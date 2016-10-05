@@ -1,0 +1,20 @@
+[Options]
+webcams = 1
+data_folder = c:\users\laughreyl\documents\DAM analysis
+thumbnailsize = 320, 240
+fullsize = 640, 480
+fps_recording = 5
+fps_preview = 5
+monitors = 9
+
+[Monitor0]
+sourcetype = 1
+source = C:\Users\laughreyl\Documents\DAM Analysis\__20160805-172737__\bias_video_cam_0_date_2016_08_05_time_17_27_37_v001.avi
+track = False
+maskfile = 
+tracktype = 1
+issdmonitor = False
+
+[Monitor1]
+maskfile = C:\Users\laughreyl\Documents\DAM Analysis\New folder\Monitor_1.msk
+

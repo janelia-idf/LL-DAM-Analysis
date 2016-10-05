@@ -1,0 +1,1428 @@
+Traceback (most recent call last):
+  File "pvg_panel_one.pyo", line 361, in onApplySource
+ValueError: u'' is not in list
+Traceback (most recent call last):
+  File "pvg_panel_two.pyo", line 159, in onChangeMonitor
+  File "pvg_common.pyo", line 265, in GetMonitor
+  File "pvg_common.pyo", line 135, in GetValue
+IndexError: string index out of range
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 445, in onMotion
+TypeError: 'NoneType' object is not subscriptable
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg.py", line 58, in OnPageChanging
+  File "pvg_panel_one.pyo", line 435, in StopPlaying
+  File "pvg_panel_one.pyo", line 264, in onStop
+  File "pvg_common.pyo", line 565, in Stop
+  File "pysolovideo.pyo", line 1069, in close
+AttributeError: 'NoneType' object has no attribute 'close'
+Traceback (most recent call last):
+  File "pvg_panel_two.pyo", line 159, in onChangeMonitor
+  File "pvg_common.pyo", line 265, in GetMonitor
+  File "pvg_common.pyo", line 135, in GetValue
+IndexError: string index out of range
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg.py", line 59, in OnPageChanging
+  File "pvg_panel_two.pyo", line 141, in StopPlaying
+  File "pvg_common.pyo", line 565, in Stop
+  File "pysolovideo.pyo", line 1069, in close
+AttributeError: 'NoneType' object has no attribute 'close'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg_common.pyo", line 542, in onNextFrame
+  File "pysolovideo.pyo", line 1405, in GetImage
+AttributeError: 'NoneType' object has no attribute 'getImage'
+Traceback (most recent call last):
+  File "pvg.py", line 58, in OnPageChanging
+  File "pvg_panel_one.pyo", line 435, in StopPlaying
+  File "pvg_panel_one.pyo", line 264, in onStop
+  File "pvg_common.pyo", line 565, in Stop
+  File "pysolovideo.pyo", line 1069, in close
+AttributeError: 'NoneType' object has no attribute 'close'

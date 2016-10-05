@@ -1,0 +1,162 @@
+function actogram(x,start,int,mode,lights,cutoff,baseline,reps)
+%ACTOGRAM  Actogram plotting function
+% actogram(y,start,int,mode,lights,cutoff,reps)
+% plots an actogram
+% y:data
+% start:starting time of the experiment
+% int: minutes btw samples (default=60) 
+% mode: 0=line graph 1=filled line graph 2=bar graph (default)
+% see also: graygram
+% lights: boolean light vector (i.e. o.lights from dam_load)
+% cutoff=[min,max]: truncate activity to min, max (default: no
+% cutoff)
+% baseline: number of hours in each period (defaults to 24)
+% reps: number of BASELINE-hour reps (defaults to two)
+
+%%(C)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Copyright (C)Jeffrey Hall Lab, Brandeis University.             %%
+% Use and distribution of this software is free for academic      %%
+% purposes only, provided this copyright notice is not removed.   %%
+% Not for commercial use.                                         %%
+% Unless by explicit permission from the copyright holder.        %%
+% Mailing address:                                                %%
+% Jeff Hall Lab, Kalman Bldg, Brandeis Univ, Waltham MA 02454 USA %%
+% Email: hall@brandeis.edu                                        %%
+%%(C)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHANGE LOG:
+%
+%   29-APR-02 SDL Added reps argument
+%   05-MAY-02 SDL Added baseline hours argument
+
+if nargin<2
+  start=0;
+end
+if start>100
+  start=floor(start/100)+mod(start,100)/60;
+end
+if nargin<3
+  int=60;
+end
+freq=60/int;
+if nargin<4
+  mode=2;
+end
+if nargin<5
+  lights=[];
+end
+if nargin<6
+  cutoff=[];
+end
+if nargin<7
+  baseline = 24;
+end
+if nargin<8
+  reps = 2;
+end
+
+hours = reps*baseline;
+
+if (length(x) ~= length(lights)) & ~isempty(lights)
+  fprintf('ERROR (actogram): DAYLIGHT info is the wrong size \n');
+  fprintf('(%d vs. %d)\n',length(lights),length(x));
+  fprintf('DAYLIGHT will be ignored\n');
+  lights=[];
+end
+reset(gca);cla;hold on
+set(gca,'Layer','top')
+if (size(x,1)>1)
+  x=x';
+end
+if ~isempty(cutoff)
+    x(x>cutoff(2))=cutoff(2);
+    x(x<cutoff(1))=cutoff(1);
+    x=x-cutoff(1);
+end 
+if (size(lights,1)>1)
+  lights=lights';
+end
+if (start>0)
+  x=[zeros(1,start*freq),x];
+  if length(lights)>0
+    lights=[zeros(1,start*freq),lights];
+  end
+end
+n=length(x);
+maxx=max(x);
+minx=min(x);
+x=x-minx;
+shift=1.1*(maxx-minx);
+if (shift==0)
+  shift=1;
+end
+w=baseline*freq;
+n=length(x);
+if mod(n,w) ~= 0
+  nn=ceil(n/w)*w;
+  x=[x,zeros(1,nn-n)];
+  if length(lights)>0
+    lights=[lights,zeros(1,nn-n)];
+  end
+else
+  nn=n;
+end
+l=nn/w;
+xx=reshape(x,w,l)';
+y=[xx(2:l,:);zeros(1,w)];
+xx=[xx,y];
+count=0;
+if ~isempty(lights)
+  ll=reshape(lights,w,l)';
+  ll=[ll,[ll(2:l,:);zeros(1,w)]];
+end
+for i=1:l
+  v=xx(i,:);
+  voff=-count*shift;
+  if ~isempty(lights) 
+    vl=ll(i,:);
+    vl=diff([0,~vl]);
+    idx=find(vl);
+    if mod(length(idx),2)== 1
+      idx=[idx,length(vl)+1];
+    end
+    for j=1:2:length(idx)-1
+      rpatch(idx(j), voff, idx(j+1), voff+shift, 0.85)
+    end
+  end
+  switch(mode)
+    case 0
+     plot(v+voff);
+   case 1
+    ww=length(v);
+    patch([(ww:-1:1),(1:ww)],[voff+zeros(1,ww),(v+voff)],'b');
+   case 3
+    ww=length(v);
+    plot([(ww:-1:1),(1:ww)],[voff+zeros(1,ww),(v+voff)],'b');
+   case 2
+    ww=length(v);
+    z=zeros(1,2*ww);
+    z(2*(1:ww)-1)=v;
+    z(2*(1:ww))=v;
+    xt=ceil(1:0.5:ww+0.5);
+    ww=length(z);
+    patch([xt(ww:-1:1),xt],[voff+zeros(1,ww),(z+voff)],'b');
+  end
+
+  count=count+1;
+  yticks(count)=voff;
+end
+if mode == 2
+  fshift=1;
+else
+  fshift=0;
+end
+set(gca,'xtick',fshift+freq*(0:6:hours),'xticklabel',mod(0:6:hours,baseline));
+set(gca,'ytick',yticks(count:-1:1),'yticklabel',count:-1:1);
+set(gca,'ylim',[yticks(count)+minx-0.1*shift,maxx]);
+
+set(gca,'xlim',1+[0 hours*freq]);
+set(gca,'xgrid','on');
+set(gca,'ygrid','on');
+
+
+
