@@ -21,7 +21,7 @@
 #       MA 02110-1301, USA.
 #
 #
-
+from inspect import currentframe
 import wx, os
 from pvg_common import options
 

@@ -45,3 +45,6 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.pyc
+Data/__20160823-135217__/bias_video_cam_0_date_2016_08_23_time_13_52_17_v001.avi
+*.avi
