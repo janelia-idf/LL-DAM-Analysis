@@ -12,12 +12,12 @@ import os, datetime
 def debugprt(self,cf,pgm,header):
 
     timestp = "{:%y-%m-%d %H:%M:%S}".format(datetime.datetime.now())
-#    datetime.datetime.now().format('%Y-%m-%d %H:%M:%S')
-
     a = inspect.getframeinfo(cf)
     funcname = a[2]
     lineno = cf.f_lineno 
     filename = os.path.split(a[0])[1]
-    print(timestp + "\t " + header + "\t\t" + funcname + "\t\t" + str(lineno) + "\t\t" + filename )
+#    classname = cf.im_class
+    print(timestp + "\t " + header + "\t" + filename + "\t" + funcname + "\t" + str(lineno))
+
 
 #   insert into code:    debugprt(currentframe(),pgm)

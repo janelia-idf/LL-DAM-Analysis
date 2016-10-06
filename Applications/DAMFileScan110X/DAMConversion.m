@@ -2,9 +2,9 @@ clear;
 txt_date = '23 Aug 2016';
 txt_time = '13:52:17';
 
-inputdir = 'V:\DAMAnalysis-Lori\20160823_NC';
-filename = 'Monitor01.txt';
-outputname = 'V:\DAMAnalysis-Lori\20160823_NC\Monitor3.txt';
+inputdir = 'c:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\Output';
+filename = 'Monitor20.txt';
+outputname = 'c:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\Output\Monitor10.txt';
 
 cd(inputdir);
 
@@ -38,20 +38,15 @@ for row = 1:size(intable.data,1)         % read each row in the input table
     newstr = sprintf('%s\t%s', intable.textdata{row,1}, ... 
                      txt_newdatetime);                 %    print col_1, date, time to output string
                  
-     for col = 4:9                             % keep columns 4 to 10 the same & add to output string
-         newstr = sprintf('%s\t%s',newstr, intable.textdata{row,col});
-     end %for col
-     
-     newstr = sprintf('%s\t0', newstr);           % replace ? with 0 & add to output string
-
      for col = 1:size(intable.data,2)           % keep remaining columns the same & add to output string
          newstr = sprintf('%s\t%s',newstr, num2str(intable.data(row,col)));
      end %for col
+     
 
 
      fprintf(fileID,'%s\r\n',newstr);          % output new string to file
 end %for row
-
+size(intable.data,2) 
 
 fclose(fileID);
 
