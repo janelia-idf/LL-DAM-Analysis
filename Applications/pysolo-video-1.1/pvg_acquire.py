@@ -68,7 +68,7 @@ class customDataTable(gridlib.PyGridTableBase):
             debugprt(self,currentframe(),pgm,'end   ')
             return len(self.data)
         except:
-            print('%%%%%%%%%%%%%%%%%%%  acquire customdatatable getnumberrows returns: ',++str(0))
+            print('%%%%%%%%%%%%%%%%%%%  acquire customdatatable getnumberrows returns: ',+str(0))
             debugprt(self,currentframe(),pgm,'end   ')
             return 0
 
@@ -80,7 +80,7 @@ class customDataTable(gridlib.PyGridTableBase):
         return a
 
     def IsEmptyCell(self, row, col):
-#        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         # customdatatable isemptycell')
         try:
             a = not self.data[row][col]
@@ -321,11 +321,11 @@ class customDataTable(gridlib.PyGridTableBase):
         colType = self.dataTypes[col].split(':')[0]
         if typeName == colType:
             debugprt(self,currentframe(),pgm,'end   ')
-            print('\n\t\t returns: True')
+            print('%%%% CamGetValueAs returns: True')
             return True
         else:
             debugprt(self,currentframe(),pgm,'end   ')
-            print('\n\t\t returns: False')
+            print('%%%% CamGetValueAs returns: False')
             return False
 
     def CanSetValueAs(self, row, col, typeName):
@@ -490,7 +490,7 @@ class CustTableGrid(gridlib.Grid):
 
         a = all_data
         debugprt(self,currentframe(),pgm,'end   ')
-        print('\n\t\t returns: ',a)
+        print('%%%%%  GetData returns: ',a)
         return a
 
     def SetData(self, *kargs, **kwargs):
@@ -911,7 +911,7 @@ class pvg_AcquirePanel(wx.Panel):
 
             mf = os.path.split(m['mask_file'])[1]
             df = 'Monitor%02d.txt' % (mn+1)
-            row = [mn+1, s, mf, df, m['track_type'], m['track'] ]
+            row = [mn, s, mf, df, m['track_type'], m['track'] ]
             self.grid.AddRow(row)
 
 
@@ -932,10 +932,12 @@ class pvg_AcquirePanel(wx.Panel):
         """
         d = self.grid.GetData()
 
-        print d                                                                 # debug
+        print('%%%%%%%%%%%%%%%  isToTrack  monitor = ',monitor)                                                              # debug
         for row in d:
-            print row                                                           # debug
+            print ('%%%%%%%%%%%% isToTrack row in d = ',row)                                                           # debug
+            print('%%%%%%%%%%%%%%  istotrack row[0] = ',row[0])
             if monitor == row[0]: 
+                print('%%%%%%%%%%%%%%%%%%%% isToTrack row[-1] = ',row[-1])
                 debugprt(self,currentframe(),pgm,'end   ')   #
                 return row[-1]
         debugprt(self,currentframe(),pgm,'end   ')   #
@@ -951,7 +953,7 @@ class pvg_AcquirePanel(wx.Panel):
         self.startBtn.Enable(not self.acquiring)
         c = 0
 
-        print('monitors:  ',self.monitors)
+        print('$$$$$$$$$$$  onStart monitors:  ',self.monitors)
         for mon in self.monitors:
             print('\n c is ',c)
             print('\n       mon:   ',mon)
@@ -1019,7 +1021,7 @@ class acquireFrame(wx.Frame):
 
 
 if __name__ == '__main__':
-    sys.stdout = open('d:\\DAM_Analysis\\stdout.txt', 'w')                                                  # DEBUG
+#    sys.stdout = open('d:\\DAM_Analysis\\stdout.txt', 'w')                                                  # DEBUG
     
     
     parser = optparse.OptionParser(usage='%prog [options] [argument]', version='%prog version 1.0')

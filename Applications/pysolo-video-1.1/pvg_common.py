@@ -225,7 +225,7 @@ class acquireThread(threading.Thread):
         threading.Thread.__init__(self)
         self.monitor = monitor
         self.keepGoing = False
-        self.verbose = False
+        self.verbose = True
         self.track = track
         outputFile = os.path.join(dataFolder, 'Monitor%02d.txt' % (monitor+1))   # account for computer indexing diff from humans
 
@@ -233,7 +233,7 @@ class acquireThread(threading.Thread):
         self.mon.setSource(source, resolution)
         self.mon.setTracking(True, track_type, mask_file, outputFile)
 
-        if self.verbose: print ( "Verbose2: Setting monitor %s with source %s and mask %s. Output to %s " % monitor, source, mask_file, outputFile)
+#        if self.verbose: print ( "Verbose2: Setting monitor %s with source %s and mask %s. Output to %s " % str(monitor), source, mask_file, outputFile)
         debugprt(self,currentframe(),pgm,'end   ')
         
     def run(self, kbdint=False):
@@ -288,13 +288,13 @@ class pvg_config(myConfig):
                            }
 
         self.monitorProperties = ['sourceType', 'source', 'track', 'maskfile', 'trackType', 'isSDMonitor']
-#        print(self.monitorProperties)
+        print('%%%%%%%%%%%%%%%%%%%%%%%%%%%   self.monitorProperties =',self.monitorProperties)
 
         myConfig.__init__(self, filename, temporary, defaultOptions)
         debugprt(self,currentframe(),pgm,'end   ')
 
     def SetMonitor(self, monitor, *args):
-#        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
         """
         """
         mn = 'Monitor%s' % monitor
