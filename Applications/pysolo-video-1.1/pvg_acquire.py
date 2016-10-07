@@ -35,7 +35,7 @@ from wx.lib.filebrowsebutton import FileBrowseButton
 import wx.grid as gridlib
 import operator
 from db import debugprt
-from pvg_common import pvg_config, acquireThread, DEFAULT_CONFIG
+from pvg_common import pvg_config, acquireThread
 
 
 # %%%%%%%%%%%   Global Variables

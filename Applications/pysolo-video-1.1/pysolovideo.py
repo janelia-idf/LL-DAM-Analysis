@@ -946,7 +946,7 @@ class Arena():
         movie_dt = datetime.datetime.fromtimestamp( self.monitor.getFrameTime() )    # NOT GETTING CORRECT date/time info
         delta_dt = movie_dt - zero_dt      
         real_dt = start_dt + delta_dt                                           # start_dt is hard-coded in.  FIX THIS        
-        real_dt_str = real_dt.strftime('%d %m %y\t%H:%M:%S')
+        real_dt_str = real_dt.strftime('%d %b %y\t%H:%M:%S')
         
         # monitor is active
         active = '1'

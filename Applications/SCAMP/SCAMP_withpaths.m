@@ -1,7 +1,7 @@
 % tier2 projtechres should be mapped to drive V:.  If not, change the 
 % drive letter in the parentfolder name.
 
-parentfolder = 'c:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Applications\SCAMP\scripts';
+parentfolder = 'c:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Applications\SCAMP\scripts\';
 cd(parentfolder);
 folders = dir('*.*');
 
