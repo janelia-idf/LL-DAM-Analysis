@@ -903,7 +903,6 @@ class Arena():
 
     def compactSeconds(self, FPS, delta):
         debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
-        print('        called Arena compactseconds')                                                # debug
         """
         Compact the frames collected in the last second
         by averaging the value of the coordinates
@@ -946,7 +945,7 @@ class Arena():
         #year, month, day, hh, mn, sec 
         movie_dt = datetime.datetime.fromtimestamp( self.monitor.getFrameTime() )    # NOT GETTING CORRECT date/time info
         delta_dt = movie_dt - zero_dt      
-        real_dt = start_dt + delta_dt        
+        real_dt = start_dt + delta_dt                                           # start_dt is hard-coded in.  FIX THIS        
         real_dt_str = real_dt.strftime('%d %m %y\t%H:%M:%S')
         
         # monitor is active
@@ -1670,7 +1669,7 @@ class Monitor(object):
         """
         self.imageCount += 1
         frame = self.cam.getImage(timestamp)
-        print('monitor cam.getimage(timestamp)', frame)                                                            # debug
+
         if timestamp: frame = self.__drawFPS(frame)
 
         if frame:
@@ -1698,7 +1697,6 @@ class Monitor(object):
 
     def processFlyMovements(self):
         debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
-        print('        called Monitor processflymovements')                                                # debug
         """
         Decides what to do with the data
         Called every frame
@@ -1706,7 +1704,6 @@ class Monitor(object):
         ct = self.getFrameTime()
         self.__tempFPS += 1
         delta = ( ct - self.lasttime)
-#        print('process fly mvmt, delta = ',delta)                                   # debug
         
         if delta >= 1: # if one second has elapsed
             self.lasttime = ct
@@ -1716,8 +1713,6 @@ class Monitor(object):
 
     def doTrack(self, frame, show_raw_diff=False, drawPath=True):
         debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
-        print('        called Monitor dotrack with: frame = ', frame,'show_raw_diff = ',show_raw_diff, 'drawpath = ',drawPath)                                                # debug
-
         """
         Track flies in ROIs using findContour algorithm in opencv
         Each frame is compared against the moving average
@@ -1768,6 +1763,8 @@ class Monitor(object):
         cv.Copy(grey_image, ROIwrk, ROImsk)
         storage = cv.CreateMemStorage(0)
 
+        print('%%%%%%%%%%%%%%%%%%%%   NEED START DATETIME BEFORE HERE.')
+        
         #track each ROI
         for fly_number, ROI in enumerate( self.arena.ROIStoRect() ):
 #            print('for ' + str(fly_number))                                    # debug
