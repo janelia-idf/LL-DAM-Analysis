@@ -29,14 +29,13 @@ __copyright__ = "Copyright (c) 2011 Giorgio Gilestro"
 __license__ = "Python"
 
 from inspect import currentframe                                                                     
-import os, optparse, sys
-from pvg_common import pvg_config, acquireThread, DEFAULT_CONFIG
-import wx
+import os, optparse, sys, datetime
 import wx
 from wx.lib.filebrowsebutton import FileBrowseButton
 import wx.grid as gridlib
-from db import debugprt
 import operator
+from db import debugprt
+from pvg_common import pvg_config, acquireThread, DEFAULT_CONFIG
 
 
 # %%%%%%%%%%%   Global Variables
@@ -44,6 +43,9 @@ data_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\data\\Outp
 DEFAULT_CONFIG = 'pysolo_video_test.cfg'
 pgm = 'pvg_acquire.py'
 
+t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
+d = datetime.date(1969, 12, 31)
+zero_dt = datetime.datetime.combine(d, t)
 
 
 

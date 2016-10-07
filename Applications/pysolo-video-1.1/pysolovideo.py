@@ -41,7 +41,7 @@ from inspect import currentframe                                                
 from db import debugprt
 import cv2, cv
 import cPickle
-import os, sys, datetime, time
+import os, sys, datetime
 import numpy as np
 
 
@@ -50,6 +50,10 @@ data_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\data\\Outp
 DEFAULT_CONFIG = 'pysolo_video_test.cfg'
 pgm = 'pysolovideo.py'
 
+start_dt = datetime.datetime(2016,8,23,13,52,17)
+t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
+d = datetime.date(1969, 12, 31)
+zero_dt = datetime.datetime.combine(d, t)
 
 pySoloVideoVersion ='dev'
 MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug','Sep', 'Oct', 'Nov', 'Dec']
@@ -938,41 +942,29 @@ class Arena():
         Called every minute; flies treated at once
         1	09 Dec 11	19:02:19	1	0	1	0	0	0	?		[actual_activity]
         """
-#        print('writeactivity')                                                # debug
         #Here we build the header
-        #year, month, day, hh, mn, sec = time.localtime()[0:6]
-        dt = datetime.datetime.fromtimestamp( self.monitor.getFrameTime() )             # NOT GETTING CORRECT date/time info
-        year, month, day, hh, mn, sec = dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second
-        month = MONTHS[month-1]
-
-        #0 rowline
-
-        #1 date
-        date = '%02d %s %s' % (day, month, str(year)[-2:])
-#        print(date)                                                # debug
-        #2 time
-        tt = '%02d:%02d:%02d' % (hh, mn, sec)
-#        print(tt)                                                # debug
-        #3 monitor is active
+        #year, month, day, hh, mn, sec 
+        movie_dt = datetime.datetime.fromtimestamp( self.monitor.getFrameTime() )    # NOT GETTING CORRECT date/time info
+        delta_dt = movie_dt - zero_dt      
+        real_dt = start_dt + delta_dt        
+        real_dt_str = real_dt.strftime('%d %m %y\t%H:%M:%S')
+        
+        # monitor is active
         active = '1'
-        #4 average frames per seconds (FPS)
+        # average frames per seconds (FPS)
         damscan = int(round(fps))
-        #5 tracktype
+        # tracktype
         tracktype = self.trackType
-        #6 is a monitor with sleep deprivation capabilities?
+        # monitor with sleep deprivation capabilities?
         sleepDep = self.monitor.isSDMonitor * 1
-        print('sleepdep = ')                                            # debug
-        print(sleepDep)                                            # debug
-        #7 monitor number, not yet implemented
+        # monitor number, not yet implemented
         monitor = '0'
-        #8 unused
+        # unused
         unused = 0
-        #9 is light on or off
+        # is light on or off?
         light = '0'                             # changed to 0 from ? for compatability with SCAMP
 
-        #10 :
-        #activity
-
+        # : activity
         activity = []
         row = ''
 
@@ -984,7 +976,9 @@ class Arena():
 
         elif self.trackType == 2:
             activity = self.calculatePosition()
+
         print('activity = ', activity)                                           # debug
+
         # Expand the readings to 32 flies for compatibility reasons with trikinetics
         flies = len ( activity[0].split('\t') )
         if extend and flies < 32:
@@ -992,11 +986,11 @@ class Arena():
         else:
             extension = ''
 
-        print('extension = ')
-        print(extension)                                                        # debug
         for line in activity:
             self.rowline +=1
-            row_header = '%s\t'*10 % (self.rowline, date, tt, active, damscan, tracktype, sleepDep, monitor, unused, light)
+            row_header = '%s\t'*9 % (self.rowline, real_dt_str, 
+                                     active, damscan, tracktype, sleepDep, 
+                                     monitor, unused, light)
             row += row_header + line + extension + '\n'
 
         if self.outputFile:
@@ -1004,8 +998,9 @@ class Arena():
             fh = open(self.outputFile, 'a')
             print('output = ',row)                                                # debug
             fh.write(row)
-#            raw_input("Press Enter to continue...")                               # debug
             fh.close()
+            
+            
         debugprt(self,currentframe(),pgm,'end   ')
 
 
