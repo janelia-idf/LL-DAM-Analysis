@@ -45,7 +45,7 @@ import os, sys, datetime
 import numpy as np
 
 
-# %%%%%%%%%%%   Global Variables
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Global Variables
 data_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\data\\Output\\'
 DEFAULT_CONFIG = 'pysolo_video_test.cfg'
 pgm = 'pysolovideo.py'
@@ -54,6 +54,7 @@ start_dt = datetime.datetime(2016,8,23,13,52,17)
 t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
 d = datetime.date(1969, 12, 31)
 zero_dt = datetime.datetime.combine(d, t)
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 pySoloVideoVersion ='dev'
 MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug','Sep', 'Oct', 'Nov', 'Dec']
@@ -560,7 +561,7 @@ class Arena():
         self.ROAS = [] #Regions of Action
         self.minuteFPS = []
 
-        self.period = 60 #in seconds
+        self.period = 61 #in seconds                # account for indexing differences btw python & people
         self.ratio = 0
         self.rowline = 0
 
@@ -947,7 +948,7 @@ class Arena():
         delta_dt = movie_dt - zero_dt      
         real_dt = start_dt + delta_dt                                           # start_dt is hard-coded in.  FIX THIS        
         real_dt_str = real_dt.strftime('%d %b %y\t%H:%M:%S')
-        
+
         # monitor is active
         active = '1'
         # average frames per seconds (FPS)
@@ -995,7 +996,7 @@ class Arena():
         if self.outputFile:
             print('outputfile: ',self.outputFile)
             fh = open(self.outputFile, 'a')
-            print('output = ',row)                                                # debug
+            print('%%%%%%%%%%%%%%  output = ',row)                                                # debug
             fh.write(row)
             fh.close()
             

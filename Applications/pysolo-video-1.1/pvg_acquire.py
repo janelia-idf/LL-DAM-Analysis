@@ -38,16 +38,15 @@ from db import debugprt
 from pvg_common import pvg_config, acquireThread
 
 
-# %%%%%%%%%%%   Global Variables
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Global Variables
 data_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\data\\Output\\'
 DEFAULT_CONFIG = 'pysolo_video_test.cfg'
 pgm = 'pvg_acquire.py'
-
+start_dt = datetime.datetime(2016,8,23,13,52,17)
 t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
 d = datetime.date(1969, 12, 31)
 zero_dt = datetime.datetime.combine(d, t)
-
-
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # Not present in dev version
 class customDataTable(gridlib.PyGridTableBase):
