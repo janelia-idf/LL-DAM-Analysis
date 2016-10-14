@@ -29,8 +29,8 @@ __copyright__ = "Copyright (c) 2011 Giorgio Gilestro"
 __license__ = "Python"
 
 from inspect import currentframe                                                                     
-import os, optparse, sys, datetime
-import wx
+import os, optparse, datetime
+import wx, sys
 from wx.lib.filebrowsebutton import FileBrowseButton
 import wx.grid as gridlib
 import operator
@@ -39,8 +39,8 @@ from pvg_common import pvg_config, acquireThread
 
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Global Variables
-data_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\data\\Output\\'
-DEFAULT_CONFIG = 'pysolo_video_test.cfg'
+data_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\Data\\Output\\'
+DEFAULT_CONFIG = 'pysolo_video.cfg'
 pgm = 'pvg_acquire.py'
 start_dt = datetime.datetime(2016,8,23,13,52,17)
 t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
@@ -1022,7 +1022,7 @@ class acquireFrame(wx.Frame):
 
 
 if __name__ == '__main__':
-#    sys.stdout = open('d:\\DAM_Analysis\\stdout.txt', 'w')                                                  # DEBUG
+    sys.stdout = open('d:\\DAM_Analysis\\stdout.txt', 'w')                                                  # DEBUG
     
     
     parser = optparse.OptionParser(usage='%prog [options] [argument]', version='%prog version 1.0')

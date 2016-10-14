@@ -135,6 +135,9 @@ class panelLiveView(wx.Panel):
 
 
         self.SetSizer(sizer_1)
+        print wx.Window.FindFocus()
+        
+        self.Bind( wx.EVT_CHAR, self.fsPanel.onKeyPressed )
 
     def StopPlaying(self):
         """

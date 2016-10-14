@@ -27,7 +27,7 @@ import ConfigParser, threading
 
 # %%%%%%%%%%%   Global Variables
 data_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\data\\Output\\'
-DEFAULT_CONFIG = 'pysolo_video_test.cfg'
+DEFAULT_CONFIG = 'pysolo_video.cfg'
 pgm = 'pvg_common.py'
 t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
 d = datetime.date(1969, 12, 31)

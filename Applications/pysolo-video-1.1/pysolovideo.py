@@ -46,10 +46,9 @@ import numpy as np
 
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Global Variables
-data_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\data\\Output\\'
-DEFAULT_CONFIG = 'pysolo_video_test.cfg'
+data_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\Data\\Output\\'
+DEFAULT_CONFIG = 'pysolo_video.cfg'
 pgm = 'pysolovideo.py'
-
 start_dt = datetime.datetime(2016,8,23,13,52,17)
 t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
 d = datetime.date(1969, 12, 31)
@@ -684,8 +683,7 @@ class Arena():
             return distance_px
 
     def addROI(self, coords, n_flies):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
-        print('        called Arena addroi')                                                # debug
+        debugprt(self,currentframe(),pgm,'begin     ')        #      
         """
         Add a new ROI to the arena
         """
@@ -993,6 +991,7 @@ class Arena():
                                      monitor, unused, light)
             row += row_header + line + extension + '\n'
 
+        print('%%%%%%%%%%%%%%%%%pysolovideo 994:  self.outputfile = ',self.outputFile)
         if self.outputFile:
             print('outputfile: ',self.outputFile)
             fh = open(self.outputFile, 'a')
@@ -1764,7 +1763,6 @@ class Monitor(object):
         cv.Copy(grey_image, ROIwrk, ROImsk)
         storage = cv.CreateMemStorage(0)
 
-        print('%%%%%%%%%%%%%%%%%%%%   NEED START DATETIME BEFORE HERE.')
         
         #track each ROI
         for fly_number, ROI in enumerate( self.arena.ROIStoRect() ):
