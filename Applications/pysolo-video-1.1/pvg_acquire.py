@@ -28,24 +28,46 @@ __date__ = "$Date: 2011/08/16 21:57:19 $"
 __copyright__ = "Copyright (c) 2011 Giorgio Gilestro"
 __license__ = "Python"
 
-from inspect import currentframe                                                                     
-import os, optparse, datetime
-import wx, sys
+#       Revisions by Caitlin Laughrey and Loretta E Laughrey in 2016.
+
+# ----------------------------------------------------------------------------
+from inspect import currentframe        # used to trace program for debugging
+from db import debugprt                 # to stop reporting change all debugprt( to # debugprt(
+pgm = 'pvg_acquire.py'
+# ----------------------------------------------------------------------------
+
+import wx, os, sys, datetime
+from win32api import GetSystemMetrics    # to get screen resolution
+import optparse
 from wx.lib.filebrowsebutton import FileBrowseButton
 import wx.grid as gridlib
 import operator
-from db import debugprt
-from pvg_common import pvg_config, acquireThread
 
+from pvg_common import DEFAULT_CONFIG, root_dir, data_dir, start_dt, zero_dt
+from pvg_common import pvg_config, acquireThread
+from pvg_panel_one import panelOne
+from pvg_options import pvg_OptionsPanel
+from pvg_panel_two import panelLiveView
+from pysolovideo import pySoloVideoVersion
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Global Variables
-data_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\Data\\Output\\'
-DEFAULT_CONFIG = 'pysolo_video.cfg'
-pgm = 'pvg_acquire.py'
-start_dt = datetime.datetime(2016,8,23,13,52,17)
-t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
-d = datetime.date(1969, 12, 31)
-zero_dt = datetime.datetime.combine(d, t)
+## get root dir name for all file operations
+##
+#import ctypes.wintypes
+#CSIDL_PERSONAL = 5       # My Documents
+#SHGFP_TYPE_CURRENT = 0   # Get current, not default value
+#buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)  # get user document folder path
+#ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
+#root_dir = buf.value + '\\GitHub\\LL-DAM-Analysis\\'
+#
+#
+#data_dir = root_dir + 'Data\\Working_files\\'
+#DEFAULT_CONFIG = 'pysolo_video.cfg'
+#pgm = 'pvg_acquire.py'
+#start_dt = datetime.datetime(2016,8,23,13,52,17)
+#t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
+#d = datetime.date(1969, 12, 31)
+#zero_dt = datetime.datetime.combine(d, t)
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # Not present in dev version
@@ -1022,8 +1044,7 @@ class acquireFrame(wx.Frame):
 
 
 if __name__ == '__main__':
-    sys.stdout = open('d:\\DAM_Analysis\\stdout.txt', 'w')                                                  # DEBUG
-    
+    sys.stdout = open(data_dir + 'stdout.txt', 'w')          # send console output to file
     
     parser = optparse.OptionParser(usage='%prog [options] [argument]', version='%prog version 1.0')
     parser.add_option('-c', '--config', dest='config_file', metavar="CONFIG_FILE", help="The full path to the config file to open")
@@ -1032,7 +1053,8 @@ if __name__ == '__main__':
 
     (options, args) = parser.parse_args()
     print('main')
-    app=wx.PySimpleApp(0)
+#    app=wx.PySimpleApp(0)
+    app=wx.App(0)
     frame_acq = acquireFrame(None, -1, "")           # Create the main window.
     app.SetTopWindow(frame_acq)
     frame_acq.Show(options.showgui)

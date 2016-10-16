@@ -23,6 +23,28 @@
 import wx, os
 from pvg_common import previewPanel, options
 
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Global Variables
+# get root dir name for all file operations
+#
+import ctypes.wintypes
+CSIDL_PERSONAL = 5       # My Documents
+SHGFP_TYPE_CURRENT = 0   # Get current, not default value
+buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)  # get user document folder path
+ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
+root_dir = buf.value + '\\GitHub\\LL-DAM-Analysis\\'
+
+
+data_dir = root_dir + 'Data\\Working_files\\'
+DEFAULT_CONFIG = 'pysolo_video.cfg'
+pgm = 'pvg_acquire.py'
+#start_dt = datetime.datetime(2016,8,23,13,52,17)
+#t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
+#d = datetime.date(1969, 12, 31)
+#zero_dt = datetime.datetime.combine(d, t)
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 class panelLiveView(wx.Panel):
     """
     Panel Number 2

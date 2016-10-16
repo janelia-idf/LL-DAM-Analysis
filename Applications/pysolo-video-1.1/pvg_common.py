@@ -19,19 +19,63 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-from inspect import currentframe
-from db import debugprt
-import wx, cv, os, sys, datetime
+#       Revisions by Caitlin Laughrey and Loretta E Laughrey in 2016.
+
+# %%                                                            for debugging
+"""
+Prints file, class, and function names and line number for each definition.
+- turn this on/off by replacing 'debugprt(' with '# debugprt(' or vice versa.
+"""
+from inspect import currentframe        
+from db import debugprt                 
+pgm = 'pvg.py'
+
+# %%                                                             imports
+import wx, cv, os        
 import pysolovideo as pv
 import ConfigParser, threading
 
-# %%%%%%%%%%%   Global Variables
-data_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\data\\Output\\'
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   "Global Variables"
+# ----------------------------------------------------------------------------
 DEFAULT_CONFIG = 'pysolo_video.cfg'
-pgm = 'pvg_common.py'
-t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
+
+# ----------------------------------------------------------------------------
+""" 
+File I/O is assumed to use the GitHub\LL-DAM-Analysis folder in the current 
+ user's documents folder.
+"""  
+import ctypes.wintypes   # used to get path to current user's documents folder
+CSIDL_PERSONAL = 5          # My Documents
+SHGFP_TYPE_CURRENT = 0      # Get current, not default value
+buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)  # get user document folder path
+ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
+
+root_dir = buf.value + '\\GitHub\\LL-DAM-Analysis\\'
+data_dir = root_dir + 'Data\\Working_files\\'
+# ----------------------------------------------------------------------------
+"""
+dates for setting the correct date information for output
+ - get datetime for adjusting from 31 Dec 1969 at 19:01:00
+ - set start date and time of video
+"""
+import datetime
+t = datetime.time(19, 1, 00)    
 d = datetime.date(1969, 12, 31)
 zero_dt = datetime.datetime.combine(d, t)
+""" - set date and time that video was actually recorded """                    #     <--- can we get this from the filename's datetime stamp?
+start_dt = datetime.datetime(2016,8,23,13,52,17)
+
+# ----------------------------------------------------------------------------
+"""
+Get screen_width & screen_height:   Screen resolution information
+      Allows all object sizes to be sized relative to the display.
+"""
+from win32api import GetSystemMetrics    # to get screen resolution
+screen_width = GetSystemMetrics(0)   # get the screen resolution of this monitor
+screen_height = GetSystemMetrics(1)
+
+# ----------------------------------------------------------------------------
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  MyConfig
 
 class myConfig():
     """
@@ -40,7 +84,7 @@ class myConfig():
     From gg's toolbox
     """
     def __init__(self, filename=None, temporary=False, defaultOptions=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #  .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')        
         """
         filename    the name of the configuration file
         temporary   whether we are reading and storing values temporarily
@@ -48,9 +92,8 @@ class myConfig():
         """
 
         filename = filename or DEFAULT_CONFIG
-        pDir = os.getcwd()+"\\"
+        pDir = data_dir
         if not os.access(pDir, os.W_OK): pDir = os.environ['HOME']
-        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% myconfig init filename = ",(pDir + filename))
         
         self.filename = os.path.join (pDir, filename)
         self.filename_temp = '%s~' % self.filename
@@ -87,7 +130,7 @@ class myConfig():
         else: filename = self.filename
 
         if os.path.exists(filename):
-            self.config = ConfigParser.RawConfigParser()
+            self.config = ConfigParser.RawConfigParser()                                  
             self.config.read(filename)
 
         else:
@@ -96,7 +139,7 @@ class myConfig():
 
 
     def Save(self, temporary=False, newfile=False, filename=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')        
         """
         """
 
@@ -104,7 +147,7 @@ class myConfig():
         elif not temporary and not filename: filename = self.filename
 
         if newfile:
-            self.config = ConfigParser.RawConfigParser()
+            self.config = ConfigParser.RawConfigParser()                               
             self.config.add_section('Options')
 
             for key in self.defaultOptions:
@@ -118,7 +161,7 @@ class myConfig():
 
 
     def SetValue(self, section, key, value):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                # debug
         """
         """
 
@@ -129,7 +172,7 @@ class myConfig():
         debugprt(self,currentframe(),pgm,'end   ')
 
     def GetValue(self, section, key):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                # debug
         """
         get value from config file
         Does some sanity checking to return tuple, integer and strings
@@ -166,7 +209,7 @@ class myConfig():
 
 
     def GetOption(self, key):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')        
         """
         """
         a = self.GetValue('Options', key)
@@ -175,7 +218,7 @@ class myConfig():
 
 class acquireObject():
     def __init__(self, monitor, source, resolution, mask_file, track, track_type, dataFolder):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.monitor = monitor
@@ -193,7 +236,7 @@ class acquireObject():
         debugprt(self,currentframe(),pgm,'end   ')
         
     def run(self, kbdint=False):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         while self.keepGoing:
@@ -201,7 +244,7 @@ class acquireObject():
         debugprt(self,currentframe(),pgm,'end   ')
 
     def start(self):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.keepGoing = True
@@ -209,7 +252,7 @@ class acquireObject():
         debugprt(self,currentframe(),pgm,'end   ')
 
     def halt(self):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.keepGoing = False
@@ -222,7 +265,7 @@ class acquireObject():
 class acquireThread(threading.Thread):
 
     def __init__(self, monitor, source, resolution, mask_file, track, track_type, dataFolder):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         threading.Thread.__init__(self)
@@ -240,7 +283,7 @@ class acquireThread(threading.Thread):
         debugprt(self,currentframe(),pgm,'end   ')
         
     def run(self, kbdint=False):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
 
@@ -258,7 +301,7 @@ class acquireThread(threading.Thread):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def doTrack(self):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.keepGoing = True
@@ -266,7 +309,7 @@ class acquireThread(threading.Thread):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def halt(self):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.keepGoing = False
@@ -278,26 +321,25 @@ class pvg_config(myConfig):
     Inheriting from myConfig
     """
     def __init__(self, filename=None, temporary=False):
-#        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
-#        print(' inspect not working in pvg_config __init__')                                   # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                      # debug
 
-        defaultOptions = { "Monitors" : [9, "Select the number of monitors connected to this machine"],
-                            "Webcams"  : [1, "Select the number of webcams connected to this machine"],
-                            "ThumbnailSize" : ['320, 240', "Specify the size for the thumbnail previews"],
-                            "FullSize" : ['640, 480', "Specify the size for the actual acquisition from the webcams.\nMake sure your webcam supports this definition"],
-                            "FPS_preview" : [5, "Refresh frequency (FPS) of the thumbnails during preview.\nSelect a low rate for slow computers"],
-                            "FPS_recording" : [5, "Actual refresh rate (FPS) during acquisition and processing"],
-                            "Data_Folder" : ['', "Folder where the final data are saved"]
-                           }
+        defaultOptions = { 
+            "Monitors" :      [9, "Select the number of monitors connected to this machine"],
+            "Webcams"  :      [1, "Select the number of webcams connected to this machine"],
+            "ThumbnailSize" : ['320, 240', "Specify the size for the thumbnail previews"],
+            "FullSize" :      ['640, 480', "Specify the size for the actual acquisition from the webcams.\nMake sure your webcam supports this definition"],
+            "FPS_preview" :   [5, "Refresh frequency (FPS) of the thumbnails during preview.\nSelect a low rate for slow computers"],
+            "FPS_recording" : [5, "Actual refresh rate (FPS) during acquisition and processing"],
+            "Data_Folder" :   [data_dir, "Folder where the final data are saved"]
+             }
 
         self.monitorProperties = ['sourceType', 'source', 'track', 'maskfile', 'trackType', 'isSDMonitor']
-        print('%%%%%%%%%%%%%%%%%%%%%%%%%%%   self.monitorProperties =',self.monitorProperties)
 
         myConfig.__init__(self, filename, temporary, defaultOptions)
         debugprt(self,currentframe(),pgm,'end   ')
 
     def SetMonitor(self, monitor, *args):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         mn = 'Monitor%s' % monitor
@@ -306,7 +348,7 @@ class pvg_config(myConfig):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def GetMonitor(self, monitor):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                           # debug
         """
         """
         mn = 'Monitor%s' % monitor
@@ -318,7 +360,7 @@ class pvg_config(myConfig):
         return md
 
     def HasMonitor(self, monitor):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         mn = 'Monitor%s' % monitor
@@ -327,7 +369,7 @@ class pvg_config(myConfig):
         return a
 
     def getMonitorsData(self):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                           # debug
         """
         return a list containing the monitors that we need to track
         based on info found in configfile
@@ -337,7 +379,6 @@ class pvg_config(myConfig):
         ms = self.GetOption('Monitors')
         resolution = self.GetOption('FullSize')
         dataFolder = self.GetOption('Data_Folder')
-        print('%%%%%%%%%%%%%%%%%%%%%%%%%%  ms = '+str(ms)+'    resolution = '+str(resolution)+'       datafolder = '+dataFolder)
         
         for mon in range(0,ms):
             if self.HasMonitor(mon):
@@ -362,7 +403,7 @@ class previewPanel(wx.Panel):
     Used for thumbnails
     """
     def __init__(self, parent, size, keymode=True):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
 
         wx.Panel.__init__(self, parent, wx.ID_ANY, style=wx.WANTS_CHARS)
 
@@ -422,7 +463,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def ClearAll(self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Clear all ROIs
         """
@@ -430,7 +471,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def ClearLast(self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Cancel current drawing
         """
@@ -445,7 +486,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def SaveCurrentSelection(self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         save current selection
         """
@@ -456,7 +497,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def AddPoint(self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Add point
         """
@@ -476,7 +517,7 @@ class previewPanel(wx.Panel):
 
 
     def onLeftDown(self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
 
@@ -493,7 +534,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def onLeftUp(self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         if self.allowEditing:
@@ -506,7 +547,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def onMotion(self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                 # debug
         """
         """
         if self.allowEditing:
@@ -526,7 +567,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def prinKeyEventsHelp(self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         for key in self.ACTIONS:
@@ -534,7 +575,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def onKeyPressed(self, event):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Regulates key pressing responses:
         """
@@ -547,7 +588,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def Calibrate(self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         if len(self.polyPoints) > 2:
@@ -564,7 +605,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def AutoMask(self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         if len(self.polyPoints > 1):
@@ -576,14 +617,14 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def SaveMask(self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.mon.saveROIS()
         debugprt(self,currentframe(),pgm,'end   ')
 
     def setMonitor(self, camera, resolution=None):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
 
@@ -603,7 +644,7 @@ class previewPanel(wx.Panel):
 
 
     def paintImg(self, img):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         if img:
@@ -622,7 +663,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def onPaint(self, evt):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         if self.bmp:
@@ -633,7 +674,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def onNextFrame(self, evt):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         img = self.mon.GetImage(drawROIs = self.drawROI, selection=self.selection, crosses=self.polyPoints, timestamp=self.timestamp)
@@ -642,7 +683,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def Play(self, status=True, showROIs=True):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
 
@@ -660,7 +701,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def Stop(self):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.Play(False)
@@ -668,7 +709,7 @@ class previewPanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'end   ')
 
     def hasMonitor(self):
-        debugprt(self,currentframe(),pgm,'begin     ')        #      .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         a = (self.mon != None)

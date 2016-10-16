@@ -1,6 +1,6 @@
 [Options]
 webcams = 1
-data_folder = c:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\20160823_135217\test-tracking
+data_folder = c:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\20160823_135217\test-tracking
 thumbnailsize = 320, 240
 fullsize = 640, 480
 fps_recording = 0.2
@@ -10,11 +10,8 @@ monitors = 1
 [Monitor0]
 sourcetype = 1
 source = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\20160823_135217\bias_video_cam_0_date_2016_08_23_time_13_52_17_v001.avi
-track = False
-maskfile = 
-tracktype = 1
-issdmonitor = False
-
-[Monitor1]
+track = True
 maskfile = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\20160823_135217\test-tracking\Monitor_1.msk
+tracktype = 0
+issdmonitor = False
 

@@ -19,20 +19,34 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
+#
+#       Revisions by Caitlin Laughrey and Loretta E Laughrey in 2016.
 
+# %%                                                            for debugging
+"""
+Prints file, class, and function names and line number for each definition.
+- turn this on/off by replacing 'debugprt(' with '# debugprt(' or vice versa.
+"""
+from inspect import currentframe        
+from db import debugprt                 
+pgm = 'pvg_panel_one.py'
+
+# %%                                                            imports
 import wx, os
-from pvg_common import previewPanel, options
-
 import wx.lib.newevent
 ThumbnailClickedEvt, EVT_THUMBNAIL_CLICKED = wx.lib.newevent.NewCommandEvent()
-
 from wx.lib.filebrowsebutton import FileBrowseButton, DirBrowseButton
 
+from pvg_common import previewPanel, options, myConfig
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Thumbnail Panel
 class thumbnailPanel(previewPanel):
     """
     A small preview Panel to be used as thumbnail
     """
-    def __init__( self, parent, monitor_number, thumbnailSize=(320,240) ):
+    def __init__( self, parent, monitor_number, thumbnailSize=(320,240) ):           
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+
         previewPanel.__init__(self, parent, size=thumbnailSize, keymode=False)
 
         self.number = int(monitor_number)
@@ -41,24 +55,30 @@ class thumbnailPanel(previewPanel):
         self.displayNumber()
 
         self.Bind(wx.EVT_LEFT_UP, self.onLeftClick)
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Displays the monitor number over top of the thumbnail
+# %%                                                Show Monitor Numbers            
     def displayNumber(self):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
+        Displays the monitor number over top of the thumbnail
         """
         # font type: wx.DEFAULT, wx.DECORATIVE, wx.ROMAN, wx.SCRIPT, wx.SWISS, wx.MODERN
         # slant: wx.NORMAL, wx.SLANT or wx.ITALIC
         # weight: wx.NORMAL, wx.LIGHT or wx.BOLD
-        #font1 = wx.Font(10, wx.SWISS, wx.ITALIC, wx.NORMAL)
+        # font1 = wx.Font(10, wx.SWISS, wx.ITALIC, wx.NORMAL)
         # use additional fonts this way ...
         pos = int(self.size[0]/2 - 20), int(self.size[1]/2 - 20),
         font1 = wx.Font(35, wx.SWISS, wx.NORMAL, wx.NORMAL)
         text1 = wx.StaticText( self, wx.ID_ANY, '%s' % (self.number+1), pos)
         text1.SetFont(font1)
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Event handler for thumbnail being clicked on
+# %%                                                        Left Click
     def onLeftClick(self, evt):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
+        Event handler for thumbnail being clicked on
         Send signal around that the thumbnail was clicked
         """
         event = ThumbnailClickedEvt(self.GetId())
@@ -68,13 +88,20 @@ class thumbnailPanel(previewPanel):
         event.thumbnail = self
 
         self.GetEventHandler().ProcessEvent(event)
+        debugprt(self,currentframe(),pgm,'end   ')
 
+        
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Panel Grid View        
 class panelGridView(wx.ScrolledWindow):
     """
     The scrollable grid of monitor thumbnails on panel one                      # number in monitors not always there
     """
     def __init__(self, parent, gridSize, thumbnailSize=(320,240) ): 
-        # Set up scrolling window
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        
+        # print('%%%%%% pvg_panel_one:  panelGridView:  line 102:  gridSize = ',gridSize)
+
+# %%                                                  Set up scrolling window
         wx.ScrolledWindow.__init__(self, parent, wx.ID_ANY, size=(-1,600))
         self.SetScrollbars(1, 1, 1, 1)
         self.SetScrollRate(10, 10)
@@ -83,57 +110,68 @@ class panelGridView(wx.ScrolledWindow):
         self.thumbnailSize = thumbnailSize
         self.grid_mainSizer = wx.GridSizer(6,3,2,2)
 
-        # Populate the thumbnail grid
+# %%                                              Populate the thumbnail grid
         self.previewPanels = []
         for i in range(0, int(gridSize)):
             self.previewPanels.append ( thumbnailPanel(self, monitor_number=i,
                 thumbnailSize=self.thumbnailSize) )
             self.grid_mainSizer.Add(self.previewPanels[i])
 
-        # Make elements visible in UI
+# %%                                              Make elements visible in UI
         self.SetSizer(self.grid_mainSizer)
         # Set up listener for clicking on thumbnails
         self.Bind(EVT_THUMBNAIL_CLICKED, self.onThumbnailClicked)
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Event handler that makes clicking a thumbnail update the dropdown menu
+# %%                                                    Thumbnail Clicked
     def onThumbnailClicked(self, event):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
+        Event handler that makes clicking a thumbnail update the dropdown menu
         Relay event to sibling panel
         """
         wx.PostEvent(self.parent.lowerPanel, event)
         event.Skip()
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Changes number of monitor thumbnails.
+# %%                                                        Update Monitors
     # Should be working
     def updateMonitors(self, old, now):
-            diff = old - now
-            self.gridSize = now
-            i = diff
-            while i != 0:
-                if diff < 0:
-                    # Adding monitors to grid
-                    i += 1
-                    # Make a new thumbnail and add to list
-                    self.previewPanels.append ( thumbnailPanel(self, monitor_number=old,
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        """
+        Changes number of monitor thumbnails.
+        """     
+        diff = old - now    
+        i = diff
+        while i != 0:                   # Adding monitors to grid
+            if diff < 0:
+                i += 1
+                # Make a new thumbnail and add to list
+                self.previewPanels.append ( thumbnailPanel(self, monitor_number=old,
                         thumbnailSize = self.thumbnailSize) )
-                    # Add thumbnail to layout
-                    self.grid_mainSizer.Add(self.previewPanels[old])
-                    self.grid_mainSizer.Layout()
-                    old += 1
-                elif diff > 0:
-                    # Removing monitors from grid
-                    i -= 1
-                    # Remove last thumbnail from list
-                    self.previewPanels.pop(len(self.previewPanels)-1)
-                    # Remove last thumbnail from layout
-                    self.grid_mainSizer.Hide(old-1)
-                    self.grid_mainSizer.Remove(old-1)
-                    self.grid_mainSizer.Layout()
-                    old -= 1
+                # Add thumbnail to layout
+                self.grid_mainSizer.Add(self.previewPanels[old])
+                self.grid_mainSizer.Layout()
+                old += 1
+            elif diff > 0:
+                # Removing monitors from grid
+                i -= 1
+                # Remove last thumbnail from list
+                self.previewPanels.pop(len(self.previewPanels)-1)
+                # Remove last thumbnail from layout
+                self.grid_mainSizer.Hide(old-1)
+                self.grid_mainSizer.Remove(old-1)
+                self.grid_mainSizer.Layout()
+                old -= 1
 
-    # Changes thumbnail sizes.
+        debugprt(self,currentframe(),pgm,'end   ')
+        
+# %%                                                    Change Thumbnail size
     def updateThumbs(self, old, new):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         self.thumbnailSize = new
+        # print('%%%%%% pvg_panel_one:  panelGridView:  line 173:  gridSize = ',gridSize)
+
         for i in range(0, self.gridSize):
             self.previewPanels[i].SetThumbnailsize(new)
             self.grid_mainSizer.Layout()
@@ -144,8 +182,7 @@ class panelConfigure(wx.Panel):
     The lower half of panel one with the configuration settings                 # this panel could be shorter to cover less of the monitors
     """
     def __init__(self, parent):
-        """
-        """
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         wx.Panel.__init__(self, parent, wx.ID_ANY, size=(-1,300),
             style=wx.SUNKEN_BORDER|wx.TAB_TRAVERSAL)
         self.parent = parent
@@ -159,7 +196,7 @@ class panelConfigure(wx.Panel):
 
         lowerSizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        #Static box1 (LEFT)
+        # Static box1 (LEFT)
         sb_1 = wx.StaticBox(self, -1, "Select Monitor")#, size=(250,-1))
         self.sbSizer_1 = wx.StaticBoxSizer (sb_1, wx.VERTICAL)
 
@@ -192,7 +229,7 @@ class panelConfigure(wx.Panel):
 
         lowerSizer.Add (self.sbSizer_1, 0, wx.EXPAND|wx.ALL, 5)
 
-        #Static box2 (CENTER)
+        # Static box2 (CENTER)
         sb_2 = wx.StaticBox(self, -1, "Select Video input" )
         self.sbSizer_2 = wx.StaticBoxSizer (sb_2, wx.VERTICAL)
         self.grid2 = wx.FlexGridSizer( 0, 2, 0, 0 )
@@ -223,12 +260,12 @@ class panelConfigure(wx.Panel):
 
         self.controls[0][1].Enable(True)
 
-        #grid2.Add(wx.StaticText(self, -1, ""))
+        # grid2.Add(wx.StaticText(self, -1, ""))
 
         self.sbSizer_2.Add( self.grid2 )
         lowerSizer.Add(self.sbSizer_2, 0, wx.EXPAND|wx.ALL, 5)
 
-        #Static box3 (RIGHT)
+        # Static box3 (RIGHT)
         sb_3 = wx.StaticBox(self, -1, "Set Tracking Parameters")
         sbSizer_3 = wx.StaticBoxSizer (sb_3, wx.VERTICAL)
 
@@ -248,11 +285,11 @@ class panelConfigure(wx.Panel):
 
         self.pickMaskBrowser = FileBrowseButton(self, -1, labelText='Mask File')
 
-        #sbSizer_3.Add ( self.activateTracking , 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+        # sbSizer_3.Add ( self.activateTracking , 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
         sbSizer_3.Add ( sbSizer_31 , 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
         sbSizer_3.Add ( self.pickMaskBrowser , 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP|wx.EXPAND, 5 )
 
-        #trackingTypeSizer = wx.Sizer(wx.HORIZONTAL)
+        # trackingTypeSizer = wx.Sizer(wx.HORIZONTAL)
         self.trackDistanceRadio = wx.RadioButton(self, -1, "Activity as distance traveled", style=wx.RB_GROUP)
         self.trackVirtualBM = wx.RadioButton(self, -1, "Activity as midline crossings count")
         self.trackPosition = wx.RadioButton(self, -1, "Only position of flies")
@@ -265,66 +302,90 @@ class panelConfigure(wx.Panel):
 
         self.SetSizer(lowerSizer)
         self.Bind(EVT_THUMBNAIL_CLICKED, self.onThumbnailClicked)
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Returns the selected source type and its value
+# %%                                                     Input source
     def __getSource(self):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         check which source is ticked and what is the associated value
+        Returns the selected source type and its value
         """
 
         for (r, s), st in zip(self.controls,range(3)):
             if r.GetValue():
                 source = s.GetValue()
                 sourceType = st
+        debugprt(self,currentframe(),pgm,'end   ')
 
         return source, sourceType
 
-    # Returns whether we are tracking distance, vbs, or xy coords
+# %%                                                Input tracking type
     def __getTrackingType(self):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
-        return which tracking we are chosing
+        return which type of tracking we are chosing
         ['DISTANCE','VBS','XY_COORDS']
         """
-        if self.trackDistanceRadio.GetValue(): trackType = 0 #"DISTANCE"
-        elif self.trackVirtualBM.GetValue(): trackType = 1 #"VBS"
-        elif self.trackPosition.GetValue(): trackType = 2 #"XY_COORDS"
+        if self.trackDistanceRadio.GetValue(): trackType = 0  #  "DISTANCE"
+        elif self.trackVirtualBM.GetValue(): trackType = 1    #  "VBS"
+        elif self.trackPosition.GetValue(): trackType = 2     #  "XY_COORDS"
 
-        return trackType
+        debugprt(self,currentframe(),pgm,'end   ')
+        return trackType                                                        # this isn't getting written to config file correctly
 
-    # Event handler for the play button
+# %%                                                            play button
     def onPlay (self, event=None):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        """
+        # Event handler for the play button
+        """
+        
         if self.thumbnail:
             self.thumbnail.Play()
             self.btnStop.Enable(True)
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Event handler for the stop button
+# %%                                                            Stop Button
     def onStop (self, event=None):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        """
+        Event handler for the stop button
+        """
         if self.thumbnail and self.thumbnail.isPlaying:
             self.thumbnail.Stop()
             self.btnStop.Enable(False)
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Event handler for changing monitor via clicking on thumbnail
+# %%                                                    Click Thumbnail
     def onThumbnailClicked(self, evt):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Picking thumbnail by clicking on it
+        Event handler for changing monitor via clicking on thumbnail
         """
         self.monitor_number = evt.number #+ 1
         self.thumbnail = evt.thumbnail
         self.thumbnailNumber.SetValue(self.MonitorList[self.monitor_number]) # -1
         self.updateThumbnail()
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Event handler for changing monitor via dropdown box
+# %%                                                    Monitor dropdown box
     def onChangingMonitor(self, evt):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Picking thumbnail by using the dropbox
+        Event handler for changing monitor via dropdown box
         """
         sel = evt.GetString()
         self.monitor_number = self.MonitorList.index(sel) #+ 1
         self.thumbnail = self.parent.scrollThumbnails.previewPanels[self.monitor_number]         #this is not very elegant
         self.updateThumbnail()
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Refresh thumbnail and controls
+# %%                                            Refresh thumbnail and controls
     def updateThumbnail(self):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Refreshing thumbnail data
         """
@@ -367,12 +428,17 @@ class panelConfigure(wx.Panel):
         self.isSDMonitor.SetValue(isSDMonitor)
         self.pickMaskBrowser.SetValue(mask_file or '')
         [self.trackDistanceRadio, self.trackVirtualBM, self.trackPosition][trackType].SetValue(True)
+        debugprt(self,currentframe(),pgm,'end   ')
 
+# %% 
     def sourceCallback (self, event):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         self.applyButton.Enable(True)
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Event handler for source radio buttons
+# %%                                                        Radio buttons
     def onChangeSource(self, event):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         # Determine which radio button was selected
         radio_selected = event.GetEventObject()
 
@@ -384,10 +450,15 @@ class panelConfigure(wx.Panel):
                 source.Enable(False)
 
         self.applyButton.Enable(True)
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Event handler for the Apply button on the lower left of panel one
+# %%                                                    Apply Button
     def onApplySource(self, event):
-        # Get source and mask info from the user's selections
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        """
+        Get source and mask info from the user's selections
+        Event handler for the Apply button on the lower left of panel one
+        """
         source, sourceType = self.__getSource()
         track = self.activateTracking.GetValue()
         self.mask_file = self.pickMaskBrowser.GetValue()
@@ -418,29 +489,42 @@ class panelConfigure(wx.Panel):
             self.pickMaskBrowser.Enable(True)
 
             self.saveMonitorConfiguration()
+        debugprt(self,currentframe(),pgm,'end   ')
 
+# %%                                                Save Monitor Config
     def saveMonitorConfiguration(self):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         options.SetMonitor(self.monitor_number,
                            self.thumbnail.sourceType,
                            self.thumbnail.source, #self.thumbnail.source+1 in dev code
                            self.thumbnail.track,
                            self.mask_file,
-                           self.trackType,
+                           self.trackType,                                      # this is not being saved correctly
                            self.thumbnail.mon.isSDMonitor
                            )
         options.Save()
+        debugprt(self,currentframe(),pgm,'end   ')
 
+# %%                                                        Activate Tracking        
     def onActivateTracking(self, event):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         if self.thumbnail:
             self.thumbnail.track = event.IsChecked()
+        debugprt(self,currentframe(),pgm,'end   ')
 
+# %%                                                        
     def onSDMonitor(self, event):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         if self.thumbnail:
             self.thumbnail.mon.isSDMonitor = event.IsChecked()
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Updates the dropdown box of monitors on lower half of panel one
-    # Should be working
+# %%                                                Update monitor dropdown box
     def updateMonitors(self, old, now):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        """
+        Updates the dropdown box of monitors on lower half of panel one
+        """
         # Generate new list of monitors
         self.MonitorList = ['Monitor %s' % (int(m) + 1) for m in range(now)]
 
@@ -456,10 +540,14 @@ class panelConfigure(wx.Panel):
 
         # Display UI changes
         self.sbSizer_1.Layout()
+        debugprt(self,currentframe(),pgm,'end   ')
 
-    # Updates the dropdown box of cameras on lower half of panel one
-    # Should be working
+# %%                                                Update webcam dropdown box
     def updateWebcams(self, old, now):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        """
+        Updates the dropdown box of cameras on lower half of panel one
+        """
         # Generate the list of webcams
         self.WebcamsList = [ 'Webcam %s' % (int(w) +1) for w in range(new) ]
 
@@ -487,13 +575,16 @@ class panelConfigure(wx.Panel):
 
         # Show changes to UI
         self.grid2.Layout()
+        debugprt(self,currentframe(),pgm,'end   ')
 
+        
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Panel One
 class panelOne(wx.Panel):
     """
-    Panel number One
-    All the thumbnails
+    Panel number One:  All the thumbnails
     """
     def __init__(self, parent):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         wx.Panel.__init__(self, parent)
 
         # Retrieve settings
@@ -506,20 +597,31 @@ class panelOne(wx.Panel):
         self.sourceType = -1
 
         # Create a grid of thumbnails and a configure panel
+
+        # print('%%%%%% pvg_panel_one:  panelOne:  line 603:  gridSize = ',self.monitor_number)
+
         self.scrollThumbnails = panelGridView(self, gridSize=self.monitor_number, thumbnailSize=self.tn_size)
         self.lowerPanel = panelConfigure(self)
-
         # Display elements
         self.PanelOneSizer = wx.BoxSizer(wx.VERTICAL)
         self.PanelOneSizer.Add(self.scrollThumbnails, 1, wx.EXPAND, 0)
         self.PanelOneSizer.Add(self.lowerPanel, 0, wx.EXPAND, 0)
         self.SetSizer(self.PanelOneSizer)
+        debugprt(self,currentframe(),pgm,'end   ')
 
+# %%                                                         Stop Playing
     def StopPlaying(self):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         self.lowerPanel.onStop()
 
-    # Checks for changes to be made to UI and implements them.
+        debugprt(self,currentframe(),pgm,'end   ')
+
+# %%                                                            Refresh   
     def onRefresh(self):
+        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        """ 
+        Checks for changes to be made to UI and implements them.
+        """
         # Check number of monitors
         if self.monitor_number != options.GetOption("Monitors"):
             self.scrollThumbnails.updateMonitors(self.monitor_number, options.GetOption("Monitors"))

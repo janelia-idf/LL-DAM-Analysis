@@ -25,6 +25,25 @@ from inspect import currentframe
 import wx, os
 from pvg_common import options
 
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Global Variables
+# get root dir name for all file operations
+#
+import ctypes.wintypes
+CSIDL_PERSONAL = 5       # My Documents
+SHGFP_TYPE_CURRENT = 0   # Get current, not default value
+buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)  # get user document folder path
+ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
+root_dir = buf.value + '\\GitHub\\LL-DAM-Analysis\\'
+
+
+data_dir = root_dir + 'Data\\Working_files\\'
+DEFAULT_CONFIG = 'pysolo_video.cfg'
+pgm = 'pvg_options.py'
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 class pvg_OptionsPanel(wx.Dialog):
     def __init__(self, parent):
         # Initial dialog setup
