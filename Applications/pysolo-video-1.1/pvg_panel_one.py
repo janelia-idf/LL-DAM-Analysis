@@ -44,10 +44,10 @@ class thumbnailPanel(previewPanel):
     """
     A small preview Panel to be used as thumbnail
     """
-    def __init__( self, parent, monitor_number, thumbnailSize=(320,240) ):           
+    def __init__( self, parent, monitor_number, ThumbnailSize=(320,240) ):           
         debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
 
-        previewPanel.__init__(self, parent, size=thumbnailSize, keymode=False)
+        previewPanel.__init__(self, parent, size=ThumbnailSize, keymode=False)
 
         self.number = int(monitor_number)
         self.allowEditing = False
@@ -96,10 +96,10 @@ class panelGridView(wx.ScrolledWindow):
     """
     The scrollable grid of monitor thumbnails on panel one                      # number in monitors not always there
     """
-    def __init__(self, parent, gridSize, thumbnailSize=(320,240) ): 
+    def __init__(self, parent, gridSize, ThumbnailSize=(320,240) ): 
         debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         
-        # print('%%%%%% pvg_panel_one:  panelGridView:  line 102:  gridSize = ',gridSize)
+        print('$$$$$$ pvg_panel_one:  panelGridView:  line 102:  gridSize = ',gridSize)
 
 # %%                                                  Set up scrolling window
         wx.ScrolledWindow.__init__(self, parent, wx.ID_ANY, size=(-1,600))
@@ -107,14 +107,14 @@ class panelGridView(wx.ScrolledWindow):
         self.SetScrollRate(10, 10)
 
         self.parent = parent
-        self.thumbnailSize = thumbnailSize
+        self.ThumbnailSize = ThumbnailSize
         self.grid_mainSizer = wx.GridSizer(6,3,2,2)
 
 # %%                                              Populate the thumbnail grid
         self.previewPanels = []
         for i in range(0, int(gridSize)):
             self.previewPanels.append ( thumbnailPanel(self, monitor_number=i,
-                thumbnailSize=self.thumbnailSize) )
+                ThumbnailSize=self.ThumbnailSize) )
             self.grid_mainSizer.Add(self.previewPanels[i])
 
 # %%                                              Make elements visible in UI
@@ -148,7 +148,7 @@ class panelGridView(wx.ScrolledWindow):
                 i += 1
                 # Make a new thumbnail and add to list
                 self.previewPanels.append ( thumbnailPanel(self, monitor_number=old,
-                        thumbnailSize = self.thumbnailSize) )
+                        ThumbnailSize = self.ThumbnailSize) )
                 # Add thumbnail to layout
                 self.grid_mainSizer.Add(self.previewPanels[old])
                 self.grid_mainSizer.Layout()
@@ -169,11 +169,11 @@ class panelGridView(wx.ScrolledWindow):
 # %%                                                    Change Thumbnail size
     def updateThumbs(self, old, new):
         debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        self.thumbnailSize = new
-        # print('%%%%%% pvg_panel_one:  panelGridView:  line 173:  gridSize = ',gridSize)
+        self.ThumbnailSize = new
+        # print('$$$$$$ pvg_panel_one:  panelGridView:  line 173:  gridSize = ',gridSize)
 
         for i in range(0, self.gridSize):
-            self.previewPanels[i].SetThumbnailsize(new)
+            self.previewPanels[i].SetThumbnailSize(new)
             self.grid_mainSizer.Layout()
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Panel Configuration
@@ -598,9 +598,9 @@ class panelOne(wx.Panel):
 
         # Create a grid of thumbnails and a configure panel
 
-        # print('%%%%%% pvg_panel_one:  panelOne:  line 603:  gridSize = ',self.monitor_number)
+        print('$$$$$$ pvg_panel_one:  panelOne:  line 603:  gridSize = ',self.monitor_number)
 
-        self.scrollThumbnails = panelGridView(self, gridSize=self.monitor_number, thumbnailSize=self.tn_size)
+        self.scrollThumbnails = panelGridView(self, gridSize=self.monitor_number, ThumbnailSize=self.tn_size)
         self.lowerPanel = panelConfigure(self)
         # Display elements
         self.PanelOneSizer = wx.BoxSizer(wx.VERTICAL)

@@ -36,7 +36,7 @@ import pysolovideo as pv
 import ConfigParser, threading
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   "Global Variables"
-# ----------------------------------------------------------------------------
+
 DEFAULT_CONFIG = 'pysolo_video.cfg'
 
 # ----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CU
 
 root_dir = buf.value + '\\GitHub\\LL-DAM-Analysis\\'
 data_dir = root_dir + 'Data\\Working_files\\'
-# ----------------------------------------------------------------------------
+# %%                                                start & zero datetimes
 """
 dates for setting the correct date information for output
  - get datetime for adjusting from 31 Dec 1969 at 19:01:00
@@ -65,7 +65,7 @@ zero_dt = datetime.datetime.combine(d, t)
 """ - set date and time that video was actually recorded """                    #     <--- can we get this from the filename's datetime stamp?
 start_dt = datetime.datetime(2016,8,23,13,52,17)
 
-# ----------------------------------------------------------------------------
+# %%                                                screen height & width
 """
 Get screen_width & screen_height:   Screen resolution information
       Allows all object sizes to be sized relative to the display.
@@ -74,9 +74,8 @@ from win32api import GetSystemMetrics    # to get screen resolution
 screen_width = GetSystemMetrics(0)   # get the screen resolution of this monitor
 screen_height = GetSystemMetrics(1)
 
-# ----------------------------------------------------------------------------
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  MyConfig
 
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  MyConfig
 class myConfig():
     """
     Handles program configuration
@@ -109,16 +108,18 @@ class myConfig():
         self.Read(temporary)
         debugprt(self,currentframe(),pgm,'end   ')
 
+# %%                                                        New config file
     def New(self, filename):
-        debugprt(self,currentframe(),pgm,'begin     ')        #    .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.filename = filename
         self.Read()
         debugprt(self,currentframe(),pgm,'end   ')
 
+# %%                                                        Read config file
     def Read(self, temporary=False):
-        debugprt(self,currentframe(),pgm,'begin     ')        #    .currentframe().f_back.f_locals['self']                                    # debug
+        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         read the configuration file. Initiate one if does not exist
 
@@ -129,6 +130,9 @@ class myConfig():
         if temporary: filename = self.filename_temp
         else: filename = self.filename
 
+        
+        print('$$$$$$  pvg_common: myconfig: 133:  read:  filename = ',filename)            # debug
+        
         if os.path.exists(filename):
             self.config = ConfigParser.RawConfigParser()                                  
             self.config.read(filename)
@@ -138,7 +142,8 @@ class myConfig():
         debugprt(self,currentframe(),pgm,'end   ')
 
 
-    def Save(self, temporary=False, newfile=False, filename=None):
+# %%                                                        Save config file
+    def Save(self, temporary=False, newfile=False, filename=None):                  # saves options configuration
         debugprt(self,currentframe(),pgm,'begin     ')        
         """
         """
@@ -150,6 +155,8 @@ class myConfig():
             self.config = ConfigParser.RawConfigParser()                               
             self.config.add_section('Options')
 
+            print('$$$$$$ pvg_common: myconfig: save: 156: key = ',key, '\n\r self.defaultOptions = ',self.defaultOptions)
+            
             for key in self.defaultOptions:
                 self.config.set('Options', key, self.defaultOptions[key][0])
 
@@ -160,17 +167,19 @@ class myConfig():
         debugprt(self,currentframe(),pgm,'end   ')
 
 
+# %%                                                     Set Values in Config
     def SetValue(self, section, key, value):
         debugprt(self,currentframe(),pgm,'begin     ')                                # debug
         """
+        puts configuration values in config file
         """
-
         if not self.config.has_section(section):
             self.config.add_section(section)
 
         self.config.set(section, key, value)
         debugprt(self,currentframe(),pgm,'end   ')
 
+# %%                                                    Get values from config
     def GetValue(self, section, key):
         debugprt(self,currentframe(),pgm,'begin     ')                                # debug
         """
@@ -180,34 +189,35 @@ class myConfig():
         """
         r = self.config.get(section, key)
 
-        if type(r) == type(0) or type(r) == type(1.0): #native int and float
+        if type(r) == type(0) or type(r) == type(1.0):  # native int and float
             debugprt(self,currentframe(),pgm,'end   ')
             return r
-        elif type(r) == type(True): #native boolean
+        elif type(r) == type(True):                     # native boolean
             debugprt(self,currentframe(),pgm,'end   ')
             return r
         elif type(r) == type(''):
             r = r.split(',')
 
-        if len(r) == 2: #tuple
-            r = tuple([int(i) for i in r]) # tuple
+        if len(r) == 2:                                 # tuple
+            r = tuple([int(i) for i in r]) 
 
-        elif len(r) < 2: #string or integer
+        elif len(r) < 2:                                # string or integer
             try:
-                r = int(r[0]) #int as text
+                r = int(r[0])                           # int as text
             except:
                 if len(r) > 0:
-                    r = r[0] #string
+                    r = r[0]                            # string
                 else:
                     r = ""
 
         if r == 'False' or r == 'True':
-            r = (r == 'True') #bool
+            r = (r == 'True')                           # bool
 
         debugprt(self,currentframe(),pgm,'end   ')
         return r
 
 
+# %%                                   Get value from options section of config
     def GetOption(self, key):
         debugprt(self,currentframe(),pgm,'begin     ')        
         """
@@ -216,6 +226,8 @@ class myConfig():
         debugprt(self,currentframe(),pgm,'end   ')
         return a
 
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Acquire Object        
 class acquireObject():
     def __init__(self, monitor, source, resolution, mask_file, track, track_type, dataFolder):
         debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
@@ -232,17 +244,24 @@ class acquireObject():
         self.mon.setSource(source, resolution)
         self.mon.setTracking(True, track_type, mask_file, outputFile)
 
-        if self.verbose: print ( "Verbose - Setting monitor %s with source %s and mask %s. Output to %s " % (monitor, source, os.path.split(mask_file)[1], os.path.split(outputFile)[1] ) )
+        if self.verbose: print("$$$$$$ Verbose 247 - Monitor %s, track %s, track type %d, \n source %s, \n mask %s,  \n output file %s  "
+                               % (monitor, track, track_type,
+                                  source,
+                                  mask_file,
+                                  outputFile) )
         debugprt(self,currentframe(),pgm,'end   ')
         
+# %%                                                        Run
     def run(self, kbdint=False):
         debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
+        checks to see if program should keep going.
         """
         while self.keepGoing:
             self.mon.GetImage()
         debugprt(self,currentframe(),pgm,'end   ')
 
+# %%                                                        Start
     def start(self):
         debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
@@ -251,17 +270,17 @@ class acquireObject():
         self.run()
         debugprt(self,currentframe(),pgm,'end   ')
 
+# %%                                                            Halt
     def halt(self):
         debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.keepGoing = False
-        if self.verbose: print ( "Verbose: Stopping capture" )
+        if self.verbose: print ( "$$$$$$ Verbose: Stopping capture" )
         debugprt(self,currentframe(),pgm,'end   ')
 
 
-
-
+        
 class acquireThread(threading.Thread):
 
     def __init__(self, monitor, source, resolution, mask_file, track, track_type, dataFolder):
@@ -279,7 +298,11 @@ class acquireThread(threading.Thread):
         self.mon.setSource(source, resolution)
         self.mon.setTracking(True, track_type, mask_file, outputFile)
 
-#        if self.verbose: print ( "Verbose2: Setting monitor %s with source %s and mask %s. Output to %s " % str(monitor), source, mask_file, outputFile)
+        if self.verbose: print("$$$$$$ Verbose 301 - Monitor %s, track %s, track type %d, \n source %s, \n mask %s,  \n output file %s  "
+                               % (monitor, track, track_type,
+                                  source,
+                                  mask_file,
+                                  outputFile) )
         debugprt(self,currentframe(),pgm,'end   ')
         
     def run(self, kbdint=False):
@@ -313,7 +336,7 @@ class acquireThread(threading.Thread):
         """
         """
         self.keepGoing = False
-        if self.verbose: print ( "Verbose3: Stopping capture" )
+        if self.verbose: print ( "$$$$$$ Verbose 339: Stopping capture" )
         debugprt(self,currentframe(),pgm,'end   ')
 
 class pvg_config(myConfig):
@@ -649,8 +672,8 @@ class previewPanel(wx.Panel):
         """
         if img:
             depth, channels = img.depth, img.nChannels
-            print('common, ln 527, cv.cv_maketype')
             datatype = cv.CV_MAKETYPE(depth, channels)
+            print('$$$$$$ common, paintimg, ln 675, datatype= ',datatype)
 
             frame = cv.CreateMat(self.size[1], self.size[0], datatype)
             cv.Resize(img, frame)

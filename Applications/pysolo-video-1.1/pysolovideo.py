@@ -1776,7 +1776,7 @@ class Monitor(object):
         
         #track each ROI
         for fly_number, ROI in enumerate( self.arena.ROIStoRect() ):
-#            print('for ' + str(fly_number))                                    # debug
+            print('$$$$$$ for fly ' + str(fly_number))                                    # debug
             (x1,y1), (x2,y2) = ROI
             cv.SetImageROI(ROIwrk, (x1,y1,x2-x1,y2-y1) )
             cv.SetImageROI(frame, (x1,y1,x2-x1,y2-y1) )
@@ -1788,8 +1788,7 @@ class Monitor(object):
             fly_coords = None
 
             while contour:
-#                # Draw rectangles
-#                print('while contour')                                            # debug
+                # Draw rectangles
                 bound_rect = cv.BoundingRect(list(contour))
                 contour = contour.h_next()
                 if track_one and not contour: # this will make sure we are tracking only the biggest rectangle
@@ -1804,6 +1803,7 @@ class Monitor(object):
 
             # for each frame adds fly coordinates to all ROIS. Also do some filtering to remove false positives
             fly_coords, distance = self.arena.addFlyCoords(fly_number, fly_coords)
+            print('$$$$$$  fly_coords = ', fly_coords, 'distance = ',distance)                                            # debug
 
             frame = self.__drawCross(frame, fly_coords)
             if drawPath: frame = self.__drawLastSteps(frame, fly_number, steps=5)

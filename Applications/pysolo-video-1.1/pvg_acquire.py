@@ -87,11 +87,11 @@ class customDataTable(gridlib.PyGridTableBase):
         debugprt(self,currentframe(),pgm,'begin     ')                                           # debug
  
         try:
-            print('%%%%%%%%%%%%%%%%%%%  acquire customdatatable getnumberrows returns: ',len(self.data))
+            print('$$$$$$  acquire customdatatable getnumberrows returns: ',len(self.data))
             debugprt(self,currentframe(),pgm,'end   ')
             return len(self.data)
         except:
-            print('%%%%%%%%%%%%%%%%%%%  acquire customdatatable getnumberrows returns: ',+str(0))
+            print('$$$$$$  acquire customdatatable getnumberrows returns: ',+str(0))
             debugprt(self,currentframe(),pgm,'end   ')
             return 0
 
@@ -224,7 +224,7 @@ class customDataTable(gridlib.PyGridTableBase):
         row can be an array of values or a 2-dimenstional array of rows and values
         """
         rows = self.cleanFromMask(rows)
-        print('%%%%%%%%%%%%%%%%%%%%%  rows = ',rows)
+        print('$$$$$$  rows = ',rows)
 
         if type(rows[0]) == list:
             n_rows = len (rows)
@@ -238,7 +238,7 @@ class customDataTable(gridlib.PyGridTableBase):
                 gridlib.GRIDTABLE_NOTIFY_ROWS_APPENDED,
                 n_rows         ))
 
-        print('%%%%%%%%%%%%%%%%%%%%%%%%% rows appended')
+        print('$$$$$$ rows appended')
         debugprt(self,currentframe(),pgm,'end   ')
 
     def RemRow (self, rows):
@@ -314,7 +314,7 @@ class customDataTable(gridlib.PyGridTableBase):
         Called when the grid needs to display labels
         """
         a = self.colLabels[col]
-        print('%%%%%%%  colLabels[col] = ',self.colLabels[col])
+        print('$$$$$$  colLabels[col] = ',self.colLabels[col])
         debugprt(self,currentframe(),pgm,'end   ')
         return self.colLabels[col]
 
@@ -344,11 +344,11 @@ class customDataTable(gridlib.PyGridTableBase):
         colType = self.dataTypes[col].split(':')[0]
         if typeName == colType:
             debugprt(self,currentframe(),pgm,'end   ')
-            print('%%%% CamGetValueAs returns: True')
+            print('$$$$$$ CamGetValueAs returns: True')
             return True
         else:
             debugprt(self,currentframe(),pgm,'end   ')
-            print('%%%% CamGetValueAs returns: False')
+            print('$$$$$$ CamGetValueAs returns: False')
             return False
 
     def CanSetValueAs(self, row, col, typeName):
@@ -513,7 +513,7 @@ class CustTableGrid(gridlib.Grid):
 
         a = all_data
         debugprt(self,currentframe(),pgm,'end   ')
-        print('%%%%%  GetData returns: ',a)
+        print('$$$$$$  GetData returns: ',a)
         return a
 
     def SetData(self, *kargs, **kwargs):
@@ -851,12 +851,12 @@ class pvg_AcquirePanel(wx.Panel):
         wx.Panel.__init__(self, parent, wx.ID_ANY)
         self.parent = parent
 
-        print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  changing to dir: '+data_dir)                         # debug
+        print('$$$$$$  changing to dir: '+data_dir)                         # debug
         os.chdir(data_dir)                    # debug
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         self.FBconfig = FileBrowseButton(self, -1, labelText='Pick file', size=(300,-1), changeCallback = self.configCallback)
         
-        print('%%%%%%%%%%%%%%%%%%%%%%%%%%   file browse button created')
+        print('$$$$$$   file browse button created')
         colLabels = ['Monitor', 'Source', 'Mask', 'Output', 'Track type', 'Track']
 
         dataTypes = [gridlib.GRID_VALUE_NUMBER,
@@ -869,7 +869,7 @@ class pvg_AcquirePanel(wx.Panel):
 
         self.grid = CustTableGrid(self, colLabels, dataTypes, enableEdit=True, useMenu=False)
 
-        print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  grid created by custtablegrid')
+        print('$$$$$$  grid created by custtablegrid')
         self.grid.Clear()
 
         btnSizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -879,7 +879,7 @@ class pvg_AcquirePanel(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.onStop, self.stopBtn)
         self.Bind(wx.EVT_BUTTON, self.onStart, self.startBtn)
 
-        print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% start and stop buttons are bound')
+        print('$$$$$$ start and stop buttons are bound')
         btnSizer.Add (self.startBtn, 0, wx.ALL, 5)
         btnSizer.Add (self.stopBtn, 0, wx.ALL, 5)
 
@@ -889,7 +889,7 @@ class pvg_AcquirePanel(wx.Panel):
         mainSizer.Add(btnSizer, 0, wx.ALL, 5)
         self.SetSizer(mainSizer)
 
-        print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sizer completed')
+        print('$$$$$$ sizer completed')
         debugprt(self,currentframe(),pgm,'end   ')   #
 
     def configCallback(self, event):
@@ -904,13 +904,13 @@ class pvg_AcquirePanel(wx.Panel):
         debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
-        print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  filename = ',filename)
+        print('$$$$$$  filename = ',filename)
         self.options = pvg_config(filename)
-        print(" options = ",self.options)
+        print("$$$$$$ options = ",self.options)
         self.updateTable()
-        print(" table updated")
+        print("$$$$$$ table updated")
         self.parent.sb.SetStatusText('Loaded file %s' % filename)
-        print("status bar message changed")
+        print("$$$$$$ status bar message changed")
         debugprt(self,currentframe(),pgm,'end   ')   #
         return True
 
@@ -946,7 +946,7 @@ class pvg_AcquirePanel(wx.Panel):
                                                 m['track'], 
                                                 m['track_type'], 
                                                 m['dataFolder']) )
-#            print(mn, self.monitors[mn], m)                                                 # debug
+            print('$$$$$$ mm = ', mn, '\n options = ', self.monitors[mn], '\n m = ', m)                                                 # debug
         debugprt(self,currentframe(),pgm,'end   ')   #
             
     def isToTrack(self, monitor):
@@ -955,47 +955,46 @@ class pvg_AcquirePanel(wx.Panel):
         """
         d = self.grid.GetData()
 
-        print('%%%%%%%%%%%%%%%  isToTrack  monitor = ',monitor)                                                              # debug
+        print('$$$$$$  isToTrack  monitor = ',monitor)                                                              # debug
         for row in d:
-            print ('%%%%%%%%%%%% isToTrack row in d = ',row)                                                           # debug
-            print('%%%%%%%%%%%%%%  istotrack row[0] = ',row[0])
+            print ('$$$$$$ isToTrack row in d = ',row)                                                           # debug
+            print('$$$$$$  istotrack row[0] = ',row[0])
             if monitor == row[0]: 
-                print('%%%%%%%%%%%%%%%%%%%% isToTrack row[-1] = ',row[-1])
+                print('$$$$$$ isToTrack row[-1] = ',row[-1])
                 debugprt(self,currentframe(),pgm,'end   ')   #
                 return row[-1]
         debugprt(self,currentframe(),pgm,'end   ')   #
 
     def onStart(self, event=None):
         debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        # onstart')                                             # debug
         """
         """
-        print('%%%%%%%%%%%  Start button clicked')
+        print('$$$$$$  Start button clicked')
         self.acquiring = True
         self.stopBtn.Enable(self.acquiring)
         self.startBtn.Enable(not self.acquiring)
         c = 0
 
-        print('$$$$$$$$$$$  onStart monitors:  ',self.monitors)
+        print('$$$$$$  onStart monitors:  ',self.monitors)
         for mon in self.monitors:
-            print('\n c is ',c)
-            print('\n       mon:   ',mon)
+            print('\n $$$$$$ c is ',c)
+            print('\n $$$$$$      mon:   ',mon)
             if self.isToTrack(mon):
 
-                print('\n            mon istotrack is true')
+                print('\n$$$$$$            mon istotrack is true')
                 self.monitors[mon].doTrack()
 
-                print('\n tracking done')
+                print('\n $$$$$$ tracking done')
                 c+=1
 
-        self.parent.sb.SetStatusText('Tracking %s Monitors' % (str(int(c)+1)))    # compensate for diff btw computer & human indexing
+        self.parent.sb.SetStatusText('Tracking %s Monitors' % (str(int(c))))    
         debugprt(self,currentframe(),pgm,'end   ')   #
     
     def onStop(self, event):
         debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
-        print('%%%%%%%%%%%%%%%%%%%%%%%   stop clicked')
+        print('$$$$$$   stop clicked')
         self.acquiring = False
         self.stopBtn.Enable(self.acquiring)
         self.startBtn.Enable(not self.acquiring)
@@ -1030,7 +1029,7 @@ class acquireFrame(wx.Frame):
                 pDir = os.environ['HOME']
                 filename = os.path.join (pDir, DEFAULT_CONFIG)
                 filename = DEFAULT_CONFIG
-        print('%%%%%%%%%%%%%%%%%%%%%   loadconfig  filename = ',filename)
+        print('$$$$$$   loadconfig  filename = ',filename)
         self.acq_panel.loadFile(filename)
         debugprt(self,currentframe(),pgm,'end   ')   #
         return True
@@ -1052,7 +1051,7 @@ if __name__ == '__main__':
     parser.add_option('--nogui', action="store_false", default=True, dest='showgui', help="Do not show the graphical interface")
 
     (options, args) = parser.parse_args()
-    print('main')
+    print('$$$$$$ main')
 #    app=wx.PySimpleApp(0)
     app=wx.App(0)
     frame_acq = acquireFrame(None, -1, "")           # Create the main window.
@@ -1061,7 +1060,7 @@ if __name__ == '__main__':
 
 #    configfile = options.config_file or DEFAULT_CONFIG
     configfile = DEFAULT_CONFIG
-    print(configfile)    
+    print('$$$$$$ configfile = ',configfile)    
     cfgloaded = frame_acq.loadConfig(configfile)
 
     if cfgloaded and options.acquire:
