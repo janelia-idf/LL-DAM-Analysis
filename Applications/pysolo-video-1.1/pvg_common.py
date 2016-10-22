@@ -89,8 +89,6 @@ class myConfig():
         else: filename = self.filename
 
         
-        print('$$$$$$  pvg_common: myconfig: 133:  read:  filename = ',filename)            # debug
-        
         if os.path.exists(filename):
             self.config = ConfigParser.RawConfigParser()                                  
             self.config.read(filename)
@@ -200,7 +198,7 @@ class acquireObject():
         self.mon.setSource(source, resolution)
         self.mon.setTracking(True, track_type, mask_file, outputFile)
 
-        if self.verbose: print("$$$$$$ Verbose 247 - Monitor %s, track %s, track type %d, \n source %s, \n mask %s,  \n output file %s  "
+        if self.verbose: print("Verbose 247 - Monitor %s, track %s, track type %d, \n source %s, \n mask %s,  \n output file %s  "
                                % (monitor, track, track_type,
                                   source,
                                   mask_file,
@@ -232,7 +230,7 @@ class acquireObject():
         """
         """
         self.keepGoing = False
-        if self.verbose: print ( "$$$$$$ Verbose: Stopping capture" )
+        if self.verbose: print ( "Verbose: Stopping capture" )
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 
@@ -254,7 +252,7 @@ class acquireThread(threading.Thread):
         self.mon.setSource(source, resolution)
         self.mon.setTracking(True, track_type, mask_file, outputFile)
 
-        if self.verbose: print("$$$$$$ Verbose 301 - Monitor %s, track %s, track type %d, \n source %s, \n mask %s,  \n output file %s  "
+        if self.verbose: print("Verbose 301 - Monitor %s, track %s, track type %d, \n source %s, \n mask %s,  \n output file %s  "
                                % (monitor, track, track_type,
                                   source,
                                   mask_file,
@@ -292,7 +290,7 @@ class acquireThread(threading.Thread):
         """
         """
         self.keepGoing = False
-        if self.verbose: print ( "$$$$$$ Verbose 339: Stopping capture" )
+        if self.verbose: print ( "Verbose 339: Stopping capture" )
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 class pvg_config(myConfig):
@@ -629,7 +627,6 @@ class previewPanel(wx.Panel):
         if img:
             depth, channels = img.depth, img.nChannels
             datatype = cv.CV_MAKETYPE(depth, channels)
-            print('$$$$$$ common, paintimg, ln 675, datatype= ',datatype)
 
             frame = cv.CreateMat(self.size[1], self.size[0], datatype)
             cv.Resize(img, frame)

@@ -80,7 +80,7 @@ pySoloVideoVersion ='dev'
 MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug','Sep', 'Oct', 'Nov', 'Dec']
 
 def getCameraCount():
-    # debugprt(currentframe(),pgm,'begin          ')    
+    if call_tracking:  debugprt(currentframe(),pgm,'begin          ')    
     """
     FIX THIS
     """
@@ -93,7 +93,7 @@ def getCameraCount():
             n += 1
         except:
             Cameras = False
-    # debugprt(self,currentframe(),pgm,'end   ')
+    if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
     return n
 
 class Cam:
@@ -102,7 +102,7 @@ class Cam:
     """
 
     def __addText__(self, frame, text = None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Add current time as stamp to the image
         """
@@ -121,32 +121,32 @@ class Cam:
 
         cv.PutText(frame, text, (x, y), font, textcolor)
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return frame
 
     def getResolution(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Returns frame resolution as tuple (w,h)
         """
         a = self.resolution
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def saveSnapshot(self, filename, quality=90, timestamp=False):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         img = self.getImage(timestamp, imgType)
         cv.SaveImage(filename, img) #with opencv
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def close(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         pass
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
 
 class realCam(Cam):
@@ -155,41 +155,41 @@ class realCam(Cam):
     camera is handled through opencv and images can be transformed to PIL
     """
     def __init__(self, devnum=0, resolution=(640,480)):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
 
         self.devnum=devnum
         self.resolution = resolution
         self.scale = False
 
         self.__initCamera()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def __initCamera(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.camera = cv.CaptureFromCAM(self.devnum)
         self.setResolution (self.resolution)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def getFrameTime(self):
-        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         a = time.time() #current time epoch in secs.ms
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def addTimeStamp(self, img):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         a = self.__addText__(img)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def setResolution(self, (x, y)):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Set resolution of the camera we are acquiring from
         """
@@ -199,22 +199,22 @@ class realCam(Cam):
         cv.SetCaptureProperty(self.camera, cv.CV_CAP_PROP_FRAME_HEIGHT, y)
         x1, y1 = self.getResolution()
         self.scale = ( (x, y) != (x1, y1) ) # if the camera does not support resolution, we need to scale the image
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
     
     def getResolution(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Return real resolution
         """
         x1 = cv.GetCaptureProperty(self.camera, cv.CV_CAP_PROP_FRAME_WIDTH)
         y1 = cv.GetCaptureProperty(self.camera, cv.CV_CAP_PROP_FRAME_HEIGHT)
         a = (int(x1), int(y1))
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
 
     def getImage( self, timestamp=False):
-        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         class realcam
         Returns frame
@@ -233,26 +233,26 @@ class realCam(Cam):
         if self.scale:
             newsize = cv.CreateImage(self.resolution , cv.IPL_DEPTH_8U, 3)
             if type(frame) != type(newsize):
-                # debugprt(self,currentframe(),pgm,'end   ')
+                if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
                 return newsize
             cv.Resize(frame, newsize)
             frame = newsize
 
         if timestamp: frame = self.__addText__(frame)
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return frame
 
     def isLastFrame(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Added for compatibility with other cams
         """
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return False
 
     def close(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Closes the connection
         """
@@ -260,7 +260,7 @@ class realCam(Cam):
 
         del(self.camera) #cv.ReleaseCapture(self.camera)
         self.camera = None
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
 class virtualCamMovie(Cam):
     """
@@ -268,7 +268,7 @@ class virtualCamMovie(Cam):
     Images are handled through opencv
     """
     def __init__(self, path, step = None, start = None, end = None, loop=False, resolution=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Specifies some of the parameters for working with the movie:
 
@@ -312,10 +312,10 @@ class virtualCamMovie(Cam):
 
         self.blackFrame = cv.CreateImage(self.resolution , cv.IPL_DEPTH_8U, 3)
         cv.Zero(self.blackFrame)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def getFrameTime(self, asString=None):
-        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Return the time of the frame
         """
@@ -325,14 +325,14 @@ class virtualCamMovie(Cam):
 
         if asString:
             frameTime = str( datetime.timedelta(seconds=frameTime / 100.0) )
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return '%s - %s/%s' % (frameTime, self.currentFrame, self.totalFrames) #time.asctime(time.localtime(fileTime))
         else:
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return frameTime / 1000.0 #returning seconds compatibility reasons
 
     def getImage(self, timestamp=False):
-        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         class virtualcammovie
         Returns frame
@@ -364,44 +364,44 @@ class virtualCamMovie(Cam):
             text = self.getFrameTime(asString=True)
             im = self.__addText__(im, text)
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return im
 
     def setResolution(self, w, h):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Changes the output resolution
         """
         self.resolution = (w, h)
         self.scale = (self.resolution != self.in_resolution)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def getTotalFrames(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Returns total number of frames
         Be aware of this bug
         https://code.ros.org/trac/opencv/ticket/851
         """
         a = cv.GetCaptureProperty( self.capture , cv.CV_CAP_PROP_FRAME_COUNT )
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def isLastFrame(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Are we processing the last frame in the movie?
         """
 
         if ( self.currentFrame >= self.totalFrames ) and not self.loop:
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return True
         elif ( self.currentFrame >= self.totalFrames ) and self.loop:
             self.currentFrame = self.start
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return False
         else:
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return False
 
 
@@ -411,7 +411,7 @@ class virtualCamFrames(Cam):
     Images are handled through PIL
     """
     def __init__(self, path, resolution = None, step = None, start = None, end = None, loop = False):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         self.path = path
         self.fileList = self.__populateList__(start, end, step)
         self.totalFrames = len(self.fileList)
@@ -426,10 +426,10 @@ class virtualCamFrames(Cam):
         if not resolution: resolution = self.in_resolution
         self.resolution = resolution
         self.scale = (self.in_resolution != self.resolution)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def getFrameTime(self, asString=None):
-        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Return the time of most recent content modification of the file fname
         """
@@ -438,21 +438,21 @@ class virtualCamFrames(Cam):
 
         manual = False
         if manual:
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return self.currentFrame
 
         if fname and asString:
             fileTime = os.stat(fname)[-2]
             a = time.asctime(time.localtime(fileTime))
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return a
         elif fname and not asString:
             fileTime = os.stat(fname)[-2]
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return fileTime
 
     def __populateList__(self, start, end, step):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Populate the file list
         """
@@ -466,12 +466,12 @@ class virtualCamFrames(Cam):
 
         fileList.sort()
         a = fileList[start:end:step]
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
 
     def getImage(self, timestamp=False):
-        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         class virtualCamFrames
         Returns frame
@@ -500,45 +500,45 @@ class virtualCamFrames(Cam):
         if timestamp:
             im = self.__addText__(im, self.last_time)
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return im
 
     def getTotalFrames(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Return the total number of frames
         """
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return self.totalFrames
 
     def isLastFrame(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Are we processing the last frame in the folder?
         """
 
         if (self.currentFrame == self.totalFrames) and not self.loop:
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return True
         elif (self.currentFrame == self.totalFrames) and self.loop:
             self.currentFrame = 0
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return False
         else:
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return False
 
     def setResolution(self, w, h):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Changes the output resolution
         """
         self.resolution = (w, h)
         self.scale = (self.resolution != self.in_resolution)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def compressAllImages(self, compression=90, resolution=(960,720)):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         FIX THIS: is this needed?
         Load all images one by one and save them in a new folder
@@ -558,11 +558,11 @@ class virtualCamFrames(Cam):
                 f_out = os.path.join(out_path, img)
                 im.save (f_out, quality=compression)
 
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return True
 
         else:
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return False
 
 class Arena():
@@ -575,8 +575,7 @@ class Arena():
     The class arena takes care of the flies
     """
     def __init__(self, parent):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena __init__')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
 
         self.monitor = parent
 
@@ -607,10 +606,10 @@ class Arena():
         self.count_seconds = 0
         self.__n = 0
         self.outputFile = None
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def __relativeBeams(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Return the coordinates of the beam
         relative to the ROI to which they belong
@@ -625,12 +624,11 @@ class Arena():
 
                 newbeams.append( ( (bx0-rx, by0-ry), (bx1-rx, by1-ry) ) )
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return newbeams
 
     def __ROItoRect(self, coords):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-#        print('        called Arena __roitorect')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Used internally
         Converts a ROI (a tuple of four points coordinates) into
@@ -642,23 +640,21 @@ class Arena():
         uy = min([y1,y2,y3,y4])
         ly = max([y1,y2,y3,y4])
 #        print('will return: ', ( (lx,uy), (rx, ly) ))                               # debug
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return ( (lx,uy), (rx, ly) )
 
     def __distance( self, (x1, y1), (x2, y2) ):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('   Arena __distance')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Calculate the distance between two cartesian points
         """
 #        print('will return: ')
 #        print(np.sqrt((x2-x1)**2 + (y2-y1)**2))                                                  # debug
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return np.sqrt((x2-x1)**2 + (y2-y1)**2)
 
     def __getMidline (self, coords):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena __getmidline')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Return the position of each ROI's midline
         Will automatically determine the orientation of the vial
@@ -669,16 +665,15 @@ class Arena():
 
         if horizontal:
             xm = x1 + (x2 - x1)/2
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return (xm, y1), (xm, y2)
         else:
             ym = y1 + (y2 - y1)/2
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return (x1, ym), (x2, ym)
 
     def calibrate(self, p1, p2, cm=1):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena calibrate')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         The distance between p1 and p2 will be set to be X cm
         (default 1 cm)
@@ -688,27 +683,26 @@ class Arena():
 
         self.ratio = dpx / cm
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return self.ratio
 
     def pxToCm(self, distance_px):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena __pxtocm')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Converts distance from pixels to cm
         """
         print(distance_px / self.ratio)                                                # debug
 
         if self.ratio:
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return distance_px / self.ratio
         else:
             print "You need to calibrate the mask first!"
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return distance_px
 
     def addROI(self, coords, n_flies):
-        # debugprt(self,currentframe(),pgm,'begin     ')        #      
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')        #      
         """
         Add a new ROI to the arena
         """
@@ -719,11 +713,10 @@ class Arena():
         #these increase by one on the fly axis
         self.flyDataBuffer = np.append( self.flyDataBuffer, [self.firstPosition], axis=0) # ( flies, 1, (x,y) )
         self.flyDataMin = np.append (self.flyDataMin, [self.__fa.copy()], axis=0) # ( flies, self.period, (x,y) )
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         
     def getROI(self, n):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena getroi')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Returns the coordinates of the nth crop area
         """
@@ -731,12 +724,11 @@ class Arena():
             coords = []
         else:
             coords = self.ROIS[n]
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return coords
 
     def delROI(self, n):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena delroi')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         removes the nth crop area from the list
         if n -1, remove all
@@ -750,19 +742,18 @@ class Arena():
 
         elif n < 0:
             self.ROIS = []
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def getROInumber(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena getroinumber')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Return the number of current active ROIS
         """
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return len(self.ROIS)
 
     def saveROIS(self, filename):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Save the current crop data to a file
         """
@@ -771,11 +762,10 @@ class Arena():
         cPickle.dump(self.points_to_track, cf)
 
         cf.close()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def loadROIS(self, filename):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena loadrois')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Load the crop data from a file
         """
@@ -792,15 +782,14 @@ class Arena():
             for coords in self.ROIS:
                 self.beams.append ( self.__getMidline (coords)  )
 
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return True
         except:
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return False
 
     def resizeROIS(self, origSize, newSize):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena resizerois')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Resize the mask to new size so that it would properly fit
         resized images
@@ -818,12 +807,11 @@ class Arena():
                 nROI.append ( (pt[0]*xp, pt[1]*yp) )
             newROIS.append ( ROI )
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return newROIS
 
     def point_in_poly(self, pt, poly):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena point_in_poly')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Determine if a point is inside a given polygon or not
         Polygon is a list of (x,y) pairs. This fuction
@@ -851,12 +839,11 @@ class Arena():
                             inside = not inside
             p1x,p1y = p2x,p2y
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return inside
 
     def isPointInROI(self, pt):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena ispointinroi')                                                # debug
+        if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Check if a given point falls whithin one of the ROI
         Returns the ROI number or else returns -1
@@ -866,12 +853,11 @@ class Arena():
             if self.point_in_poly(pt, ROI):
                 return self.ROIS.index(ROI)
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return -1
 
     def ROIStoRect(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena roistorect')                                                # debug
+        if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         translate ROI (list containing for points a tuples)
         into Rect (list containing two points as tuples)
@@ -880,20 +866,20 @@ class Arena():
         for ROI in self.ROIS:
             newROIS. append ( self.__ROItoRect(ROI) )
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return newROIS
 
     def getLastSteps(self, fly, steps):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         c = self.count_seconds
         a = [(x,y) for [x,y] in self.flyDataMin[fly][c-steps:c].tolist()] + [tuple(self.flyDataBuffer[fly].flatten())]
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def addFlyCoords(self, count, fly):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Add the provided coordinates to the existing list
         count   int     the fly number in the arena
@@ -918,12 +904,10 @@ class Arena():
         #This way the shape of flyDataBuffer is always (n, (x,y)) and once a second we just have to add the (x,y)
         #values to flyDataMin, whose shape is (n, 60, (x,y))
         self.flyDataBuffer[count] = np.append( self.flyDataBuffer[count], fly, axis=0 ).reshape(-1,2).mean(axis=0)
-        if count == 0: print('------------------------------------------------------------')
-        # debugprt(self,currentframe(),pgm,'end   ')
         return fly, distance
 
     def compactSeconds(self, FPS, delta):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Compact the frames collected in the last second
         by averaging the value of the coordinates
@@ -950,11 +934,10 @@ class Arena():
 
         self.count_seconds += delta
         self.__n += 1
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def writeActivity(self, fps=0, extend=True):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena writeactivity')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Write the activity to file
         Kind of motion depends on user settings
@@ -997,7 +980,7 @@ class Arena():
         elif self.trackType == 2:
             activity = self.calculatePosition()
 
-        print('activity = ', activity)                                           # debug
+        print('$$$$$$ pysolovideo: writeactivity: 995:  activity = ', activity)                                           # debug
 
         # Expand the readings to 32 flies for compatibility reasons with trikinetics
         flies = len ( activity[0].split('\t') )
@@ -1013,21 +996,18 @@ class Arena():
                                      monitor, unused, light)
             row += row_header + line + extension + '\n'
 
-        print('%%%%%%%%%%%%%%%%%pysolovideo 994:  self.outputfile = ',self.outputFile)
         if self.outputFile:
-            print('outputfile: ',self.outputFile)
             fh = open(self.outputFile, 'a')
-            print('%%%%%%%%%%%%%%  output = ',row)                                                # debug
+            print('$$$$$$ pysolovideo: writeactivity: 1014:  row = ',row)                                                # debug
             fh.write(row)
             fh.close()
             
             
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
 
     def calculateDistances(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-#        print('        called Arena calculatedistances')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Motion is calculated as distance in px per minutes
         """
@@ -1042,18 +1022,18 @@ class Arena():
         y1 = fs[:,:,1:]
 
         d = self.__distance((x,y),(x1,y1))
+
         #we sum everything BUT the last bit of information otherwise we have data duplication
         values = d[:,:-1,:].sum(axis=1).reshape(-1)
 
         activity = '\t'.join( ['%s' % int(v) for v in values] )
-        print('activity = ', activity, 'values = ',values)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        print('$$$$$$ pysolovideo: writeactivity: 1042: activity = ', activity, 'values = ',values)
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return activity
 
 
     def calculateVBM(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Arena calculatevbm')                                                # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Motion is calculated as virtual beam crossing
         Detects automatically beam orientation (vertical vs horizontal)
@@ -1079,11 +1059,11 @@ class Arena():
             values .append ( crossed.sum() )
 
         activity = '\t'.join( [str(v) for v in values] )
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return activity
 
     def calculatePosition(self, resolution=1):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Simply write out position of the fly at every time interval, as
         decided by "resolution" (seconds)
@@ -1098,9 +1078,8 @@ class Arena():
         for fd in a:
             onerow = '\t'.join( ['%s,%s' % (x,y) for (x,y) in fd] )
             activity.append(onerow)
-#        print('        called Arena calculateposition, which will return: ', activity)                               # debug                                              # debug
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return activity
 
 class Monitor(object):
@@ -1112,8 +1091,7 @@ class Monitor(object):
     """
 
     def __init__(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor __init__')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         A Monitor contains a cam, which can be either virtual or real.
         Everything is handled through openCV
@@ -1139,11 +1117,10 @@ class Monitor(object):
 
         self.drawPath = False
         self.isSDMonitor = False
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def __drawBeam(self, img, bm, color=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor __drawbeam')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Draw the Beam using given coordinates
         """
@@ -1153,11 +1130,11 @@ class Monitor(object):
 
         cv.Line(img, bm[0], bm[1], color, width, line_type, 0)
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return img
 
     def __drawFPS(self, frame):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
 
@@ -1174,13 +1151,12 @@ class Monitor(object):
 
         cv.PutText(frame, text, (x, y), font, textcolor)
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return frame
 
 
     def __drawROI(self, img, ROI, color=None, ROInum=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor __drawroi')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Draw ROI on img using given coordinates
         ROI is a tuple of 4 tuples ( (x1, y1), (x2, y2), (x3, y3), (x4, y4) )
@@ -1200,11 +1176,11 @@ class Monitor(object):
             text = "%02d" % ROInum
             cv.PutText(img, text, (x, y), font, textcolor)
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return img
 
     def __drawCross(self, img, pt, color=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Draw a cross around a point pt
         """
@@ -1221,11 +1197,11 @@ class Monitor(object):
         cv.Line(img, a, b, color, width, line_type, 0)
         cv.Line(img, c, d, color, width, line_type, 0)
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return img
 
     def __drawLastSteps(self, img, fly, steps=5, color=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Draw the last n (default 5) steps of the fly
         """
@@ -1238,14 +1214,13 @@ class Monitor(object):
 
         cv.PolyLine(img, [points], is_closed=0, color=color, thickness=1, lineType=line_type, shift=0)
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return img
 
 
 
     def __getChannel(self, img, channel='R'):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor __getchannel')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Return only the asked channel R,G or B
         """
@@ -1254,12 +1229,11 @@ class Monitor(object):
 
         channels = [None, None, None]
         cv.Split(img, channels[0], channels[1], channels[2], None)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return channels[cn]
 
     def __angle(self, pt1, pt2, pt0):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor __angle')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Return the angle between three points
         """
@@ -1267,21 +1241,19 @@ class Monitor(object):
         dy1 = pt1[1] - pt0[1]
         dx2 = pt2[0] - pt0[0]
         dy2 = pt2[1] - pt0[1]
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return (dx1*dx2 + dy1*dy2)/np.sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10)
 
     def close(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor close')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Closes stream
         """
         self.cam.close()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def CaptureFromCAM(self, devnum=0, resolution=(640,480), options=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor capturefromcam')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.isVirtualCam = False
@@ -1292,11 +1264,10 @@ class Monitor(object):
         self.cam.setResolution(resolution)
         self.resolution = self.cam.getResolution()
         self.numberOfFrames = 0
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def CaptureFromMovie(self, camera, resolution=None, options=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor capturefrommovie')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.isVirtualCam = True
@@ -1311,11 +1282,10 @@ class Monitor(object):
         self.cam = virtualCamMovie(path=camera, resolution = resolution)
         self.resolution = self.cam.getResolution()
         self.numberOfFrames = self.cam.getTotalFrames()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def CaptureFromFrames(self, camera, resolution=None, options=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor capturefromframes')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.isVirtualCam = True
@@ -1330,18 +1300,18 @@ class Monitor(object):
         self.cam = virtualCamFrames(path = camera, resolution = resolution)
         self.resolution = self.cam.getResolution()
         self.numberOfFrames = self.cam.getTotalFrames()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def hasSource(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         a = self.cam != None
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def setSource(self, camera, resolution, options=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Set source intelligently
         """
@@ -1356,10 +1326,10 @@ class Monitor(object):
             self.CaptureFromMovie(camera, resolution, options)
         elif os.path.isdir(camera):
             self.CaptureFromFrames(camera, resolution, options)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def setTracking(self, track, trackType=0, mask_file='', outputFile=''):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Set the tracking parameters
 
@@ -1381,30 +1351,29 @@ class Monitor(object):
 
         if mask_file:
             self.loadROIS(mask_file)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def getFrameTime(self):
-        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         a = self.cam.getFrameTime()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def isLastFrame(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Proxy to isLastFrame()
         Handled by camera
         """
         a = self.cam.isLastFrame()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
 
     def saveMovie(self, filename, fps=24, codec='FMP4', startOnKey=False):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor savemovie')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Determines whether all the frames grabbed through getImage will also
         be saved as movie.
@@ -1419,21 +1388,19 @@ class Monitor(object):
 
         self.writer = cv.CreateVideoWriter(filename, fourcc, fps, self.resolution, 1)
         self.grabMovie = not startOnKey
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
 
     def saveSnapshot(self, *args, **kwargs):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor savesnapshot')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         proxy to saveSnapshot
         """
         self.cam.saveSnapshot(*args, **kwargs)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def SetLoop(self,loop):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor setloop')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Set Loop on or off.
         Will work only in virtual cam mode and not realCam
@@ -1442,15 +1409,14 @@ class Monitor(object):
         if self.isVirtualCam:
             self.cam.loop = loop
             a = self.cam.loop
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return a
         else:
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return False
 
     def addROI(self, coords, n_flies=1):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor addroi')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Add the coords for a new ROI and the number of flies we want to track in that area
         selection       (pt1, pt2, pt3, pt4)    A four point selection
@@ -1458,84 +1424,76 @@ class Monitor(object):
         """
 
         self.arena.addROI(coords, n_flies)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def getROI(self, n):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor getroi')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Returns the coordinates of the nth crop area
         """
         a = self.arena.getROI(n)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def delROI(self, n):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor setroi')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         removes the nth crop area from the list
         if n -1, remove all
         """
         self.arena.delROI(n)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def saveROIS(self, filename=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor saverois')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Save the current crop data to a file
         """
         if not filename: filename = self.mask_file
         self.arena.saveROIS(filename)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def loadROIS(self, filename=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor loadrois')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Load the crop data from a file
         """
         if not filename: filename = self.mask_file
         a = self.arena.loadROIS(filename)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def resizeROIS(self, origSize, newSize):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor resizerois')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Resize the mask to new size so that it would properly fit
         resized images
         """
         a = self.arena.resizeROIS(origSize, newSize)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def isPointInROI(self, pt):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor ispointinroi')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Check if a given point falls whithin one of the ROI
         Returns the ROI number or else returns -1
         """
         a = self.arena.isPointInROI(pt)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def calibrate(self, pt1, pt2, cm=1):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor calibrate')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Relays to arena calibrate
         """
         a = self.arena.calibrate(pt1, pt2, cm)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def autoMask(self, pt1, pt2):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor automask')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         EXPERIMENTAL, FIX THIS
         This is experimental
@@ -1565,11 +1523,10 @@ class Monitor(object):
         for R in ROI:
             (x, y), (x1, y1) = R
             self.arena.addROI( ( (x,y), (x,y1), (x1,y1), (x1,y) ), 1)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def findOuterFrame(self, img, thresh=50):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        print('        called Monitor findouterframe')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         EXPERIMENTAL
         Find the greater square
@@ -1660,11 +1617,11 @@ class Monitor(object):
                             print ('current # of squares found %d' % len(squares))
                     contour = contour.h_next()
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return squares
 
     def GetImage(self, drawROIs = False, selection=None, crosses=None, timestamp=False):
-        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         class Monitor
         
@@ -1708,13 +1665,13 @@ class Monitor(object):
 
             if self.grabMovie: cv.WriteFrame(self.writer, frame)
             
-        else: print('****** pysolovideo: monitor: getimage: NOT frame')
+        else: print('$$$$$$ pysolovideo: monitor: getimage: NOT frame')
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return frame
 
     def processFlyMovements(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Decides what to do with the data
         Called every frame
@@ -1727,10 +1684,10 @@ class Monitor(object):
             self.lasttime = ct
             self.arena.compactSeconds(self.__tempFPS, delta) #average the coordinates and transfer from buffer to array
             self.processingFPS = self.__tempFPS; self.__tempFPS = 0
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def doTrack(self, frame, show_raw_diff=False, drawPath=True):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Track flies in ROIs using findContour algorithm in opencv
         Each frame is compared against the moving average
@@ -1784,7 +1741,7 @@ class Monitor(object):
         
         #track each ROI
         for fly_number, ROI in enumerate( self.arena.ROIStoRect() ):
-            print('$$$$$$ for fly ' + str(fly_number))                                    # debug
+            print('$$$$$$ pysolovideo: dotrack: 1773: for fly ' + str(fly_number))                                    # debug
             (x1,y1), (x2,y2) = ROI
             cv.SetImageROI(ROIwrk, (x1,y1,x2-x1,y2-y1) )
             cv.SetImageROI(frame, (x1,y1,x2-x1,y2-y1) )
@@ -1811,7 +1768,7 @@ class Monitor(object):
 
             # for each frame adds fly coordinates to all ROIS. Also do some filtering to remove false positives
             fly_coords, distance = self.arena.addFlyCoords(fly_number, fly_coords)
-            print('$$$$$$  fly_coords = ', fly_coords, 'distance = ',distance)                                            # debug
+            print('$$$$$$ pysolovideo: dotrack: 1800:  fly_coords = ', fly_coords, 'distance = ',distance)                                            # debug
 
             frame = self.__drawCross(frame, fly_coords)
             if drawPath: frame = self.__drawLastSteps(frame, fly_number, steps=5)
@@ -1826,8 +1783,8 @@ class Monitor(object):
         if show_raw_diff:
             temp2 = cv.CloneImage(grey_image)
             cv.CvtColor(grey_image, temp2, cv.CV_GRAY2RGB)#show the actual difference blob that will be tracked
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return temp2
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return frame

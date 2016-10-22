@@ -48,7 +48,7 @@ from pvg_panel_two import panelLiveView
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Settings
 pgm = 'pvg_acquire.py'              # identifies script file name for debug code
-console_to_file = True             # controls whether console output goes to console or a file
+console_to_file = False             # controls whether console output goes to console or a file
 console_file = pv.data_dir + 'stdout.txt'
 
 
@@ -71,24 +71,20 @@ class customDataTable(gridlib.PyGridTableBase):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                           # debug
  
         try:
-            print('$$$$$$  acquire customdatatable getnumberrows returns: ',len(self.data))
             if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
             return len(self.data)
         except:
-            print('$$$$$$  acquire customdatatable getnumberrows returns: ',+str(0))
             if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
             return 0
 
     def GetNumberCols(self):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        # customdatatable getnumbercols')
         a = len (self.colLabels)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def IsEmptyCell(self, row, col):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        # customdatatable isemptycell')
         try:
             a = not self.data[row][col]
             if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
@@ -208,7 +204,6 @@ class customDataTable(gridlib.PyGridTableBase):
         row can be an array of values or a 2-dimenstional array of rows and values
         """
         rows = self.cleanFromMask(rows)
-        print('$$$$$$  rows = ',rows)
 
         if type(rows[0]) == list:
             n_rows = len (rows)
@@ -222,7 +217,6 @@ class customDataTable(gridlib.PyGridTableBase):
                 gridlib.GRIDTABLE_NOTIFY_ROWS_APPENDED,
                 n_rows         ))
 
-        print('$$$$$$ rows appended')
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def RemRow (self, rows):
@@ -293,19 +287,16 @@ class customDataTable(gridlib.PyGridTableBase):
 
     def GetColLabelValue(self, col):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        # getcollabelvalue')
         """
         Called when the grid needs to display labels
         """
         a = self.colLabels[col]
-        print('$$$$$$  colLabels[col] = ',self.colLabels[col])
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return self.colLabels[col]
 
 
     def GetTypeName(self, row, col):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        # customdatatable gettypename')                         # debug
         """
         Called to determine the kind of editor/renderer to use by
         default, doesn't necessarily have to be the same type used
@@ -313,7 +304,6 @@ class customDataTable(gridlib.PyGridTableBase):
         """
         a = self.dataTypes[col]
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
-        print('\n\t\t returns: ',a)
         return a
 
 
@@ -328,16 +318,13 @@ class customDataTable(gridlib.PyGridTableBase):
         colType = self.dataTypes[col].split(':')[0]
         if typeName == colType:
             if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
-            print('$$$$$$ CamGetValueAs returns: True')
             return True
         else:
             if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
-            print('$$$$$$ CamGetValueAs returns: False')
             return False
 
     def CanSetValueAs(self, row, col, typeName):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        # cansetvalueas')                                             # debug
         a = self.CanGetValueAs(row, col, typeName)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return a
@@ -497,7 +484,6 @@ class CustTableGrid(gridlib.Grid):
 
         a = all_data
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
-        print('$$$$$$  GetData returns: ',a)
         return a
 
     def SetData(self, *kargs, **kwargs):
@@ -835,12 +821,10 @@ class pvg_AcquirePanel(wx.Panel):
         wx.Panel.__init__(self, parent, wx.ID_ANY)
         self.parent = parent
 
-        print('$$$$$$  changing to dir: '+pv.data_dir)                         # debug
         os.chdir(pv.data_dir)                    # debug
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         self.FBconfig = FileBrowseButton(self, -1, labelText='Pick file', size=(300,-1), changeCallback = self.configCallback)
         
-        print('$$$$$$   file browse button created')
         colLabels = ['Monitor', 'Source', 'Mask', 'Output', 'Track type', 'Track']
 
         dataTypes = [gridlib.GRID_VALUE_NUMBER,
@@ -853,7 +837,6 @@ class pvg_AcquirePanel(wx.Panel):
 
         self.grid = CustTableGrid(self, colLabels, dataTypes, enableEdit=True, useMenu=False)
 
-        print('$$$$$$  grid created by custtablegrid')
         self.grid.Clear()
 
         btnSizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -863,7 +846,6 @@ class pvg_AcquirePanel(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.onStop, self.stopBtn)
         self.Bind(wx.EVT_BUTTON, self.onStart, self.startBtn)
 
-        print('$$$$$$ start and stop buttons are bound')
         btnSizer.Add (self.startBtn, 0, wx.ALL, 5)
         btnSizer.Add (self.stopBtn, 0, wx.ALL, 5)
 
@@ -873,7 +855,6 @@ class pvg_AcquirePanel(wx.Panel):
         mainSizer.Add(btnSizer, 0, wx.ALL, 5)
         self.SetSizer(mainSizer)
 
-        print('$$$$$$ sizer completed')
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
 
     def configCallback(self, event):
@@ -888,13 +869,9 @@ class pvg_AcquirePanel(wx.Panel):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
-        print('$$$$$$  filename = ',filename)
         self.options = pvg_config(filename)
-        print("$$$$$$ options = ",self.options)
         self.updateTable()
-        print("$$$$$$ table updated")
         self.parent.sb.SetStatusText('Loaded file %s' % filename)
-        print("$$$$$$ status bar message changed")
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
         return True
 
@@ -930,7 +907,6 @@ class pvg_AcquirePanel(wx.Panel):
                                                 m['track'], 
                                                 m['track_type'], 
                                                 m['dataFolder']) )
-            print('$$$$$$ mm = ', mn, '\n options = ', self.monitors[mn], '\n m = ', m)                                                 # debug
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
             
     def isToTrack(self, monitor):
@@ -939,12 +915,8 @@ class pvg_AcquirePanel(wx.Panel):
         """
         d = self.grid.GetData()
 
-        print('$$$$$$  isToTrack  monitor = ',monitor)                                                              # debug
         for row in d:
-            print ('$$$$$$ isToTrack row in d = ',row)                                                           # debug
-            print('$$$$$$  istotrack row[0] = ',row[0])
             if monitor == row[0]: 
-                print('$$$$$$ isToTrack row[-1] = ',row[-1])
                 if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
                 return row[-1]
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
@@ -953,22 +925,16 @@ class pvg_AcquirePanel(wx.Panel):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
-        print('$$$$$$  Start button clicked')
         self.acquiring = True
         self.stopBtn.Enable(self.acquiring)
         self.startBtn.Enable(not self.acquiring)
         c = 0
 
-        print('$$$$$$  onStart monitors:  ',self.monitors)
         for mon in self.monitors:
-            print('\n $$$$$$ c is ',c)
-            print('\n $$$$$$      mon:   ',mon)
             if self.isToTrack(mon):
 
-                print('\n$$$$$$            mon istotrack is true')
                 self.monitors[mon].doTrack()
 
-                print('\n $$$$$$ tracking done')
                 c+=1
 
         self.parent.sb.SetStatusText('Tracking %s Monitors' % (str(int(c))))    
@@ -978,7 +944,6 @@ class pvg_AcquirePanel(wx.Panel):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
-        print('$$$$$$   stop clicked')
         self.acquiring = False
         self.stopBtn.Enable(self.acquiring)
         self.startBtn.Enable(not self.acquiring)
@@ -1005,7 +970,6 @@ class acquireFrame(wx.Frame):
         """
         """
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        # acquireframe loadConfig '+filename)                   # debug
         if ~os.path.isfile(filename):
             
             if filename is None:
@@ -1013,7 +977,6 @@ class acquireFrame(wx.Frame):
                 pDir = os.environ['HOME']
                 filename = os.path.join (pDir, DEFAULT_CONFIG)
                 filename = DEFAULT_CONFIG
-        print('$$$$$$   loadconfig  filename = ',filename)
         self.acq_panel.loadFile(filename)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
         return True
@@ -1042,7 +1005,6 @@ if __name__ == '__main__':
     app.SetTopWindow(frame_acq)
     frame_acq.Show(options.showgui)
 
-#    configfile = options.config_file or DEFAULT_CONFIG
     configfile = pv.DEFAULT_CONFIG
     cfgloaded = frame_acq.loadConfig(configfile)
 
