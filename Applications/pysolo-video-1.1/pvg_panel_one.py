@@ -22,30 +22,31 @@
 #
 #       Revisions by Caitlin Laughrey and Loretta E Laughrey in 2016.
 
-# %%                                                            for debugging
 """
-Prints file, class, and function names and line number for each definition.
-- turn this on/off by replacing 'debugprt(' with '# debugprt(' or vice versa.
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% imports
 """
-from inspect import currentframe        
-from db import debugprt                 
-pgm = 'pvg_panel_one.py'
-
-# %%                                                            imports
 import wx, os
 import wx.lib.newevent
 ThumbnailClickedEvt, EVT_THUMBNAIL_CLICKED = wx.lib.newevent.NewCommandEvent()
 from wx.lib.filebrowsebutton import FileBrowseButton, DirBrowseButton
 
 from pvg_common import previewPanel, options, myConfig
+import pysolovideo as pv
 
+"""
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Settings
+"""
+pgm = 'pvg_panel_one.py'
+
+"""
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Thumbnail Panel
+"""
 class thumbnailPanel(previewPanel):
     """
     A small preview Panel to be used as thumbnail
     """
     def __init__( self, parent, monitor_number, ThumbnailSize=(320,240) ):           
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
 
         previewPanel.__init__(self, parent, size=ThumbnailSize, keymode=False)
 
@@ -55,11 +56,11 @@ class thumbnailPanel(previewPanel):
         self.displayNumber()
 
         self.Bind(wx.EVT_LEFT_UP, self.onLeftClick)
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                Show Monitor Numbers            
     def displayNumber(self):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Displays the monitor number over top of the thumbnail
         """
@@ -72,11 +73,11 @@ class thumbnailPanel(previewPanel):
         font1 = wx.Font(35, wx.SWISS, wx.NORMAL, wx.NORMAL)
         text1 = wx.StaticText( self, wx.ID_ANY, '%s' % (self.number+1), pos)
         text1.SetFont(font1)
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                        Left Click
     def onLeftClick(self, evt):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Event handler for thumbnail being clicked on
         Send signal around that the thumbnail was clicked
@@ -88,7 +89,7 @@ class thumbnailPanel(previewPanel):
         event.thumbnail = self
 
         self.GetEventHandler().ProcessEvent(event)
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
         
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Panel Grid View        
@@ -97,7 +98,7 @@ class panelGridView(wx.ScrolledWindow):
     The scrollable grid of monitor thumbnails on panel one                      # number in monitors not always there
     """
     def __init__(self, parent, gridSize, ThumbnailSize=(320,240) ): 
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         
         print('$$$$$$ pvg_panel_one:  panelGridView:  line 102:  gridSize = ',gridSize)
 
@@ -121,23 +122,23 @@ class panelGridView(wx.ScrolledWindow):
         self.SetSizer(self.grid_mainSizer)
         # Set up listener for clicking on thumbnails
         self.Bind(EVT_THUMBNAIL_CLICKED, self.onThumbnailClicked)
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                    Thumbnail Clicked
     def onThumbnailClicked(self, event):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Event handler that makes clicking a thumbnail update the dropdown menu
         Relay event to sibling panel
         """
         wx.PostEvent(self.parent.lowerPanel, event)
         event.Skip()
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                        Update Monitors
     # Should be working
     def updateMonitors(self, old, now):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Changes number of monitor thumbnails.
         """     
@@ -164,11 +165,11 @@ class panelGridView(wx.ScrolledWindow):
                 self.grid_mainSizer.Layout()
                 old -= 1
 
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         
 # %%                                                    Change Thumbnail size
     def updateThumbs(self, old, new):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         self.ThumbnailSize = new
         # print('$$$$$$ pvg_panel_one:  panelGridView:  line 173:  gridSize = ',gridSize)
 
@@ -183,7 +184,7 @@ class panelConfigure(wx.Panel):
     The lower half of panel one with the configuration settings                 # this panel could be shorter to cover less of the monitors
     """
     def __init__(self, parent):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         wx.Panel.__init__(self, parent, wx.ID_ANY, size=(-1,300),
             style=wx.SUNKEN_BORDER|wx.TAB_TRAVERSAL)
         self.parent = parent
@@ -303,11 +304,11 @@ class panelConfigure(wx.Panel):
 
         self.SetSizer(lowerSizer)
         self.Bind(EVT_THUMBNAIL_CLICKED, self.onThumbnailClicked)
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                     Input source
     def __getSource(self):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         check which source is ticked and what is the associated value
         Returns the selected source type and its value
@@ -317,13 +318,13 @@ class panelConfigure(wx.Panel):
             if r.GetValue():
                 source = s.GetValue()
                 sourceType = st
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
         return source, sourceType
 
 # %%                                                Input tracking type
     def __getTrackingType(self):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         return which type of tracking we are chosing
         ['DISTANCE','VBS','XY_COORDS']
@@ -332,12 +333,12 @@ class panelConfigure(wx.Panel):
         elif self.trackVirtualBM.GetValue(): trackType = 1    #  "VBS"
         elif self.trackPosition.GetValue(): trackType = 2     #  "XY_COORDS"
 
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return trackType                                                        # this isn't getting written to config file correctly
 
 # %%                                                            play button
     def onPlay (self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         # Event handler for the play button
         """
@@ -345,22 +346,22 @@ class panelConfigure(wx.Panel):
         if self.thumbnail:
             self.thumbnail.Play()
             self.btnStop.Enable(True)
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                            Stop Button
     def onStop (self, event=None):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Event handler for the stop button
         """
         if self.thumbnail and self.thumbnail.isPlaying:
             self.thumbnail.Stop()
             self.btnStop.Enable(False)
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                    Click Thumbnail
     def onThumbnailClicked(self, evt):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Picking thumbnail by clicking on it
         Event handler for changing monitor via clicking on thumbnail
@@ -369,11 +370,11 @@ class panelConfigure(wx.Panel):
         self.thumbnail = evt.thumbnail
         self.thumbnailNumber.SetValue(self.MonitorList[self.monitor_number]) # -1
         self.updateThumbnail()
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                    Monitor dropdown box
     def onChangingMonitor(self, evt):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Picking thumbnail by using the dropbox
         Event handler for changing monitor via dropdown box
@@ -382,11 +383,11 @@ class panelConfigure(wx.Panel):
         self.monitor_number = self.MonitorList.index(sel) #+ 1
         self.thumbnail = self.parent.scrollThumbnails.previewPanels[self.monitor_number]         #this is not very elegant
         self.updateThumbnail()
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                            Refresh thumbnail and controls
     def updateThumbnail(self):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Refreshing thumbnail data
         """
@@ -429,17 +430,17 @@ class panelConfigure(wx.Panel):
         self.isSDMonitor.SetValue(isSDMonitor)
         self.pickMaskBrowser.SetValue(mask_file or '')
         [self.trackDistanceRadio, self.trackVirtualBM, self.trackPosition][trackType].SetValue(True)
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %% 
     def sourceCallback (self, event):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         self.applyButton.Enable(True)
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                        Radio buttons
     def onChangeSource(self, event):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         # Determine which radio button was selected
         radio_selected = event.GetEventObject()
 
@@ -451,11 +452,11 @@ class panelConfigure(wx.Panel):
                 source.Enable(False)
 
         self.applyButton.Enable(True)
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                    Apply Button
     def onApplySource(self, event):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Get source and mask info from the user's selections
         Event handler for the Apply button on the lower left of panel one
@@ -490,11 +491,11 @@ class panelConfigure(wx.Panel):
             self.pickMaskBrowser.Enable(True)
 
             self.saveMonitorConfiguration()
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                Save Monitor Config
     def saveMonitorConfiguration(self):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         options.SetMonitor(self.monitor_number,
                            self.thumbnail.sourceType,
                            self.thumbnail.source, #self.thumbnail.source+1 in dev code
@@ -504,25 +505,25 @@ class panelConfigure(wx.Panel):
                            self.thumbnail.mon.isSDMonitor
                            )
         options.Save()
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                        Activate Tracking        
     def onActivateTracking(self, event):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         if self.thumbnail:
             self.thumbnail.track = event.IsChecked()
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                        
     def onSDMonitor(self, event):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         if self.thumbnail:
             self.thumbnail.mon.isSDMonitor = event.IsChecked()
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                Update monitor dropdown box
     def updateMonitors(self, old, now):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Updates the dropdown box of monitors on lower half of panel one
         """
@@ -541,11 +542,11 @@ class panelConfigure(wx.Panel):
 
         # Display UI changes
         self.sbSizer_1.Layout()
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                Update webcam dropdown box
     def updateWebcams(self, old, now):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Updates the dropdown box of cameras on lower half of panel one
         """
@@ -576,7 +577,7 @@ class panelConfigure(wx.Panel):
 
         # Show changes to UI
         self.grid2.Layout()
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
         
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Panel One
@@ -585,7 +586,7 @@ class panelOne(wx.Panel):
     Panel number One:  All the thumbnails
     """
     def __init__(self, parent):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         wx.Panel.__init__(self, parent)
 
         # Retrieve settings
@@ -608,18 +609,18 @@ class panelOne(wx.Panel):
         self.PanelOneSizer.Add(self.scrollThumbnails, 1, wx.EXPAND, 0)
         self.PanelOneSizer.Add(self.lowerPanel, 0, wx.EXPAND, 0)
         self.SetSizer(self.PanelOneSizer)
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                         Stop Playing
     def StopPlaying(self):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         self.lowerPanel.onStop()
 
-        debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                            Refresh   
     def onRefresh(self):
-        debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """ 
         Checks for changes to be made to UI and implements them.
         """

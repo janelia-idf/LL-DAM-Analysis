@@ -21,55 +21,17 @@
 
 #       Revisions by Caitlin Laughrey and Loretta E Laughrey in 2016.
 
-# %%                                                            for debugging
 """
-Prints file, class, and function names and line number for each definition.
-- turn this on/off by replacing '# debugprt(' with '# # debugprt(' or vice versa.
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    imports
 """
-from inspect import currentframe        
-from db import debugprt                 
-
-# %%                                                             imports
 import wx, cv, os        
 import pysolovideo as pv
 import ConfigParser, threading
 
 """
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   "Global Variables"
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Settings
 """
 pgm = 'pvg_common.py'
-
-#vDEFAULT_CONFIG = 'pysolo_video.cfg'
-
-# ----------------------------------------------------------------------------
-""" 
-File I/O is assumed to use the GitHub\LL-DAM-Analysis folder in the current 
- user's documents folder.
-"""  
-#import ctypes.wintypes   # used to get path to current user's documents folder
-#CSIDL_PERSONAL = 5          # My Documents
-#SHGFP_TYPE_CURRENT = 0      # Get current, not default value
-#buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)  # get user document folder path
-#ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
-
-#
-#root_dir = 'D:\\LL-DAM-Analysis\\'
-#data_dir = root_dir + 'Data\\20160823_135217\\4ROI_pfps\\'
-#data_dir = root_dir + 'Data\\Working_files\\'
-# %%                                                start & zero datetimes
-"""
-dates for setting the correct date information for output
- - get datetime for adjusting from 31 Dec 1969 at 19:01:00
- - set start date and time of video
-"""
-import datetime
-t = datetime.time(19, 1, 00)    
-d = datetime.date(1969, 12, 31)
-zero_dt = datetime.datetime.combine(d, t)
-""" - set date and time that video was actually recorded """                    #     <--- can we get this from the filename's datetime stamp?
-start_dt = datetime.datetime(2016,8,23,13,52,17)
-
-
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  MyConfig
 class myConfig():
@@ -79,7 +41,7 @@ class myConfig():
     From gg's toolbox
     """
     def __init__(self, filename=None, temporary=False, defaultOptions=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')        
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')        
         """
         filename    the name of the configuration file
         temporary   whether we are reading and storing values temporarily
@@ -102,20 +64,20 @@ class myConfig():
                                     }
 
         self.Read(temporary)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                        New config file
     def New(self, filename):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.filename = filename
         self.Read()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                        Read config file
     def Read(self, temporary=False):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         read the configuration file. Initiate one if does not exist
 
@@ -135,12 +97,12 @@ class myConfig():
 
         else:
             self.Save(temporary, newfile=True)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 
 # %%                                                        Save config file
     def Save(self, temporary=False, newfile=False, filename=None):                  # saves options configuration
-        # debugprt(self,currentframe(),pgm,'begin     ')        
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')        
         """
         """
 
@@ -158,12 +120,12 @@ class myConfig():
             self.config.write(configfile)
 
         if not temporary: self.Save(temporary=True)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 
 # %%                                                     Set Values in Config
     def SetValue(self, section, key, value):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                # debug
         """
         puts configuration values in config file
         """
@@ -171,11 +133,11 @@ class myConfig():
             self.config.add_section(section)
 
         self.config.set(section, key, value)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                    Get values from config
     def GetValue(self, section, key):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                # debug
         """
         get value from config file
         Does some sanity checking to return tuple, integer and strings
@@ -184,10 +146,10 @@ class myConfig():
         r = self.config.get(section, key)
 
         if type(r) == type(0) or type(r) == type(1.0):  # native int and float
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
             return r
         elif type(r) == type(True):                     # native boolean
-            # debugprt(self,currentframe(),pgm,'end   ')
+            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
             return r
         elif type(r) == type(''):
             r = r.split(',')
@@ -207,24 +169,24 @@ class myConfig():
         if r == 'False' or r == 'True':
             r = (r == 'True')                           # bool
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return r
 
 
 # %%                                   Get value from options section of config
     def GetOption(self, key):
-        # debugprt(self,currentframe(),pgm,'begin     ')        
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')        
         """
         """
         a = self.GetValue('Options', key)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return a
 
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Acquire Object        
 class acquireObject():
     def __init__(self, monitor, source, resolution, mask_file, track, track_type, dataFolder):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.monitor = monitor
@@ -243,42 +205,42 @@ class acquireObject():
                                   source,
                                   mask_file,
                                   outputFile) )
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         
 # %%                                                        Run
     def run(self, kbdint=False):
-        debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         checks to see if program should keep going.
         """
         while self.keepGoing:
             self.keepGoing = self.mon.GetImage()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                        Start
     def start(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.keepGoing = True
         self.run()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                            Halt
     def halt(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.keepGoing = False
         if self.verbose: print ( "$$$$$$ Verbose: Stopping capture" )
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 
         
 class acquireThread(threading.Thread):
 
     def __init__(self, monitor, source, resolution, mask_file, track, track_type, dataFolder):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         threading.Thread.__init__(self)
@@ -297,10 +259,10 @@ class acquireThread(threading.Thread):
                                   source,
                                   mask_file,
                                   outputFile) )
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         
     def run(self, kbdint=False):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
 
@@ -315,30 +277,30 @@ class acquireThread(threading.Thread):
         else:
             while self.keepGoing:
                 self.mon.GetImage()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def doTrack(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.keepGoing = True
         self.start()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def halt(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.keepGoing = False
         if self.verbose: print ( "$$$$$$ Verbose 339: Stopping capture" )
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 class pvg_config(myConfig):
     """
     Inheriting from myConfig
     """
     def __init__(self, filename=None, temporary=False):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                      # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                      # debug
 
         defaultOptions = { 
             "Monitors" :      [9, "Select the number of monitors connected to this machine"],
@@ -353,19 +315,19 @@ class pvg_config(myConfig):
         self.monitorProperties = ['sourceType', 'source', 'track', 'maskfile', 'trackType', 'isSDMonitor']
 
         myConfig.__init__(self, filename, temporary, defaultOptions)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def SetMonitor(self, monitor, *args):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         mn = 'Monitor%s' % monitor
         for v, vn in zip( args, self.monitorProperties ):
             self.SetValue(mn, vn, v)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def GetMonitor(self, monitor):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                           # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                           # debug
         """
         """
         mn = 'Monitor%s' % monitor
@@ -373,20 +335,20 @@ class pvg_config(myConfig):
         if self.config.has_section(mn):
             for vn in self.monitorProperties:
                 md.append ( self.GetValue(mn, vn) )
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return md
 
     def HasMonitor(self, monitor):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         mn = 'Monitor%s' % monitor
         a = self.config.has_section(mn)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def getMonitorsData(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                           # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                           # debug
         """
         return a list containing the monitors that we need to track
         based on info found in configfile
@@ -409,7 +371,7 @@ class pvg_config(myConfig):
                 monitors[mon]['track'] = track
                 monitors[mon]['isSDMonitor'] = isSDMonitor
 
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return monitors
 
 
@@ -420,7 +382,7 @@ class previewPanel(wx.Panel):
     Used for thumbnails
     """
     def __init__(self, parent, size, keymode=True):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
 
         wx.Panel.__init__(self, parent, wx.ID_ANY, style=wx.WANTS_CHARS)
 
@@ -477,18 +439,18 @@ class previewPanel(wx.Panel):
         if keymode:
             self.Bind( wx.EVT_CHAR, self.onKeyPressed )
             self.SetFocus()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def ClearAll(self, event=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Clear all ROIs
         """
         self.mon.delROI(-1)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def ClearLast(self, event=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Cancel current drawing
         """
@@ -500,10 +462,10 @@ class previewPanel(wx.Panel):
             if self.selROI >= 0:
                 self.mon.delROI(self.selROI)
                 self.selROI = -1
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def SaveCurrentSelection(self, event=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         save current selection
         """
@@ -511,10 +473,10 @@ class previewPanel(wx.Panel):
             self.mon.addROI(self.selection, 1)
             self.selection = None
             self.polyPoints = []
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def AddPoint(self, event=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Add point
         """
@@ -530,11 +492,11 @@ class previewPanel(wx.Panel):
             x = event.GetX()
             y = event.GetY()
             self.polyPoints.append( (x,y) )
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 
     def onLeftDown(self, event=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
 
@@ -548,10 +510,10 @@ class previewPanel(wx.Panel):
             else:
                 self.selection = self.mon.getROI(r)
                 self.selROI = r
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def onLeftUp(self, event=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         if self.allowEditing:
@@ -561,10 +523,10 @@ class previewPanel(wx.Panel):
             if len(self.polyPoints) == 4:
                 self.selection = self.polyPoints
                 self.polyPoints = []
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def onMotion(self, event=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                 # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                 # debug
         """
         """
         if self.allowEditing:
@@ -581,18 +543,18 @@ class previewPanel(wx.Panel):
 
                 x1, y1, x2, y2  = (xmin, ymin, xmax, ymax)
                 self.selection = (x1,y1), (x2,y1), (x2,y2), (x1, y2)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def prinKeyEventsHelp(self, event=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         for key in self.ACTIONS:
             print "%s\t%s" % (key, self.ACTIONS[key][1])
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def onKeyPressed(self, event):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Regulates key pressing responses:
         """
@@ -602,10 +564,10 @@ class previewPanel(wx.Panel):
 
         if self.ACTIONS.has_key(key):
             self.ACTIONS[key][0]()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def Calibrate(self, event=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         if len(self.polyPoints) > 2:
@@ -619,10 +581,10 @@ class previewPanel(wx.Panel):
             print "You need at least two points for calibration."
 
         print "%spixels = 1cm" % r
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def AutoMask(self, event=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         if len(self.polyPoints > 1):
@@ -631,17 +593,17 @@ class previewPanel(wx.Panel):
         else:
             print "Too few points to automask"
         self.polyPoints = []
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def SaveMask(self, event=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.mon.saveROIS()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def setMonitor(self, camera, resolution=None):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
 
@@ -657,11 +619,11 @@ class previewPanel(wx.Panel):
         self.Bind(wx.EVT_PAINT, self.onPaint)
         self.playTimer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.onNextFrame)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 
     def paintImg(self, img):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         if img:
@@ -677,10 +639,10 @@ class previewPanel(wx.Panel):
 
             self.bmp.CopyFromBuffer(frame.tostring())
             self.Refresh()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def onPaint(self, evt):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         if self.bmp:
@@ -688,19 +650,19 @@ class previewPanel(wx.Panel):
             #self.PrepareDC(dc)
             dc.DrawBitmap(self.bmp, 0, 0, True)
         evt.Skip()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def onNextFrame(self, evt):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         img = self.mon.GetImage(drawROIs = self.drawROI, selection=self.selection, crosses=self.polyPoints, timestamp=self.timestamp)
         self.paintImg( img )
         if evt: evt.Skip()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def Play(self, status=True, showROIs=True):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
 
@@ -715,22 +677,22 @@ class previewPanel(wx.Panel):
                 self.playTimer.Start(self.interval)
             else:
                 self.playTimer.Stop()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def Stop(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         self.Play(False)
         self.mon.close()
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def hasMonitor(self):
-        # debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
         a = (self.mon != None)
-        # debugprt(self,currentframe(),pgm,'end   ')
+        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return a
 
 #################

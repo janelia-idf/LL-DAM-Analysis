@@ -37,6 +37,10 @@ Algorithm for motion analysis:          PIL through kmeans (vector quantization)
     http://en.wikipedia.org/wiki/Vector_quantization
     http://stackoverflow.com/questions/3923906/kmeans-in-opencv-python-interface
 """
+
+"""
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Imports
+"""
 from inspect import currentframe                                                                     # debug
 from db import debugprt
 import cv2, cv
@@ -46,22 +50,27 @@ import numpy as np
 
 
 """
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Global Variables
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Settings
 """
 pgm = 'pysolovideo.py'
+call_tracking = False               # if True each function will report it's beginning and end
+
 # get root dir name for all file operations
 #
-#import ctypes.wintypes
-#CSIDL_PERSONAL = 5       # My Documents
-#SHGFP_TYPE_CURRENT = 0   # Get current, not default value
-#buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)  # get user document folder path
-#ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
-root_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\'
+import ctypes.wintypes
+CSIDL_PERSONAL = 5       # My Documents
+SHGFP_TYPE_CURRENT = 0   # Get current, not default value
+buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)  # get user document folder path
+ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
+root_dir = buf.value + '\\GitHub\\LL-DAM-Analysis\\'
 #data_dir = root_dir + 'Data\\20160823_135217\\no_timer\\'
 data_dir = root_dir +'Data\\Working_files\\'
+
 DEFAULT_CONFIG = 'pysolo_video.cfg'
 
-start_dt = datetime.datetime(2016,8,23,13,52,17)
+# %%                                                    Datetime settings
+start_dt = datetime.datetime(2016,8,23,13,52,17)    # start datetime of movie
+
 t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
 d = datetime.date(1969, 12, 31)
 zero_dt = datetime.datetime.combine(d, t)
