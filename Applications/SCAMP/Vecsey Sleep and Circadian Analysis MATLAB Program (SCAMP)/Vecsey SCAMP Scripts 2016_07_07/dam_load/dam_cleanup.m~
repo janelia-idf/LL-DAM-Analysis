@@ -1,0 +1,113 @@
+function [gg,x,first]=dam_cleanup(ff,start,int,keeptail)
+%DAM_CLEANUP  Cleanup function for DAM data
+%
+% EDITED 11/1/2010 BY CHRIS VECSEY - GRIFFITH LAB, BRANDEIS UNIVERSITY
+% REMOVED TRUNCATION CODE FOR THE CONTINGENCY THAT ALL FLIES HAVE "0"
+% VALUES AT THE END OF DATA. THIS WAS MEANT TO REMOVE DATA FROM AFTER ALL
+% FLIES HAVE DIED, BUT IT ALSO CAUSES ERRORS IN ANALYSIS.
+%
+% This function is not usually called directly.
+% use dam_load.
+%
+% [f,x,first]=dam_cleanup(data,start,int,keeptail)
+%
+% Dam_cleanup cleans up data read from DAM files for dam_load
+% and other dam functions. Dam data originally has negative numbers
+% indicating various events (lag before start of the experiment,
+% errors and so on). 
+%
+% Inputs:
+% data,start,int: raw DAM data as read by dam_read.
+% keeptail: if 0 all activity is truncated at
+% the time of death of the first fly to die. 
+%
+% Outputs:
+% f: cleanuped data matrix. It may be shorter than data, because
+% of two reasons: (a) initial negative sequences are chopped off
+% (b) if keeptail=0, negative/zero tails are also chopped off. 
+% x: vector of times (deduced from start, int and chop off). 
+
+%%(C)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Copyright (C)Jeffrey Hall Lab, Brandeis University.             %%
+% Use and distribution of this software is free for academic      %%
+% purposes only, provided this copyright notice is not removed.   %%
+% Not for commercial use.                                         %%
+% Unless by explicit permission from the copyright holder.        %%
+% Mailing address:                                                %%
+% Jeff Hall Lab, Kalman Bldg, Brandeis Univ, Waltham MA 02454 USA %%
+% Email: hall@brandeis.edu                                        %%
+%%(C)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if nargin < 4
+  keeptail=1;
+end 
+h=floor(start/100);
+start=h+(start-h*100)/60;
+if (start>23) 
+  start=start-24;
+end
+if nargin<2
+  start=0;
+end
+if nargin<3
+  int=30;
+end
+for i=1:size(ff,2)
+  f=ff(:,i);
+  v=find(f>=0);
+  if isempty(v)
+    error('ALL VALUES ARE NEGATIVE??')
+  end
+  fir(i)=min(v);
+  v2=find(f>0);
+  if isempty(v2)
+      la(i)=0;
+    else
+%       la(i)=max(v2);
+
+    end
+end
+first=max(fir);
+if keeptail
+    last=max(la);
+else
+    last=min(la);
+end
+gg=zeros(last-first+1,size(ff,2));
+for i=1:size(ff,2)
+  f=ff(first:last,i);
+  e=find(f<0);
+  a1=f(e-1);
+  a2=f(e+1);
+  if (sum(([a1,a2]<0)))
+    fprintf('Warning (dam_cleanup): Consecutive errors on matrix (col %d)\n',i);
+    f=slow_clean(f);
+  else
+    f(e)=(a1+a2)/2;
+  end
+  gg(:,i)=f;
+end
+% Warning: changed first to first-1
+% pf'03
+x=((0:length(f)-1)+first-1)*(int/60)+start;
+x=x';
+
+function f=slow_clean(f);
+n=length(f);
+x1=1:n;
+x2=1:n;
+e=find(f<0);
+e0=e;
+skip=zeros(1,n);
+i=0;
+while length(e)>0
+  x1(e)=x1(e)-1;
+  e=e(f(x1(e))<0);
+  i=i+1;
+  skip(e-i)=i;
+end
+delta=x2(e0)-x1(e0);
+delta2=skip(e0)+1;
+lengths=delta+delta2;
+x2(e0)=x2(e0)+delta2;
+f(e0)=(f(x1(e0)) .* delta2' + f(x2(e0)) .* delta') ./ lengths';
+

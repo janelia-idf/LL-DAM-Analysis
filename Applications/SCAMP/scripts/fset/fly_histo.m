@@ -1,0 +1,67 @@
+function data=fly_histo(file)
+    
+% Reads through raw data, finds wherever there was no activity, and puts in
+% a number where that non-active period started - the number corresponds to
+% the length of the non-active period in minutes. This does NOT take into
+% account the sleep threshold being used. Then all zeros are replaced by
+% NaN.
+ 
+[x y]=size(file.f);
+data=zeros(x,y);
+for j = 1:y
+    i=1;ii=0;
+    while i<(x+1)   
+        for ii= i:x
+            if file.f(ii,j)==0            
+                data(i,j)= data(i,j)+1;
+            else
+
+               %data(ii)=NaN;
+                break;
+            end
+        end 
+
+        if (data(i,j)>0)
+            i=i+data(i,j);
+        else
+            i=i+1;
+        end
+        
+    end        
+end 
+
+for m=1:y
+ for k= 1:x
+     if data(k,m)==0 
+         data(k,m)= nan; 
+     end
+ end
+end
+% inter-activity interval: number of consecutive measurement intervals that recorded no
+% activity 
+
+
+% data.h= zeros(x*y,1);
+% data.h(:)=nan;
+% k=1;
+% for j=1:y
+%     for i=1:x
+%         if data(i,j)~=nan
+%             data.h(k)=data(i,j);
+%             k=k+1;
+%         end
+%     end
+% end
+% 
+% data.ah= zeros(x*y,1);
+% data.ah(:)=nan;
+% k=1;
+% for j=1:y
+%     for i=1:x
+%         if file(i,j)~=0
+%             data.ah(k)=file(i,j);
+%             k=k+1;
+%         end
+%     end
+% end
+

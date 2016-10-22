@@ -1,0 +1,88 @@
+
+-------- DAM File Scan Log   14 Sep 16 14:12:38 --------
+
+User's Guide    V1.10
+
+   This program scans DAMSystem3 and DAMSystemMB Monitor data files to produce validated output files at any bin length. Use as follows:
+
+1. Select Input Data Folder to choose the location of the DAMSystem data text files. File names must be of the form MonitorNNN.txt, where NNN = 1 to 254, or LC for Light Control. Files must consist of 42 tab-delimited columns.
+
+2. Choose the monitor range to be scanned, and click Scan to initiate read and review of the input files. Results include the earliest and latest readings for each file, number of readings with monitor errors, and total number of readings. Uncheck the Verify Data box to speed up scanning if the input files are known to be good.
+
+3. Choose the first and last bins to be saved, and the output bin length.
+
+4. Choose the Output Data Type. DAMSystem3 counts data may be output as either Monitor Counts, in the same 42-column format as the input files, or Channel Counts, in the legacy DAMSystem2 format of 32 single-column files per monitor. 
+
+5. DAMSystemMB multibeam data may be output as either Monitor files, containing summary data from each tube in one file per monitor, or Tube files, containing detailed data from each tube in individual files. Channel file output may also be used for tube summary data.
+
+6. Multiple input readings within the time frame of a single output bin are combined either by sum or average. The number of these 'extra' readings is reported for each bin in column 5 of the output monitor or tube file.    
+
+7. RunName specifies the name of the output data folder, which will be created alongside the input folder. The individual output files will be named with the RunName prefix plus the output data type.
+
+8. Click Save to produce the output files. Results for each monitor are reported as follows:
+  R = Input readings included in output
+  E = Input readings with errors (output as 0)
+  S = (Skipped) output bins with no input data (output as 0)
+  X = Extra readings (combined into output)
+
+Preview reports as Save, but produces no output files.
+
+9. Save Log adds this log to file DAMFileScanLog.txt.
+
+Note: Input data is contained in 'readings', which may or may not be periodic, and sequences of which may contain gaps. Output data is produced in 'bins', which are guaranteed to be periodic and sequentially complete.
+
+---------- Input Data Folder ----------
+Full Path= 
+V:\
+PySolo - Lori\
+PySolo Data\
+
+Contents=
+No monitor files
+
+---------- Input Data Folder ----------
+Full Path= 
+V:\
+PySolo - Lori\
+
+Contents=
+No monitor files
+
+---------- Input Data Folder ----------
+Full Path= 
+V:\
+PySolo - Lori\
+PySolo Data\
+
+Contents=
+Monitor: 24
+
+---------- File Scan ----------
+Monitor   Earliest ... Latest   Errors/Readings
+M24:  16 Aug 16  15:23:00 ... 22 Aug 16  11:34:00   1/8412
+Scan complete
+
+---------- Preview Monitor Files ----------
+First Bin: 16 Aug 16  15:23:00
+Last Bin: 22 Aug 16  11:34:00
+Bin length (sec): 60
+Output Bins: 8412
+Extra readings: Sum into bin
+
+CtM024:  R=8412    E=1    S=0    X=0
+Preview complete
+
+---------- Save Monitor Files ----------
+First Bin: 16 Aug 16  15:23:00
+Last Bin: 22 Aug 16  11:34:00
+Bin length (sec): 60
+Output Bins: 8412
+Extra readings: Sum into bin
+
+Output Folder Path: 
+V:\
+PySolo - Lori\
+Monitor24D\
+
+Monitor24DCtM024:  R=8412    E=1    S=0    X=0
+Save complete
