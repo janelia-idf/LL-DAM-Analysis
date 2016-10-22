@@ -22,6 +22,8 @@
 #
 #
 
+console_to_file = False
+
 __author__ = "Giorgio Gilestro <giorgio@gilest.ro>"
 __version__ = "$Revision: 1.0 $"
 __date__ = "$Date: 2011/08/16 21:57:19 $"
@@ -1028,7 +1030,8 @@ class acquireFrame(wx.Frame):
 
 
 if __name__ == '__main__':
-#    sys.stdout = open(pv.data_dir + 'stdout.txt', 'w')          # send console output to file
+    if (console_to_file == True) :
+        sys.stdout = open(pv.data_dir + 'stdout.txt', 'w')          # send console output to file
     
     parser = optparse.OptionParser(usage='%prog [options] [argument]', version='%prog version 1.0')
     parser.add_option('-c', '--config', dest='config_file', metavar="CONFIG_FILE", help="The full path to the config file to open")

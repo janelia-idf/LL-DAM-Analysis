@@ -56,7 +56,7 @@ pgm = 'pysolovideo.py'
 #SHGFP_TYPE_CURRENT = 0   # Get current, not default value
 #buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)  # get user document folder path
 #ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
-root_dir = 'D:\\LL-DAM-Analysis\\'
+root_dir = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\'
 #data_dir = root_dir + 'Data\\20160823_135217\\no_timer\\'
 data_dir = root_dir +'Data\\Working_files\\'
 DEFAULT_CONFIG = 'pysolo_video.cfg'

@@ -88,7 +88,7 @@ class myConfig():
 
         filename = filename or pv.DEFAULT_CONFIG
         pDir = pv.data_dir
-        if not os.access(pDir, os.W_OK): pDir = os.environ['HOME']
+#        if not os.access(pDir, os.W_OK): pDir = os.environ['HOME']
         
         self.filename = os.path.join (pDir, filename)
         self.filename_temp = '%s~' % self.filename
@@ -150,9 +150,7 @@ class myConfig():
         if newfile:
             self.config = ConfigParser.RawConfigParser()                               
             self.config.add_section('Options')
-
-            print('$$$$$$ pvg_common: myconfig: save: 156: key = ',key, '\n\r self.defaultOptions = ',self.defaultOptions)
-            
+           
             for key in self.defaultOptions:
                 self.config.set('Options', key, self.defaultOptions[key][0])
 
