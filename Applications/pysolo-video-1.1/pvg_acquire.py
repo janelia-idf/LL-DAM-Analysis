@@ -1012,5 +1012,3 @@ if __name__ == '__main__':
         frame_acq.Start()
 
     app.MainLoop()              # don't step into this
-
-print('done')

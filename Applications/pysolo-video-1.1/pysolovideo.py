@@ -45,7 +45,7 @@ from inspect import currentframe                                                
 from db import debugprt
 import cv2, cv
 import cPickle
-import os, sys, datetime, copy
+import os, sys, datetime
 import numpy as np
 
 
@@ -89,7 +89,7 @@ def getCameraCount():
 
     while Cameras:
         try:
-            print ( cv2.cv.CaptureFromCAM(n) )
+            print ( cv.CaptureFromCAM(n) )
             n += 1
         except:
             Cameras = False
@@ -109,17 +109,17 @@ class Cam:
 
         if not text: text = time.asctime(time.localtime(time.time()))
 
-        normalfont = cv2.cv.InitFont(cv.CV_FONT_HERSHEY_PLAIN, 1, 1, 0, 1, 8)
-        boldfont = cv2.cv.InitFont(cv.CV_FONT_HERSHEY_SIMPLEX, 1, 1, 0, 3, 8)
+        normalfont = cv.InitFont(cv.CV_FONT_HERSHEY_PLAIN, 1, 1, 0, 1, 8)
+        boldfont = cv.InitFont(cv.CV_FONT_HERSHEY_SIMPLEX, 1, 1, 0, 3, 8)
         font = normalfont
         textcolor = (255,255,255)
 
-        (x1, _), ymin = cv2.cv.GetTextSize(text, font)
+        (x1, _), ymin = cv.GetTextSize(text, font)
         width, height = frame.width, frame.height
         x = width - x1 - (width/64)
         y = height - ymin - 2
 
-        cv2.cv.PutText(frame, text, (x, y), font, textcolor)
+        cv.PutText(frame, text, (x, y), font, textcolor)
 
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return frame
@@ -138,7 +138,7 @@ class Cam:
         """
         """
         img = self.getImage(timestamp, imgType)
-        cv2.cv.SaveImage(filename, img) #with opencv
+        cv.SaveImage(filename, img) #with opencv
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def close(self):
@@ -168,7 +168,7 @@ class realCam(Cam):
         if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
-        self.camera = cv2.cv.CaptureFromCAM(self.devnum)
+        self.camera = cv.CaptureFromCAM(self.devnum)
         self.setResolution (self.resolution)
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
@@ -195,8 +195,8 @@ class realCam(Cam):
         """
         x = int(x); y = int(y)
         self.resolution = (x, y)
-        cv2.cv.SetCaptureProperty(self.camera, cv2.cv.CV_CAP_PROP_FRAME_WIDTH, x)
-        cv2.cv.SetCaptureProperty(self.camera, cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, y)
+        cv.SetCaptureProperty(self.camera, cv.CV_CAP_PROP_FRAME_WIDTH, x)
+        cv.SetCaptureProperty(self.camera, cv.CV_CAP_PROP_FRAME_HEIGHT, y)
         x1, y1 = self.getResolution()
         self.scale = ( (x, y) != (x1, y1) ) # if the camera does not support resolution, we need to scale the image
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
@@ -206,8 +206,8 @@ class realCam(Cam):
         """
         Return real resolution
         """
-        x1 = cv2.cv.GetCaptureProperty(self.camera, cv2.cv.CV_CAP_PROP_FRAME_WIDTH)
-        y1 = cv2.cv.GetCaptureProperty(self.camera, cv2.cv.CV_CAP_PROP_FRAME_HEIGHT)
+        x1 = cv.GetCaptureProperty(self.camera, cv.CV_CAP_PROP_FRAME_WIDTH)
+        y1 = cv.GetCaptureProperty(self.camera, cv.CV_CAP_PROP_FRAME_HEIGHT)
         a = (int(x1), int(y1))
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
@@ -228,15 +228,15 @@ class realCam(Cam):
         if not self.camera:
             self.__initCamera()
 
-        frame = cv2.cv.fromarray(cv2.cv.QueryFrame(self.camera))
+        frame = cv.QueryFrame(self.camera)
 
         if self.scale:
-#            newsize = cv2.cv.CreateImage(self.resolution , cv2.cv.IPL_DEPTH_8U, 3)
-#            if type(frame) != type(newsize):
-#                if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
-#                return newsize
-            cv2.cv.Resize(frame, self.resolution)
-#            frame = newsize
+            newsize = cv.CreateImage(self.resolution , cv.IPL_DEPTH_8U, 3)
+            if type(frame) != type(newsize):
+                if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
+                return newsize
+            cv.Resize(frame, newsize)
+            frame = newsize
 
         if timestamp: frame = self.__addText__(frame)
 
@@ -293,15 +293,15 @@ class virtualCamMovie(Cam):
         self.step = step or 1
         if self.step < 1: self.step = 1
 
-        self.loop = False                               # was loop
+        self.loop = loop
 
-        self.capture = cv2.VideoCapture(self.path)
+        self.capture = cv.CaptureFromFile(self.path)
 
         #finding the input resolution
-        w = self.capture.get(cv2.cv.CV_CAP_PROP_FRAME_WIDTH)
-        h = self.capture.get(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT)
-        self.in_resolution = (int(w), int(h))                 
-        self.resolution = self.in_resolution                    # will check for changes in resolution later
+        w = cv.GetCaptureProperty(self.capture, cv.CV_CAP_PROP_FRAME_WIDTH)
+        h = cv.GetCaptureProperty(self.capture, cv.CV_CAP_PROP_FRAME_HEIGHT)
+        self.in_resolution = (int(w), int(h))
+        self.resolution = self.in_resolution
 
         # setting the output resolution
         self.setResolution(*resolution)
@@ -310,8 +310,8 @@ class virtualCamMovie(Cam):
         if end < 1 or end > self.totalFrames: end = self.totalFrames
         self.lastFrame = end
 
-        self.blackFrame = cv2.cv.CreateImage(self.resolution , cv2.cv.IPL_DEPTH_8U, 3)
-        cv2.cv.Zero(self.blackFrame)
+        self.blackFrame = cv.CreateImage(self.resolution , cv.IPL_DEPTH_8U, 3)
+        cv.Zero(self.blackFrame)
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
     def getFrameTime(self, asString=None):
@@ -320,7 +320,7 @@ class virtualCamMovie(Cam):
         Return the time of the frame
         """
 
-        frameTime = cv2.cv.GetCaptureProperty(self.capture, cv2.cv.CV_CAP_PROP_POS_MSEC)
+        frameTime = cv.GetCaptureProperty(self.capture, cv.CV_CAP_PROP_POS_MSEC)
 
 
         if asString:
@@ -342,34 +342,30 @@ class virtualCamMovie(Cam):
 
         """
 
-        #cv.SetCaptureProperty(self.capture, cv2.cv.CV_CAP_PROP_POS_FRAMES, self.currentFrame)
+        #cv.SetCaptureProperty(self.capture, cv.CV_CAP_PROP_POS_FRAMES, self.currentFrame)
         # this does not work properly. Image is very corrupted
-#        im = self.capture.grab()
-        success,im_nparry = self.capture.read() 
+        im = cv.QueryFrame(self.capture)
 
         self.currentFrame += self.step
 
-#%%        if not success:                             if can't read why make black frame?
-#            im = self.blackFrame
-#
-#        elif ((self.currentFrame > self.lastFrame) and (not self.loop)): return False
+        if not im: 
+            im = self.blackFrame
+            print('****** cv.QueryFrame = false')
+            raw_input("Press Enter to continue...")
 
-        if (not success or ((self.currentFrame > self.lastFrame) and (not self.loop))): 
-            return False,im_nparry             # False indicates read was unsuccesful
+        elif ((self.currentFrame > self.lastFrame) and (not self.loop)): return False
 
-        if self.scale:                                                             #    not working... need?
-#            newsize = cv2.cv.CreateImage(self.resolution , cv2.cv.IPL_DEPTH_8U, 3)
-
-            im_nparry = cv2.resize(im_nparry,self.resolution)
-#            cv2.resize(im, newsize)
-#            im = newsize
+        if self.scale:
+            newsize = cv.CreateImage(self.resolution , cv.IPL_DEPTH_8U, 3)
+            cv.Resize(im, newsize)
+            im = newsize
 
         if timestamp:
             text = self.getFrameTime(asString=True)
-            im_nparry = self.__addText__(im, text)
+            im = self.__addText__(im, text)
 
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
-        return True,im_nparry                                                  # True indicates successful read of frame
+        return im
 
     def setResolution(self, w, h):
         if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
@@ -387,7 +383,7 @@ class virtualCamMovie(Cam):
         Be aware of this bug
         https://code.ros.org/trac/opencv/ticket/851
         """
-        a = self.capture.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT )
+        a = cv.GetCaptureProperty( self.capture , cv.CV_CAP_PROP_FRAME_COUNT )
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
@@ -426,7 +422,7 @@ class virtualCamFrames(Cam):
 
         fp = os.path.join(self.path, self.fileList[0])
 
-        self.in_resolution = cv2.cv.GetSize(cv.LoadImage(fp))
+        self.in_resolution = cv.GetSize(cv.LoadImage(fp))
         if not resolution: resolution = self.in_resolution
         self.resolution = resolution
         self.scale = (self.in_resolution != self.resolution)
@@ -489,15 +485,15 @@ class virtualCamFrames(Cam):
         self.currentFrame += 1
 
         try:
-            im = cv2.cv.LoadImage(fp) #using cv to open the file
+            im = cv.LoadImage(fp) #using cv to open the file
 
         except:
             print ( 'error with image %s' % fp )
             raise
 
         if self.scale:
-            newsize = cv2.cv.CreateMat(self.resolution[0], self.resolution[1], cv2.cv.CV_8UC3)
-            cv2.cv.Resize(im, newsize)
+            newsize = cv.CreateMat(self.resolution[0], self.resolution[1], cv.CV_8UC3)
+            cv.Resize(im, newsize)
 
         self.last_time = self.getFrameTime(asString=True)
 
@@ -947,7 +943,7 @@ class Arena():
         Kind of motion depends on user settings
 
         Called every minute; flies treated at once
-        1    09 Dec 11    19:02:19    1    0    1    0    0    0    ?        [actual_activity]
+        1	09 Dec 11	19:02:19	1	0	1	0	0	0	?		[actual_activity]
         """
         #Here we build the header
         #year, month, day, hh, mn, sec 
@@ -1130,9 +1126,9 @@ class Monitor(object):
         """
         if not color: color = (100,100,200)
         width = 1
-        line_type = cv2.cv.CV_AA
+        line_type = cv.CV_AA
 
-        cv2.cv.Line(img, bm[0], bm[1], color, width, line_type, 0)
+        cv.Line(img, bm[0], bm[1], color, width, line_type, 0)
 
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return img
@@ -1142,18 +1138,18 @@ class Monitor(object):
         """
         """
 
-        normalfont = cv2.cv.InitFont(cv.CV_FONT_HERSHEY_PLAIN, 1, 1, 0, 1, 8)
-        boldfont = cv2.cv.InitFont(cv.CV_FONT_HERSHEY_SIMPLEX, 1, 1, 0, 3, 8)
+        normalfont = cv.InitFont(cv.CV_FONT_HERSHEY_PLAIN, 1, 1, 0, 1, 8)
+        boldfont = cv.InitFont(cv.CV_FONT_HERSHEY_SIMPLEX, 1, 1, 0, 3, 8)
         font = normalfont
         textcolor = (255,255,255)
         text = "FPS: %02d" % self.processingFPS
 
-        (x1, _), ymin = cv2.cv.GetTextSize(text, font)
+        (x1, _), ymin = cv.GetTextSize(text, font)
         width, height = frame.width, frame.height
         x = (width/64)
         y = height - ymin - 2
 
-        cv2.cv.PutText(frame, text, (x, y), font, textcolor)
+        cv.PutText(frame, text, (x, y), font, textcolor)
 
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return frame
@@ -1169,16 +1165,16 @@ class Monitor(object):
 
         if not color: color = (255,255,255)
         width = 1
-        line_type = cv2.cv.CV_AA
+        line_type = cv.CV_AA
 
-        cv2.cv.PolyLine(img, [ROI], is_closed=1, color=color, thickness=1, lineType=line_type, shift=0)
+        cv.PolyLine(img, [ROI], is_closed=1, color=color, thickness=1, lineType=line_type, shift=0)
 
         if ROInum != None:
             x, y = ROI[0]
-            font = cv2.cv.InitFont(cv.CV_FONT_HERSHEY_PLAIN, 1, 1, 0, 1, 8)
+            font = cv.InitFont(cv.CV_FONT_HERSHEY_PLAIN, 1, 1, 0, 1, 8)
             textcolor = (255,255,255)
             text = "%02d" % ROInum
-            cv2.cv.PutText(img, text, (x, y), font, textcolor)
+            cv.PutText(img, text, (x, y), font, textcolor)
 
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return img
@@ -1190,7 +1186,7 @@ class Monitor(object):
         """
         if not color: color = (255,255,255)
         width = 1
-        line_type = cv2.cv.CV_AA
+        line_type = cv.CV_AA
 
         x, y = pt
         a = (x, y-5)
@@ -1198,8 +1194,8 @@ class Monitor(object):
         c = (x-5, y)
         d = (x+5, y)
 
-        cv2.cv.Line(img, a, b, color, width, line_type, 0)
-        cv2.cv.Line(img, c, d, color, width, line_type, 0)
+        cv.Line(img, a, b, color, width, line_type, 0)
+        cv.Line(img, c, d, color, width, line_type, 0)
 
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return img
@@ -1212,11 +1208,11 @@ class Monitor(object):
 
         if not color: color = (255,255,255)
         width = 1
-        line_type = cv2.cv.CV_AA
+        line_type = cv.CV_AA
 
         points = self.arena.getLastSteps(fly, steps)
 
-        cv2.cv.PolyLine(img, [points], is_closed=0, color=color, thickness=1, lineType=line_type, shift=0)
+        cv.PolyLine(img, [points], is_closed=0, color=color, thickness=1, lineType=line_type, shift=0)
 
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return img
@@ -1232,7 +1228,7 @@ class Monitor(object):
         cn = 'RGB'.find( channel.upper() )
 
         channels = [None, None, None]
-        cv2.cv.Split(img, channels[0], channels[1], channels[2], None)
+        cv.Split(img, channels[0], channels[1], channels[2], None)
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return channels[cn]
 
@@ -1388,9 +1384,9 @@ class Monitor(object):
 
         http://stackoverflow.com/questions/5426637/writing-video-with-opencv-python-mac
         """
-        fourcc = cv2.cv.CV_FOURCC(*[c for c in codec])
+        fourcc = cv.CV_FOURCC(*[c for c in codec])
 
-        self.writer = cv2.cv.CreateVideoWriter(filename, fourcc, fps, self.resolution, 1)
+        self.writer = cv.CreateVideoWriter(filename, fourcc, fps, self.resolution, 1)
         self.grabMovie = not startOnKey
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
@@ -1537,39 +1533,39 @@ class Monitor(object):
         """
         N = 11
         sz = (img.width & -2, img.height & -2)
-        storage = cv2.cv.CreateMemStorage(0)
-        timg = cv2.cv.CloneImage(img)
-        gray = cv2.cv.CreateImage(sz, 8, 1)
-        pyr = cv2.cv.CreateImage((img.width/2, img.height/2), 8, 3)
+        storage = cv.CreateMemStorage(0)
+        timg = cv.CloneImage(img)
+        gray = cv.CreateImage(sz, 8, 1)
+        pyr = cv.CreateImage((img.width/2, img.height/2), 8, 3)
 
         squares =[]
         # select the maximum ROI in the image
         # with the width and height divisible by 2
-        subimage = cv2.cv.GetSubRect(timg, (0, 0, sz[0], sz[1]))
+        subimage = cv.GetSubRect(timg, (0, 0, sz[0], sz[1]))
 
         # down-scale and upscale the image to filter out the noise
-        cv2.cv.PyrDown(subimage, pyr, 7)
-        cv2.cv.PyrUp(pyr, subimage, 7)
-        tgray = cv2.cv.CreateImage(sz, 8, 1)
+        cv.PyrDown(subimage, pyr, 7)
+        cv.PyrUp(pyr, subimage, 7)
+        tgray = cv.CreateImage(sz, 8, 1)
         # find squares in every color plane of the image
         for c in range(3):
             # extract the c-th color plane
             channels = [None, None, None]
             channels[c] = tgray
-            cv2.cv.Split(subimage, channels[0], channels[1], channels[2], None)
+            cv.Split(subimage, channels[0], channels[1], channels[2], None)
             for l in range(N):
                 # hack: use Canny instead of zero threshold level.
                 # Canny helps to catch squares with gradient shading
                 if(l == 0):
-                    cv2.cv.Canny(tgray, gray, 0, thresh, 5)
-                    cv2.cv.Dilate(gray, gray, None, 1)
+                    cv.Canny(tgray, gray, 0, thresh, 5)
+                    cv.Dilate(gray, gray, None, 1)
                 else:
                     # apply threshold if l!=0:
                     #     tgray(x, y) = gray(x, y) < (l+1)*255/N ? 255 : 0
-                    cv2.cv.Threshold(tgray, gray, (l+1)*255/N, 255, cv2.cv.CV_THRESH_BINARY)
+                    cv.Threshold(tgray, gray, (l+1)*255/N, 255, cv.CV_THRESH_BINARY)
 
                 # find contours and store them all as a list
-                contours = cv2.cv.FindContours(gray, storage, cv2.cv.CV_RETR_LIST, cv2.cv.CV_CHAIN_APPROX_SIMPLE)
+                contours = cv.FindContours(gray, storage, cv.CV_RETR_LIST, cv.CV_CHAIN_APPROX_SIMPLE)
 
                 if not contours:
                     continue
@@ -1592,8 +1588,8 @@ class Monitor(object):
 
                     # approximate contour with accuracy proportional
                     # to the contour perimeter
-                    result = cv2.cv.ApproxPoly(contour, storage,
-                        cv2.cv.CV_POLY_APPROX_DP, cv2.cv.ArcLength(contour) *0.02, 0)
+                    result = cv.ApproxPoly(contour, storage,
+                        cv.CV_POLY_APPROX_DP, cv.ArcLength(contour) *0.02, 0)
 
                     # square contours should have 4 vertices after approximation
                     # relatively large area (to filter out noisy contours)
@@ -1603,7 +1599,7 @@ class Monitor(object):
                     # contour orientation
                     if(len(result) == 4 and
                         abs(cv.ContourArea(result)) > 500 and
-                        cv2.cv.CheckContourConvexity(result)):
+                        cv.CheckContourConvexity(result)):
                         s = 0
                         for i in range(5):
                             # find minimum angle between joint
@@ -1645,34 +1641,34 @@ class Monitor(object):
         """
         self.imageCount += 1
                
-        keepgoing,frame_nparry = self.cam.getImage(timestamp)
-        frame_cvmat = cv2.cv.fromarray(frame_nparry)                  # conversion of frame to format suited to cv2
+        frame = self.cam.getImage(timestamp)
 
-        if keepgoing:
 
-            if timestamp: frame_cvmat = self.__drawFPS(frame_cvmat)     # don't add timestamp to image
-            if self.tracking: frame = self.doTrack(frame_cvmat, show_raw_diff=False, drawPath=self.drawPath)
+        if frame:
+
+            if timestamp: frame = self.__drawFPS(frame)
+            if self.tracking: frame = self.doTrack(frame, show_raw_diff=False, drawPath=self.drawPath)
 
             if drawROIs and self.arena.ROIS:
                 ROInum = 0
                 for ROI, beam in zip(self.arena.ROIS, self.arena.beams):
                     ROInum += 1
-                    frame_cvmat = self.__drawROI(frame_cvmat, ROI, ROInum=ROInum)
-                    frame_cvmat = self.__drawBeam(frame_cvmat, beam)
+                    frame = self.__drawROI(frame, ROI, ROInum=ROInum)
+                    frame = self.__drawBeam(frame, beam)
 
             if selection:
-                frame_cvmat = self.__drawROI(frame_cvmat, selection, color=(0,0,255))
+                frame = self.__drawROI(frame, selection, color=(0,0,255))
 
             if crosses:
                 for pt in crosses:
-                    frame_cvmat = self.__drawCross (frame_cvmat, pt, color=(0,0,255))
+                    frame = self.__drawCross (frame, pt, color=(0,0,255))
 
-            if self.grabMovie: cv2.cv.WriteFrame(self.writer, frame_cvmat)
+            if self.grabMovie: cv.WriteFrame(self.writer, frame)
             
         else: print('$$$$$$ pysolovideo: monitor: getimage: NOT frame')
 
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
-        return keepgoing,frame_cvmat
+        return frame
 
     def processFlyMovements(self):
         if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
@@ -1689,109 +1685,82 @@ class Monitor(object):
             self.arena.compactSeconds(self.__tempFPS, delta) #average the coordinates and transfer from buffer to array
             self.processingFPS = self.__tempFPS; self.__tempFPS = 0
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
-        
 
-    def showcvmat(self, title, img):
-            img_nparry = np.asarray(img )
-            cv2.imshow(title,img_nparry)
-            cv2.waitKey()
-            return 
-            
-        
-    def doTrack(self, frame_cvmat, show_raw_diff=False, drawPath=True):
+    def doTrack(self, frame, show_raw_diff=False, drawPath=True):
         if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         Track flies in ROIs using findContour algorithm in opencv
         Each frame is compared against the moving average
         take an opencv frame as input and return a frame as output with path, flies and mask drawn on it
         """
-        self.showcvmat('frame',frame_cvmat)
         track_one = True # Track only one fly per ROI
 
-        h, w = cv2.cv.GetSize(frame_cvmat) 
-
-        # smooth the image
-        frame_nparry = np.asarray(frame_cvmat[:,:] )       # Gaussian blur requires np array
-        cv2.GaussianBlur(frame_nparry, (3, 3), 0)              # what do the numbers mean?
-        cv2.imshow('gaussian blur',frame_nparry)
-        cv2.waitKey()
+        # Smooth to get rid of false positives
+        cv.Smooth(frame, frame, cv.CV_GAUSSIAN, 3, 0)
 
         # Create some empty containers to be used later on
-        grey_image_cvmat = cv2.cv.CreateMat(h, w, cv2.cv.CV_8UC1)
-        self.showcvmat('grey image',grey_image_cvmat)
-
-        temp_cvmat = cv2.cv.CreateMat(h, w, cv2.cv.CV_32FC3)
-        self.showcvmat('temp image',temp_cvmat)
-
-        difference_cvmat = cv2.cv.CreateMat(h, w, cv2.cv.CV_32FC3)
-        self.showcvmat('difference image',difference_cvmat)
-
-        ROImsk_ipl = copy.copy(grey_image_cvmat)
-        ROIwrk_ipl = copy.copy(grey_image_cvmat)
+        grey_image = cv.CreateImage(cv.GetSize(frame), cv.IPL_DEPTH_8U, 1)
+        temp = cv.CloneImage(frame)
+        difference = cv.CloneImage(frame)
+        ROImsk = cv.CloneImage(grey_image)
+        ROIwrk = cv.CloneImage(grey_image)
 
         if self.__firstFrame:
             #create the moving average
-            self.moving_average_cvmat = cv2.cv.CreateMat(h, w, cv2.cv.CV_32FC3)
-            cv2.cv.ConvertScale(frame_cvmat, self.moving_average_cvmat, 1.0, 0.0)              
+            self.moving_average = cv.CreateImage(cv.GetSize(frame), cv.IPL_DEPTH_32F, 3)
+            cv.ConvertScale(frame, self.moving_average, 1.0, 0.0)
             self.__firstFrame = False
         else:
             #update the moving average
-            cv2.cv.RunningAvg(frame_cvmat, self.moving_average_cvmat, 0.2, None)           #0.04
+            cv.RunningAvg(frame, self.moving_average, 0.2, None) #0.04
 
         # Convert the scale of the moving average.
-        cv2.cv.ConvertScale(self.moving_average_cvmat, temp_cvmat, 1.0, 0.0)                  
+        cv.ConvertScale(self.moving_average, temp, 1.0, 0.0)
 
         # Minus the current frame from the moving average.
-        print('frame_cvmat = ',type(frame_cvmat),cv2.cv.GetSize(frame_cvmat))
-        print('temp_cvmat = ',type(temp_cvmat),cv2.cv.GetSize(temp_cvmat))
-        print('difference_cvmat = ',type(difference_cvmat),cv2.cv.GetSize(difference_cvmat))
-
-        frame_32FC3_cvmat = cv2.cv.CreateMat(h, w, cv2.cv.CV_32FC3)
-        cv2.cv.ConvertScale(frame_cvmat, frame_32FC3_cvmat, 1.0, 0.0)              
-        cv2.cv.AbsDiff(frame_32FC3_cvmat, temp_cvmat, difference_cvmat)
+        cv.AbsDiff(frame, temp, difference)
 
         # Convert the image to grayscale.
-        cv2.cv.CvtColor(difference_cvmat, grey_image_cvmat,cv2.cv.CV_RGB2GRAY)
+        cv.CvtColor(difference, grey_image, cv.CV_RGB2GRAY)
 
         # Convert the image to black and white.
-        grey_image_cvmat = cv2.threshold(grey_image_cvmat, 20, 255, cv2.THRESH_BINARY)[1]
-#        junk,grey_image = cv2.threshold(np.asarray(grey_image)[:,:], 20, 255,cv2.THRESH_BINARY)
+        cv.Threshold(grey_image, grey_image, 20, 255, cv.CV_THRESH_BINARY)
 
         # Dilate and erode to get proper blobs
-        cv2.cv.Dilate(grey_image__cvmat, grey_image_cvmat, None, 2) #18
-        cv2.cv.Erode(grey_image_cvmat, grey_image_cvmat, None, 2) #10
+        cv.Dilate(grey_image, grey_image, None, 2) #18
+        cv.Erode(grey_image, grey_image, None, 2) #10
 
         #Build the mask. This allows for non rectangular ROIs
         for ROI in self.arena.ROIS:
-            cv2.cv.FillPoly( ROImsk_nparry, [ROI], color=cv.CV_RGB(255, 255, 255) )
+            cv.FillPoly( ROImsk, [ROI], color=cv.CV_RGB(255, 255, 255) )
 
         #Apply the mask to the grey image where tracking happens
-        cv2.cv.Copy(grey_image_cvmat, ROIwrk_nparry, ROImsk_nparry)
-        storage = cv2.cv.CreateMemStorage(0)
+        cv.Copy(grey_image, ROIwrk, ROImsk)
+        storage = cv.CreateMemStorage(0)
 
         
         #track each ROI
         for fly_number, ROI in enumerate( self.arena.ROIStoRect() ):
             print('$$$$$$ pysolovideo: dotrack: 1773: for fly ' + str(fly_number))                                    # debug
             (x1,y1), (x2,y2) = ROI
-            cv2.cv.SetImageROI(ROIwrk_nparry, (x1,y1,x2-x1,y2-y1) )
-            cv2.cv.SetImageROI(frame_cvmat, (x1,y1,x2-x1,y2-y1) )
-            cv2.cv.SetImageROI(grey_image_cvmat, (x1,y1,x2-x1,y2-y1) )
+            cv.SetImageROI(ROIwrk, (x1,y1,x2-x1,y2-y1) )
+            cv.SetImageROI(frame, (x1,y1,x2-x1,y2-y1) )
+            cv.SetImageROI(grey_image, (x1,y1,x2-x1,y2-y1) )
 
-            contour = cv2.cv.FindContours(ROIwrk_nparry, storage, cv2.cv.CV_RETR_CCOMP, cv2.cv.CV_CHAIN_APPROX_SIMPLE)
+            contour = cv.FindContours(ROIwrk, storage, cv.CV_RETR_CCOMP, cv.CV_CHAIN_APPROX_SIMPLE)
 
             points = []
             fly_coords = None
 
             while contour:
                 # Draw rectangles
-                bound_rect = cv2.cv.BoundingRect(list(contour))
+                bound_rect = cv.BoundingRect(list(contour))
                 contour = contour.h_next()
                 if track_one and not contour: # this will make sure we are tracking only the biggest rectangle
                     pt1 = (bound_rect[0], bound_rect[1])
                     pt2 = (bound_rect[0] + bound_rect[2], bound_rect[1] + bound_rect[3])
                     points.append(pt1); points.append(pt2)
-                    cv2.cv.Rectangle(frame_cvmat, pt1, pt2, cv2.cv.CV_RGB(255,0,0), 1)
+                    cv.Rectangle(frame, pt1, pt2, cv.CV_RGB(255,0,0), 1)
 
                     fly_coords = ( pt1[0]+(pt2[0]-pt1[0])/2, pt1[1]+(pt2[1]-pt1[1])/2 )
                     area = (pt2[0]-pt1[0])*(pt2[1]-pt1[1])
@@ -1801,23 +1770,21 @@ class Monitor(object):
             fly_coords, distance = self.arena.addFlyCoords(fly_number, fly_coords)
             print('$$$$$$ pysolovideo: dotrack: 1800:  fly_coords = ', fly_coords, 'distance = ',distance)                                            # debug
 
-            frame_cvmat = self.__drawCross(frame_cvmat, fly_coords)
-            if drawPath: frame_cvmat = self.__drawLastSteps(frame__cvmat, fly_number, steps=5)
-            if show_raw_diff: grey_image_cvmat = self.__drawCross(grey_image_cvmat, fly_coords, color=(100,100,100))
+            frame = self.__drawCross(frame, fly_coords)
+            if drawPath: frame = self.__drawLastSteps(frame, fly_number, steps=5)
+            if show_raw_diff: grey_image = self.__drawCross(grey_image, fly_coords, color=(100,100,100))
 
-            cv2.cv.ResetImageROI(ROIwrk_nparry)
-            cv2.cv.ResetImageROI(grey_image_cvmat)
-            cv2.cv.ResetImageROI(frame_cvmat)
+            cv.ResetImageROI(ROIwrk)
+            cv.ResetImageROI(grey_image)
+            cv.ResetImageROI(frame)
 
         self.processFlyMovements()
 
         if show_raw_diff:
-            temp2_nparry = cv2.cv.CloneImage(grey_image_cvmat)
-            cv2.cv.CvtColor(grey_image_cvmat, temp2_cvmat, cv2.cv.CV_GRAY2RGB)#show the actual difference blob that will be tracked
+            temp2 = cv.CloneImage(grey_image)
+            cv.CvtColor(grey_image, temp2, cv.CV_GRAY2RGB)#show the actual difference blob that will be tracked
             if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
-            return temp2_cvmat
+            return temp2
 
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
-        return frame_cvmat
-
-
+        return frame
