@@ -1686,6 +1686,14 @@ class Monitor(object):
             self.processingFPS = self.__tempFPS; self.__tempFPS = 0
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
+
+    def showimg(self, title, img):                # displays an image                 # debug           
+            
+        img_nparry = np.asarray(img[:,:])
+        cv2.imshow(title,img_nparry)
+        cv2.waitKey()
+  
+        
     def doTrack(self, frame, show_raw_diff=False, drawPath=True):
         if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
@@ -1693,49 +1701,84 @@ class Monitor(object):
         Each frame is compared against the moving average
         take an opencv frame as input and return a frame as output with path, flies and mask drawn on it
         """
+        self.showimg('1703 frame', frame)    
         track_one = True # Track only one fly per ROI
 
         # Smooth to get rid of false positives
         cv.Smooth(frame, frame, cv.CV_GAUSSIAN, 3, 0)
+        self.showimg('1708 smooth frame', frame)    
 
         # Create some empty containers to be used later on
         grey_image = cv.CreateImage(cv.GetSize(frame), cv.IPL_DEPTH_8U, 1)
+        self.showimg('1712 grey image', grey_image)    
+
         temp = cv.CloneImage(frame)
+        self.showimg('1715 temp', temp)    
+
         difference = cv.CloneImage(frame)
+        self.showimg('1718 difference', difference)    
+
         ROImsk = cv.CloneImage(grey_image)
+        self.showimg('1721 ROImsk', ROImsk)    
+
         ROIwrk = cv.CloneImage(grey_image)
+        self.showimg('1724 ROIwrk', ROIwrk)    
+
 
         if self.__firstFrame:
             #create the moving average
             self.moving_average = cv.CreateImage(cv.GetSize(frame), cv.IPL_DEPTH_32F, 3)
+            self.showimg('1730 moving_average', self.moving_average)    
+
             cv.ConvertScale(frame, self.moving_average, 1.0, 0.0)
+            self.showimg('1733 ConvertScale moving_average', self.moving_average)    
+
             self.__firstFrame = False
         else:
             #update the moving average
             cv.RunningAvg(frame, self.moving_average, 0.2, None) #0.04
+            self.showimg('1739 RunningAvg moving_average', self.moving_average)    
+
 
         # Convert the scale of the moving average.
         cv.ConvertScale(self.moving_average, temp, 1.0, 0.0)
+        self.showimg('1744 ConvertScale moving_average', self.moving_average)    
+
 
         # Minus the current frame from the moving average.
         cv.AbsDiff(frame, temp, difference)
+        self.showimg('1749 AbsDiff difference', difference)    
+
 
         # Convert the image to grayscale.
         cv.CvtColor(difference, grey_image, cv.CV_RGB2GRAY)
+        self.showimg('1754 CvtColor grey_image', grey_image)    
+
 
         # Convert the image to black and white.
         cv.Threshold(grey_image, grey_image, 20, 255, cv.CV_THRESH_BINARY)
+        self.showimg('1759 Threshold grey_image', grey_image)    
 
         # Dilate and erode to get proper blobs
         cv.Dilate(grey_image, grey_image, None, 2) #18
+        self.showimg('1763 Dilate grey_image', grey_image)    
+
         cv.Erode(grey_image, grey_image, None, 2) #10
+        self.showimg('1765 Erode grey_image', grey_image)    
+
 
         #Build the mask. This allows for non rectangular ROIs
         for ROI in self.arena.ROIS:
             cv.FillPoly( ROImsk, [ROI], color=cv.CV_RGB(255, 255, 255) )
+            self.showimg('1772 FillPoly ROImsk '+ str(ROI) , ROImsk)    
 
         #Apply the mask to the grey image where tracking happens
         cv.Copy(grey_image, ROIwrk, ROImsk)
+        self.showimg('1776 grey_image', grey_image)    
+        self.showimg('1777 ROIwrk', ROIwrk)    
+        self.showimg('1778 ROImsk', ROImsk)    
+
+
         storage = cv.CreateMemStorage(0)
 
         
