@@ -54,7 +54,7 @@ import numpy as np
 """
 pgm = 'pysolovideo.py'
 call_tracking = False               # if True each function will report it's beginning and end
-
+show_imgs = False                   # if true, show images 
 # get root dir name for all file operations
 #
 import ctypes.wintypes
@@ -63,8 +63,7 @@ SHGFP_TYPE_CURRENT = 0   # Get current, not default value
 buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)  # get user document folder path
 ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
 root_dir = buf.value + '\\GitHub\\LL-DAM-Analysis\\'
-#data_dir = root_dir + 'Data\\20160823_135217\\no_timer\\'
-data_dir = root_dir +'Data\\Working_files\\'
+data_dir = root_dir + 'Data\\20160727_172238\\'
 
 DEFAULT_CONFIG = 'pysolo_video.cfg'
 
@@ -350,7 +349,7 @@ class virtualCamMovie(Cam):
 
         if not im: 
             im = self.blackFrame
-            print('****** cv.QueryFrame = false')
+            print('$$$$$$, pysolovideo, getImage, 353, cv.QueryFrame = false')
             raw_input("Press Enter to continue...")
 
         elif ((self.currentFrame > self.lastFrame) and (not self.loop)): return False
@@ -639,7 +638,7 @@ class Arena():
         rx = max([x1,x2,x3,x4])
         uy = min([y1,y2,y3,y4])
         ly = max([y1,y2,y3,y4])
-#        print('will return: ', ( (lx,uy), (rx, ly) ))                               # debug
+
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return ( (lx,uy), (rx, ly) )
 
@@ -648,8 +647,6 @@ class Arena():
         """
         Calculate the distance between two cartesian points
         """
-#        print('will return: ')
-#        print(np.sqrt((x2-x1)**2 + (y2-y1)**2))                                                  # debug
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return np.sqrt((x2-x1)**2 + (y2-y1)**2)
 
@@ -896,7 +893,7 @@ class Arena():
         fly = fly or previous_position #Fly is None if no blob was detected
 
         distance = self.__distance( previous_position, fly )
-        print('$$$$$$ pysolovideo: addflycoords: 902: distance = ',distance,'  previous position = ',previous_position, '  fly = ',fly)
+        print('$$$$$$, pysolovideo, addflycoords, 902, distance = ',distance,'  previous position = ',previous_position, '  fly = ',fly)
         if ( distance > max_movement and not isFirstMovement ) or ( distance < min_movement ):
             fly = previous_position
 
@@ -980,7 +977,7 @@ class Arena():
         elif self.trackType == 2:
             activity = self.calculatePosition()
 
-        print('$$$$$$ pysolovideo: writeactivity: 995:  activity = ', activity)                                           # debug
+        print('$$$$$$ pysolovideo: writeactivity: 995:  activity = ,', activity)                                           # debug
 
         # Expand the readings to 32 flies for compatibility reasons with trikinetics
         flies = len ( activity[0].split('\t') )
@@ -998,7 +995,7 @@ class Arena():
 
         if self.outputFile:
             fh = open(self.outputFile, 'a')
-            print('$$$$$$ pysolovideo: writeactivity: 1014:  row = ',row)                                                # debug
+            print('$$$$$$, pysolovideo, writeactivity, 1014,  row = ',row)                                                # debug
             fh.write(row)
             fh.close()
             
@@ -1014,7 +1011,7 @@ class Arena():
 
         # shift by one second left flies, seconds, (x,y)
         fs = np.roll(self.flyDataMin, -1, axis=1)
-
+        
         x = self.flyDataMin[:,:,:1]
         y = self.flyDataMin[:,:,1:]
 
@@ -1022,12 +1019,14 @@ class Arena():
         y1 = fs[:,:,1:]
 
         d = self.__distance((x,y),(x1,y1))
+        print('$$$$$$, pysolovideo, calcdists, 1021, x = ,',str(x[0]),', y = ,',str(y[0]),
+              ', x1 = ,',str(x1[0]),', y1 = ,',str(y1[0]), 'd = ', str(d[0]))
 
         #we sum everything BUT the last bit of information otherwise we have data duplication
         values = d[:,:-1,:].sum(axis=1).reshape(-1)
-
         activity = '\t'.join( ['%s' % int(v) for v in values] )
-        print('$$$$$$ pysolovideo: writeactivity: 1042: activity = ', activity, 'values = ',values)
+        print('$$$$$$, pysolovideo, writeactivity, calculatedistances, 1030, activity = ,', activity, ', values = ,',values)
+
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return activity
 
@@ -1096,6 +1095,8 @@ class Monitor(object):
         A Monitor contains a cam, which can be either virtual or real.
         Everything is handled through openCV
         """
+        self.count = 0
+        
         self.grabMovie = False
         self.writer = None
         self.cam = None
@@ -1688,10 +1689,10 @@ class Monitor(object):
 
 
     def showimg(self, title, img):                # displays an image                 # debug           
-            
         img_nparry = np.asarray(img[:,:])
         cv2.imshow(title,img_nparry)
         cv2.waitKey()
+        cv2.imwrite(data_dir + 'snapshots\\' + title + '.jpg', img_nparry)
   
         
     def doTrack(self, frame, show_raw_diff=False, drawPath=True):
@@ -1701,82 +1702,85 @@ class Monitor(object):
         Each frame is compared against the moving average
         take an opencv frame as input and return a frame as output with path, flies and mask drawn on it
         """
-        self.showimg('1703 frame', frame)    
+        
+        self.count +=1
+        
+        if show_imgs: self.showimg('1703 frame ' + str(self.count), frame)    
         track_one = True # Track only one fly per ROI
 
         # Smooth to get rid of false positives
         cv.Smooth(frame, frame, cv.CV_GAUSSIAN, 3, 0)
-        self.showimg('1708 smooth frame', frame)    
+        # if show_imgs:  self.showimg('1708 smooth frame ' + str(self.count), frame)    
 
         # Create some empty containers to be used later on
         grey_image = cv.CreateImage(cv.GetSize(frame), cv.IPL_DEPTH_8U, 1)
-        self.showimg('1712 grey image', grey_image)    
+        # if show_imgs: self.showimg('1712 grey image ' + str(self.count), grey_image)    
 
         temp = cv.CloneImage(frame)
-        self.showimg('1715 temp', temp)    
+        # if show_imgs: self.showimg('1715 temp ' + str(self.count), temp)    
 
         difference = cv.CloneImage(frame)
-        self.showimg('1718 difference', difference)    
+        # if show_imgs: self.showimg('1718 difference ' + str(self.count), difference)    
 
         ROImsk = cv.CloneImage(grey_image)
-        self.showimg('1721 ROImsk', ROImsk)    
+        # if show_imgs: self.showimg('1721 ROImsk ' + str(self.count), ROImsk)    
 
         ROIwrk = cv.CloneImage(grey_image)
-        self.showimg('1724 ROIwrk', ROIwrk)    
+        # if show_imgs: self.showimg('1724 ROIwrk ' + str(self.count), ROIwrk)    
 
 
         if self.__firstFrame:
             #create the moving average
             self.moving_average = cv.CreateImage(cv.GetSize(frame), cv.IPL_DEPTH_32F, 3)
-            self.showimg('1730 moving_average', self.moving_average)    
+            # if show_imgs: self.showimg('1730 moving_average ' + str(self.count), self.moving_average)    
 
             cv.ConvertScale(frame, self.moving_average, 1.0, 0.0)
-            self.showimg('1733 ConvertScale moving_average', self.moving_average)    
+            # if show_imgs: self.showimg('1733 ConvertScale moving_average ' + str(self.count), self.moving_average)    
 
             self.__firstFrame = False
         else:
             #update the moving average
             cv.RunningAvg(frame, self.moving_average, 0.2, None) #0.04
-            self.showimg('1739 RunningAvg moving_average', self.moving_average)    
+            # if show_imgs: self.showimg('1739 RunningAvg moving_average ' + str(self.count), self.moving_average)    
 
 
         # Convert the scale of the moving average.
         cv.ConvertScale(self.moving_average, temp, 1.0, 0.0)
-        self.showimg('1744 ConvertScale moving_average', self.moving_average)    
+        # if show_imgs: self.showimg('1744 ConvertScale moving_average ' + str(self.count), self.moving_average)    
 
 
         # Minus the current frame from the moving average.
         cv.AbsDiff(frame, temp, difference)
-        self.showimg('1749 AbsDiff difference', difference)    
+        if show_imgs: self.showimg('1749 AbsDiff difference ' + str(self.count), difference)    
 
 
         # Convert the image to grayscale.
         cv.CvtColor(difference, grey_image, cv.CV_RGB2GRAY)
-        self.showimg('1754 CvtColor grey_image', grey_image)    
+        # if show_imgs: self.showimg('1754 CvtColor grey_image ' + str(self.count), grey_image)    
 
 
         # Convert the image to black and white.
         cv.Threshold(grey_image, grey_image, 20, 255, cv.CV_THRESH_BINARY)
-        self.showimg('1759 Threshold grey_image', grey_image)    
+        # if show_imgs: self.showimg('1759 Threshold grey_image ' + str(self.count), grey_image)    
 
         # Dilate and erode to get proper blobs
         cv.Dilate(grey_image, grey_image, None, 2) #18
-        self.showimg('1763 Dilate grey_image', grey_image)    
+        # if show_imgs: self.showimg('1763 Dilate grey_image ' + str(self.count), grey_image)    
 
         cv.Erode(grey_image, grey_image, None, 2) #10
-        self.showimg('1765 Erode grey_image', grey_image)    
+        if show_imgs: self.showimg('1765 Erode grey_image ' + str(self.count), grey_image)    
 
 
         #Build the mask. This allows for non rectangular ROIs
         for ROI in self.arena.ROIS:
             cv.FillPoly( ROImsk, [ROI], color=cv.CV_RGB(255, 255, 255) )
-            self.showimg('1772 FillPoly ROImsk '+ str(ROI) , ROImsk)    
+        # if show_imgs: self.showimg('1772 FillPoly ROImsk  ' + str(self.count) + 'ROI' + str(ROI) , ROImsk)    
 
         #Apply the mask to the grey image where tracking happens
         cv.Copy(grey_image, ROIwrk, ROImsk)
-        self.showimg('1776 grey_image', grey_image)    
-        self.showimg('1777 ROIwrk', ROIwrk)    
-        self.showimg('1778 ROImsk', ROImsk)    
+        # if show_imgs: self.showimg('1776 grey_image ' + str(self.count), grey_image)    
+        # if show_imgs: self.showimg('1777 ROIwrk ' + str(self.count), ROIwrk)    
+        if show_imgs: self.showimg('1778 ROImsk ' + str(self.count), ROImsk)    
 
 
         storage = cv.CreateMemStorage(0)
@@ -1784,7 +1788,7 @@ class Monitor(object):
         
         #track each ROI
         for fly_number, ROI in enumerate( self.arena.ROIStoRect() ):
-            print('$$$$$$ pysolovideo: dotrack: 1773: for fly ' + str(fly_number))                                    # debug
+            print('$$$$$$, pysolovideo, dotrack, 1794, for ROI number ' + str(fly_number) + ', frame ' + str(self.count))                                    # debug
             (x1,y1), (x2,y2) = ROI
             cv.SetImageROI(ROIwrk, (x1,y1,x2-x1,y2-y1) )
             cv.SetImageROI(frame, (x1,y1,x2-x1,y2-y1) )
@@ -1807,11 +1811,12 @@ class Monitor(object):
 
                     fly_coords = ( pt1[0]+(pt2[0]-pt1[0])/2, pt1[1]+(pt2[1]-pt1[1])/2 )
                     area = (pt2[0]-pt1[0])*(pt2[1]-pt1[1])
-                    if area > 400: fly_coords = None
+                    if area > 400: 
+                        fly_coords = None
+                        print('$$$$$$, pysolovideo, dotrack, 1810, area > 400 - no coords, area = ',area)
 
             # for each frame adds fly coordinates to all ROIS. Also do some filtering to remove false positives
             fly_coords, distance = self.arena.addFlyCoords(fly_number, fly_coords)
-            print('$$$$$$ pysolovideo: dotrack: 1800:  fly_coords = ', fly_coords, 'distance = ',distance)                                            # debug
 
             frame = self.__drawCross(frame, fly_coords)
             if drawPath: frame = self.__drawLastSteps(frame, fly_number, steps=5)
@@ -1825,7 +1830,9 @@ class Monitor(object):
 
         if show_raw_diff:
             temp2 = cv.CloneImage(grey_image)
-            cv.CvtColor(grey_image, temp2, cv.CV_GRAY2RGB)#show the actual difference blob that will be tracked
+            cv.CvtColor(grey_image, temp2, cv.CV_GRAY2RGB)  #show the actual difference blob that will be tracked
+            if show_imgs: self.showimg('1829 diff bolb being tracked, ' + str(self.count) + ' fly # '+str(str(fly_number)), temp2)    
+
             if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return temp2
 
