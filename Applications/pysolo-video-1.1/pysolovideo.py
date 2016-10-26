@@ -53,10 +53,8 @@ import numpy as np
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Settings
 """
 pgm = 'pysolovideo.py'
-call_tracking = True               # if True each function will report it's beginning and end
+call_tracking = False               # if True each function will report it's beginning and end
 show_imgs = False                   # if true, show images 
-
-
 # get root dir name for all file operations
 #
 import ctypes.wintypes
@@ -65,7 +63,7 @@ SHGFP_TYPE_CURRENT = 0   # Get current, not default value
 buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)  # get user document folder path
 ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
 root_dir = buf.value + '\\GitHub\\LL-DAM-Analysis\\'
-data_dir = root_dir + 'Data\\20160823_135217\\'
+data_dir = root_dir + 'Data\\20160727_172238\\'
 
 DEFAULT_CONFIG = 'pysolo_video.cfg'
 
@@ -586,7 +584,7 @@ class Arena():
         self.ROAS = [] #Regions of Action
         self.minuteFPS = []
 
-        self.period = 2 #in seconds                # account for indexing differences btw python & people (2-> 1 frame at a time; 61-> 60 frames per period)
+        self.period = 2 #in seconds                # account for indexing differences btw python & people
         self.ratio = 0
         self.rowline = 0
 
@@ -1645,7 +1643,7 @@ class Monitor(object):
         self.imageCount += 1
                
         frame = self.cam.getImage(timestamp)
-        
+
 
         if frame:
 
@@ -1668,13 +1666,7 @@ class Monitor(object):
 
             if self.grabMovie: cv.WriteFrame(self.writer, frame)
             
-        else: 
-            sys.stdout = open(console_file, 'w')          # send console output to file
-            print('$$$$$$ pysolovideo: monitor: getimage: NOT frame')
-            cv2.waitKey()
-
-
-            sys.exit()
+        else: print('$$$$$$ pysolovideo: monitor: getimage: NOT frame')
 
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return frame
