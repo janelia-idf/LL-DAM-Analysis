@@ -45,6 +45,8 @@ from pvg_common import pvg_config, acquireThread
 from pvg_panel_one import panelOne
 from pvg_options import pvg_OptionsPanel
 from pvg_panel_two import panelLiveView
+from inspect import currentframe                                                                     # debug
+from db import debugprt
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Settings
 pgm = 'pvg_acquire.py'              # identifies script file name for debug code

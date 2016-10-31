@@ -65,7 +65,7 @@ SHGFP_TYPE_CURRENT = 0   # Get current, not default value
 buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)  # get user document folder path
 ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
 root_dir = buf.value + '\\GitHub\\LL-DAM-Analysis\\'
-data_dir = root_dir + 'Data\\20160823_135217\\'
+data_dir = root_dir + 'Data\\Working_files\\'
 
 DEFAULT_CONFIG = 'pysolo_video.cfg'
 
@@ -323,14 +323,14 @@ class virtualCamMovie(Cam):
 
         frameTime = cv.GetCaptureProperty(self.capture, cv.CV_CAP_PROP_POS_MSEC)
 
-
+        print('$$$$$$, pysolovideo, getframetime, 326, will return 1/1000th of frametime = ,',frameTime)
         if asString:
             frameTime = str( datetime.timedelta(seconds=frameTime / 100.0) )
             if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
-            return '%s - %s/%s' % (frameTime, self.currentFrame, self.totalFrames) #time.asctime(time.localtime(fileTime))
+            return '%s - %s/%s' % (frameTime, self.currentFrame, self.totalFrames)   # was time.asctime(time.localtime(fileTime))  -> why do we care what the current time is?
         else:
             if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
-            return frameTime / 1000.0 #returning seconds compatibility reasons
+            return frameTime / 1000.0 # returning seconds compatibility reasons
 
     def getImage(self, timestamp=False):
         if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
@@ -351,16 +351,25 @@ class virtualCamMovie(Cam):
 
         if not im: 
             im = self.blackFrame
+            sysout = sys.__stdout__
             print('$$$$$$, pysolovideo, getImage, 353, cv.QueryFrame = false')
+
             raw_input("Press Enter to continue...")
 
-        elif ((self.currentFrame > self.lastFrame) and (not self.loop)): return False
+        elif ((self.currentFrame > self.lastFrame) and (not self.loop)): 
+            sysout = sys.__stdout__
+            print('$$$$$$, pysolovideo, getImage, 361, currentFrame > lastFrame')
+
+            raw_input("Press Enter to continue...")
+            
+            return False
 
         if self.scale:
             newsize = cv.CreateImage(self.resolution , cv.IPL_DEPTH_8U, 3)
             cv.Resize(im, newsize)
             im = newsize
-
+            print('$$$$$$, pysolovideo, getImage, 371, image resized')
+            
         if timestamp:
             text = self.getFrameTime(asString=True)
             im = self.__addText__(im, text)
@@ -385,6 +394,8 @@ class virtualCamMovie(Cam):
         https://code.ros.org/trac/opencv/ticket/851
         """
         a = cv.GetCaptureProperty( self.capture , cv.CV_CAP_PROP_FRAME_COUNT )
+
+        print('$$$$$$, pysolovideo, getImage, 398, total frames = ,',a)
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
@@ -440,15 +451,18 @@ class virtualCamFrames(Cam):
         manual = False
         if manual:
             if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
+            print('$$$$$$, pysolovideo, getframetime, 454, returns currentFrame')
             return self.currentFrame
 
         if fname and asString:
             fileTime = os.stat(fname)[-2]
             a = time.asctime(time.localtime(fileTime))
+            print('$$$$$$, pysolovideo, getframetime, 460, most recent modification time = ,',a)
             if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return a
         elif fname and not asString:
             fileTime = os.stat(fname)[-2]
+            print('$$$$$$, pysolovideo, getframetime, 465, most recent modification time = ,',fileTime)
             if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return fileTime
 
@@ -586,7 +600,7 @@ class Arena():
         self.ROAS = [] #Regions of Action
         self.minuteFPS = []
 
-        self.period = 2 #in seconds                # account for indexing differences btw python & people (2-> 1 frame at a time; 61-> 60 frames per period)
+        self.period = 31 #in seconds                # account for indexing differences btw python & people (2-> 1 frame at a time; 61-> 60 frames per period)
         self.ratio = 0
         self.rowline = 0
 

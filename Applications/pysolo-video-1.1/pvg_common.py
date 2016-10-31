@@ -27,6 +27,8 @@
 import wx, cv, os        
 import pysolovideo as pv
 import ConfigParser, threading
+from inspect import currentframe                                                                     # debug
+from db import debugprt
 
 """
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Settings

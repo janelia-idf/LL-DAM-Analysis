@@ -34,12 +34,14 @@ from pvg_options import pvg_OptionsPanel
 from pvg_panel_two import panelLiveView
 from pysolovideo import pySoloVideoVersion
 import pysolovideo as pv
+from inspect import currentframe                                                                     # debug
+from db import debugprt
 """
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Settings
 """ 
 
 pgm = 'pvg.py'
-console_to_file = True             # controls whether console output goes to console or a file
+console_to_file = False             # controls whether console output goes to console or a file
 console_file = pv.data_dir + 'stdout.txt'
 
 """
