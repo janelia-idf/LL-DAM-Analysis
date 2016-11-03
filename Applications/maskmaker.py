@@ -5,7 +5,6 @@ Created on Fri Oct 28 22:23:09 2016
 @author: Lori
 """
 
-import codecs
 
 x1 = 10
 x_width = 20
@@ -18,7 +17,7 @@ y_sep = 3
 rows = 2
 columns = 3
 
-filename = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\Data\\automask.msk'
+filename = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\Data\\Working_files\\automask.msk'
 
 fh = open(filename,'w')
 
@@ -34,8 +33,7 @@ dx = x1
 dy = y1 + y_height
 ROI = 1
 
-# outstr = '(lp1\n((I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\n' % (ax,ay,bx,by,cx,cy,dx,dy)
-fh.write(  '(lp1\n((I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\n' % (ax,ay,bx,by,cx,cy,dx,dy))
+fh.write('(lp1\n((I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\n' % (ax,ay,bx,by,cx,cy,dx,dy))
 
 for col in range(0,columns):        # x-coordinates changes through columns
     ax = ax + x_width + x_sep       # move to the right in x
@@ -52,7 +50,6 @@ for col in range(0,columns):        # x-coordinates changes through columns
         cy = cy + y_height + y_sep
         dy = dy + y_height + y_sep
         ROI = ROI + 1
-#         outstr = 'ttp%d\na((I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\n' % (ROI,ax,ay,bx,by,cx,cy,dx,dy)
         fh.write('ttp%d\na((I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\n' % (ROI,ax,ay,bx,by,cx,cy,dx,dy))
 
 # no           fh.write('ttp%d\naI%d\nI%d\nI%d\nI%d\n%d\n%d\n%d\n%d\n' % (ROI,ax,ay,bx,by,cx,cy,dx,dy))
@@ -64,10 +61,8 @@ for col in range(0,columns):        # x-coordinates changes through columns
 
 
        
-# outstr = 'ttp%d\na.(lp1\nI1\n' % (ROI+1)
 fh.write('ttp%d\na.(lp1\nI1\n' % (ROI+1))
-#
-#outstr = 'aI1\n'*(rows*columns)  + 'a.' 
+
 fh.write('aI1\n'*(rows*columns)) 
 fh.write('a.')        
         
