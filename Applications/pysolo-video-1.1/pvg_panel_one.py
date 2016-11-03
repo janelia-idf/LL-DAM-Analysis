@@ -32,6 +32,8 @@ from wx.lib.filebrowsebutton import FileBrowseButton, DirBrowseButton
 
 from pvg_common import previewPanel, options, myConfig
 import pysolovideo as pv
+from inspect import currentframe                                                                     # debug
+from db import debugprt
 
 """
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Settings
