@@ -1,0 +1,11 @@
+x1 = 14
+x_len = 18
+x_sep = 5.1
+x_tilt = -.4
+
+y1 = 238
+y_len = 16
+y_sep = 1.5
+y_tilt = .5
+rows = 8
+columns = 12
