@@ -53,8 +53,8 @@ import numpy as np
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Settings
 """
 pgm = 'pysolovideo.py'
-call_tracking = True               # if True each function will report it's beginning and end
-show_imgs = False                   # if true, show images 
+call_tracking = False               # if True each function will report it's beginning and end
+show_imgs = False                   # if true, show images
 
 
 # get root dir name for all file operations
@@ -323,7 +323,7 @@ class virtualCamMovie(Cam):
 
         frameTime = cv.GetCaptureProperty(self.capture, cv.CV_CAP_PROP_POS_MSEC)
 
-        print('$$$$$$, pysolovideo, getframetime, 326, will return 1/1000th of frametime = ,',frameTime)
+        # # print('$$$$$$, pysolovideo, getframetime, 326, will return 1/1000th of frametime = ,',frameTime)
         if asString:
             frameTime = str( datetime.timedelta(seconds=frameTime / 100.0) )
             if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
@@ -352,13 +352,13 @@ class virtualCamMovie(Cam):
         if not im: 
             im = self.blackFrame
             sysout = sys.__stdout__
-            print('$$$$$$, pysolovideo, getImage, 353, cv.QueryFrame = false')
+            # print('$$$$$$, pysolovideo, getImage, 353, cv.QueryFrame = false')
 
             raw_input("Press Enter to continue...")
 
         elif ((self.currentFrame > self.lastFrame) and (not self.loop)): 
             sysout = sys.__stdout__
-            print('$$$$$$, pysolovideo, getImage, 361, currentFrame > lastFrame')
+            # print('$$$$$$, pysolovideo, getImage, 361, currentFrame > lastFrame')
 
             raw_input("Press Enter to continue...")
             
@@ -368,7 +368,7 @@ class virtualCamMovie(Cam):
             newsize = cv.CreateImage(self.resolution , cv.IPL_DEPTH_8U, 3)
             cv.Resize(im, newsize)
             im = newsize
-            print('$$$$$$, pysolovideo, getImage, 371, image resized')
+            # # print('$$$$$$, pysolovideo, getImage, 371, image resized')
             
         if timestamp:
             text = self.getFrameTime(asString=True)
@@ -395,7 +395,7 @@ class virtualCamMovie(Cam):
         """
         a = cv.GetCaptureProperty( self.capture , cv.CV_CAP_PROP_FRAME_COUNT )
 
-        print('$$$$$$, pysolovideo, getImage, 398, total frames = ,',a)
+        # print('$$$$$$, pysolovideo, getImage, 398, total frames = ,',a)
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return a
 
@@ -451,18 +451,18 @@ class virtualCamFrames(Cam):
         manual = False
         if manual:
             if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
-            print('$$$$$$, pysolovideo, getframetime, 454, returns currentFrame')
+            # print('$$$$$$, pysolovideo, getframetime, 454, returns currentFrame')
             return self.currentFrame
 
         if fname and asString:
             fileTime = os.stat(fname)[-2]
             a = time.asctime(time.localtime(fileTime))
-            print('$$$$$$, pysolovideo, getframetime, 460, most recent modification time = ,',a)
+            # print('$$$$$$, pysolovideo, getframetime, 460, most recent modification time = ,',a)
             if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return a
         elif fname and not asString:
             fileTime = os.stat(fname)[-2]
-            print('$$$$$$, pysolovideo, getframetime, 465, most recent modification time = ,',fileTime)
+            # print('$$$$$$, pysolovideo, getframetime, 465, most recent modification time = ,',fileTime)
             if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
             return fileTime
 
@@ -600,7 +600,7 @@ class Arena():
         self.ROAS = [] #Regions of Action
         self.minuteFPS = []
 
-        self.period = 31 #in seconds                # account for indexing differences btw python & people (2-> 1 frame at a time; 61-> 60 frames per period)
+        self.period = 61 #in seconds                # account for indexing differences btw python & people (2-> 1 frame at a time; 61-> 60 frames per period)
         self.ratio = 0
         self.rowline = 0
 
@@ -909,7 +909,7 @@ class Arena():
         fly = fly or previous_position #Fly is None if no blob was detected
 
         distance = self.__distance( previous_position, fly )
-        print('$$$$$$, pysolovideo, addflycoords, 902, distance = ',distance,'  previous position = ',previous_position, '  fly = ',fly)
+        # print('$$$$$$, pysolovideo, addflycoords, 902, distance = ',distance,'  previous position = ',previous_position, '  fly = ',fly)
         if ( distance > max_movement and not isFirstMovement ) or ( distance < min_movement ):
             fly = previous_position
 
@@ -993,7 +993,7 @@ class Arena():
         elif self.trackType == 2:
             activity = self.calculatePosition()
 
-        print('$$$$$$ pysolovideo: writeactivity: 995:  activity = ,', activity)                                           # debug
+        # print('$$$$$$ pysolovideo: writeactivity: 995:  activity = ,', activity)                                           # debug
 
         # Expand the readings to 32 flies for compatibility reasons with trikinetics
         flies = len ( activity[0].split('\t') )
@@ -1011,7 +1011,7 @@ class Arena():
 
         if self.outputFile:
             fh = open(self.outputFile, 'a')
-            print('$$$$$$, pysolovideo, writeactivity, 1014,  row = ',row)                                                # debug
+            # print('$$$$$$, pysolovideo, writeactivity, 1014,  row = ',row)                                                # debug
             fh.write(row)
             fh.close()
             
@@ -1035,13 +1035,12 @@ class Arena():
         y1 = fs[:,:,1:]
 
         d = self.__distance((x,y),(x1,y1))
-        print('$$$$$$, pysolovideo, calcdists, 1021, x = ,',str(x[0]),', y = ,',str(y[0]),
-              ', x1 = ,',str(x1[0]),', y1 = ,',str(y1[0]), 'd = ', str(d[0]))
+        # print('$$$$$$, pysolovideo, calcdists, 1021, x = ,',str(x[0]),', y = ,',str(y[0]),', x1 = ,',str(x1[0]),', y1 = ,',str(y1[0]), 'd = ', str(d[0]))
 
         #we sum everything BUT the last bit of information otherwise we have data duplication
         values = d[:,:-1,:].sum(axis=1).reshape(-1)
         activity = '\t'.join( ['%s' % int(v) for v in values] )
-        print('$$$$$$, pysolovideo, writeactivity, calculatedistances, 1030, activity = ,', activity, ', values = ,',values)
+        # print('$$$$$$, pysolovideo, writeactivity, calculatedistances, 1030, activity = ,', activity, ', values = ,',values)
 
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
         return activity
@@ -1684,7 +1683,7 @@ class Monitor(object):
             
         else: 
             sys.stdout = open(console_file, 'w')          # send console output to file
-            print('$$$$$$ pysolovideo: monitor: getimage: NOT frame')
+            # print('$$$$$$ pysolovideo: monitor: getimage: NOT frame')
             cv2.waitKey()
 
 
@@ -1710,7 +1709,7 @@ class Monitor(object):
         if call_tracking:  debugprt(self,currentframe(),pgm,'end   ')
 
 
-    def showimg(self, title, img):                # displays an image                 # debug           
+    def showimg(self, title, img):                # displays an image                 # debug
         img_nparry = np.asarray(img[:,:])
         cv2.imshow(title,img_nparry)
         cv2.waitKey()
@@ -1796,12 +1795,12 @@ class Monitor(object):
         #Build the mask. This allows for non rectangular ROIs
         for ROI in self.arena.ROIS:
             cv.FillPoly( ROImsk, [ROI], color=cv.CV_RGB(255, 255, 255) )
-        # if show_imgs: self.showimg('1772 FillPoly ROImsk  ' + str(self.count) + 'ROI' + str(ROI) , ROImsk)    
+            if show_imgs: self.showimg('1772 FillPoly ROImsk  ' + str(self.count) + 'ROI' + str(ROI) , ROImsk)
 
         #Apply the mask to the grey image where tracking happens
         cv.Copy(grey_image, ROIwrk, ROImsk)
-        # if show_imgs: self.showimg('1776 grey_image ' + str(self.count), grey_image)    
-        # if show_imgs: self.showimg('1777 ROIwrk ' + str(self.count), ROIwrk)    
+        if show_imgs: self.showimg('1776 grey_image ' + str(self.count), grey_image)
+        if show_imgs: self.showimg('1777 ROIwrk ' + str(self.count), ROIwrk)
         if show_imgs: self.showimg('1778 ROImsk ' + str(self.count), ROImsk)    
 
 
@@ -1810,7 +1809,7 @@ class Monitor(object):
         
         #track each ROI
         for fly_number, ROI in enumerate( self.arena.ROIStoRect() ):
-            print('$$$$$$, pysolovideo, dotrack, 1794, for ROI number ' + str(fly_number) + ', frame ' + str(self.count))                                    # debug
+            # print('$$$$$$, pysolovideo, dotrack, 1794, for ROI number ' + str(fly_number) + ', frame ' + str(self.count))                                    # debug
             (x1,y1), (x2,y2) = ROI
             cv.SetImageROI(ROIwrk, (x1,y1,x2-x1,y2-y1) )
             cv.SetImageROI(frame, (x1,y1,x2-x1,y2-y1) )
@@ -1835,7 +1834,7 @@ class Monitor(object):
                     area = (pt2[0]-pt1[0])*(pt2[1]-pt1[1])
                     if area > 400: 
                         fly_coords = None
-                        print('$$$$$$, pysolovideo, dotrack, 1810, area > 400 - no coords, area = ',area)
+                        # print('$$$$$$, pysolovideo, dotrack, 1810, area > 400 - no coords, area = ',area)
 
             # for each frame adds fly coordinates to all ROIS. Also do some filtering to remove false positives
             fly_coords, distance = self.arena.addFlyCoords(fly_number, fly_coords)

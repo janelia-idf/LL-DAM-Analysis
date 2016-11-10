@@ -1,6 +1,6 @@
 [Options]
 webcams = 1
-data_folder = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\20160823_135217\1ROI
+data_folder = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\20160823_135217
 thumbnailsize = 320, 240
 fullsize = 640, 480
 fps_recording = .5
@@ -9,13 +9,12 @@ monitors = 1
 
 [Monitor0]
 sourcetype = 1
-source = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Input\bias_video_cam_0_date_2016_08_05_time_17_27_37_v001.avi
+source = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Input\bias_video_cam_0_date_2016_08_23_time_13_52_17_v001.avi
 track = True
-maskfile = 
-c = \Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\Working_files\Monitor_1.msk
+maskfile = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\20160823_135217\ULquad.msk
 tracktype = 0
 issdmonitor = False
 
 [Monitor1]
-maskfile = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\20160823_135217\1ROI\Monitor_2.msk
+maskfile = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\20160823_135217\LLquad.msk
 
