@@ -4,66 +4,108 @@ Created on Fri Oct 28 22:23:09 2016
 
 @author: Lori
 """
-
-
-x1 = 10
-x_width = 20
-x_sep = 3
-
-y1 = 20
-y_height = 20
-y_sep = 3
-
-rows = 2
-columns = 3
+rows = 17
+columns = 26
 
 filename = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\Data\\Working_files\\automask.msk'
 
 fh = open(filename,'w')
 
-# %%              Write header and first row
+# %%    Whole
 
-ax = x1                     # create the four corners of the first box
-ay = y1                     #
-bx = x1 + x_width             #   A(x,y)  B(x,y)
-by = y1                     #   D(x,y)  C(x,y)
-cx = x1 + x_width
-cy = y1 + y_height
-dx = x1
-dy = y1 + y_height
+x1 = 21
+x_len = 18
+x_sep = 5.55
+x_tilt = -.6
+
+y1 = 71
+y_len = 16
+y_sep = 2.13
+y_tilt = .44
+
+# %%    Upper Left
+"""
+x1 = 21
+x_len = 18
+x_sep = 5.55
+x_tilt = -.4
+
+y1 = 71
+y_len = 16
+y_sep = 1.6
+y_tilt = .4
+"""
+# %%    Upper Right
+"""
+x1 = 351
+x_len = 18
+x_sep = 5.55
+x_tilt = -.4
+
+y1 = 75
+y_len = 16
+y_sep = 1.6
+y_tilt = .4
+"""
+# %%    Lower Right
+"""
+x1 = 341
+x_len = 18
+x_sep = 5.55
+x_tilt = -.4
+
+y1 = 243
+y_len = 16
+y_sep = 1.6
+y_tilt = .4
+"""
+# %%    Lower Left
+"""
+x1 = 14
+x_len = 18
+x_sep = 5.55
+x_tilt = -.4
+
+y1 = 238
+y_len = 16
+y_sep = 1.6
+y_tilt = .4
+"""
 ROI = 1
 
-fh.write('(lp1\n((I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\n' % (ax,ay,bx,by,cx,cy,dx,dy))
-
-for col in range(0,columns):        # x-coordinates changes through columns
-    ax = ax + x_width + x_sep       # move to the right in x
-    ay = y1                         # reset y-coordinate to start of row
-    bx = bx + x_width + x_sep
-    by = y1
-    cx = cx + x_width + x_sep
-    cy = y1
-    dx = dx + x_width + x_sep
-    dy = y1
-    for row in range(0,rows):       # y-coordinates changes through rows
-        ay = ay + y_height + y_sep
-        by = by + y_height + y_sep
-        cy = cy + y_height + y_sep
-        dy = dy + y_height + y_sep
+for row in range(0, rows):  # y-coordinates change through rows
+    ax = x1 + row * x_tilt  # reset x-coordinate start of row
+    bx = ax + x_len
+    cx = bx
+    dx = ax
+    if row == 0:
+        ay = y1
+    else:
+        ay = y1 + row * (y_len + y_sep)  # move down in y
+    by = ay
+    cy = ay + y_len
+    dy = cy
+    for col in range(0, columns):  # x-coordinates change through columns
+        if (col == 0 and row == 0):
+            fh.write('(lp1\n((I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\n' % (ax, ay, bx, by, cx, cy, dx, dy))
+            print('(lp1\n((I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\n' % (ax, ay, bx, by, cx, cy, dx, dy))
+        else:
+            fh.write('ttp%d\na((I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\n' % (ROI, ax, ay, bx, by, cx, cy, dx, dy))
+            print('ttp%d\na((I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\n' % (ROI, ax, ay, bx, by, cx, cy, dx, dy))
+        ax = bx + x_sep
+        bx = ax + x_len
+        cx = bx
+        dx = ax
+        ay = ay + y_tilt
+        by = ay
+        cy = ay + y_len
+        dy = cy
         ROI = ROI + 1
-        fh.write('ttp%d\na((I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\nt(I%d\nI%d\n' % (ROI,ax,ay,bx,by,cx,cy,dx,dy))
-
-# no           fh.write('ttp%d\naI%d\nI%d\nI%d\nI%d\n%d\n%d\n%d\n%d\n' % (ROI,ax,ay,bx,by,cx,cy,dx,dy))
-# no            fh.write('ttp%d\na(I%d\nI%d\nI%d\n%d\n%d\n%d\n%d\n%d\n' % (ROI,ax,ay,bx,by,cx,cy,dx,dy))
-# works        fh.write('ttp%d\naI%d\nI%d\nI%d\n%d\n%d\n%d\n%d\n%d\n' % (ROI,ax,ay,bx,by,cx,cy,dx,dy))
-# works        fh.write('ttp%d\naI%d\nI%d\nI%d\n text %d\n%d\n%d\n%d\n%d\n' % (ROI,ax,ay,bx,by,cx,cy,dx,dy))
-# works        fh.write('ttp%d \naI%d \nI%d \nI%d \n%d \n%d \n%d \n%d \n%d \n' % (ROI,ax,ay,bx,by,cx,cy,dx,dy))
-# works        fh.write('ttp%d \na((I%d \nI%d \nI%d \n%d \n%d \n%d \n%d \n%d \n' % (ROI,ax,ay,bx,by,cx,cy,dx,dy))
 
 
-       
 fh.write('ttp%d\na.(lp1\nI1\n' % (ROI+1))
 
-fh.write('aI1\n'*(rows*columns)) 
-fh.write('a.')        
+fh.write('aI1\n'*(rows*columns-1)) 
+fh.write('a.\n\n\n')
         
 fh.close()
