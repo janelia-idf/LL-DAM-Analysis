@@ -4,15 +4,15 @@ Created on Fri Oct 28 22:23:09 2016
 
 @author: Lori
 """
-rows = 17
-columns = 26
+rows = 8                    #  Chrimson/+ section
+columns = 6
 
 filename = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\Data\\Working_files\\automask.msk'
 
 fh = open(filename,'w')
 
 # %%    Whole
-
+"""
 x1 = 21
 x_len = 18
 x_sep = 5.55
@@ -22,20 +22,45 @@ y1 = 71
 y_len = 16
 y_sep = 2.13
 y_tilt = .44
-
-# %%    Upper Left
 """
+# %%    Upper Left column 1
+""""""
 x1 = 21
 x_len = 18
 x_sep = 5.55
 x_tilt = -.4
 
-y1 = 71
+y1 = 67
 y_len = 16
 y_sep = 1.6
 y_tilt = .4
+
+""""""
+# %%    Upper Left column 7
 """
-# %%    Upper Right
+x1 = 163
+x_len = 18
+x_sep = 5.55
+x_tilt = -.6
+
+y1 = 70
+y_len = 16
+y_sep = 1.6
+y_tilt = .5
+"""
+# %%    Lower Left column 7
+"""
+x1 = 158
+x_len = 18
+x_sep = 5.55
+x_tilt = -.5
+
+y1 = 238
+y_len = 16
+y_sep = 1.6
+y_tilt = .5
+"""
+# %%    Upper Right first half
 """
 x1 = 351
 x_len = 18
@@ -43,6 +68,18 @@ x_sep = 5.55
 x_tilt = -.4
 
 y1 = 75
+y_len = 16
+y_sep = 1.6
+y_tilt = .4
+"""
+# %%    Upper Right second half
+"""
+x1 = 515
+x_len = 18
+x_sep = 5.55
+x_tilt = -.4
+
+y1 = 79
 y_len = 16
 y_sep = 1.6
 y_tilt = .4
@@ -59,18 +96,7 @@ y_len = 16
 y_sep = 1.6
 y_tilt = .4
 """
-# %%    Lower Left
-"""
-x1 = 14
-x_len = 18
-x_sep = 5.55
-x_tilt = -.4
 
-y1 = 238
-y_len = 16
-y_sep = 1.6
-y_tilt = .4
-"""
 ROI = 1
 
 for row in range(0, rows):  # y-coordinates change through rows

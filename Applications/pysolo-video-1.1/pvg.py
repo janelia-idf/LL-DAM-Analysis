@@ -310,8 +310,6 @@ class mainFrame(wx.Frame):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Main Program
-    sys.stdout = open(pv.data_dir + 'stdout.txt', 'w')          # send console output to file
-
 
 if __name__ == "__main__":
     if (console_to_file == True) :
