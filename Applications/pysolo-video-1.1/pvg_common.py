@@ -308,7 +308,7 @@ class pvg_config(myConfig):
             "ThumbnailSize" : ['320, 240', "Specify the size for the thumbnail previews"],
             "FullSize" :      ['640, 480', "Specify the size for the actual acquisition from the webcams.\nMake sure your webcam supports this definition"],
             "FPS_preview" :   [5, "Refresh frequency (FPS) of the thumbnails during preview.\nSelect a low rate for slow computers"],
-            "FPS_recording" : [5, "Actual refresh rate (FPS) during acquisition and processing"],
+            "FPS_recording" : [.5, "Actual refresh rate (FPS) during acquisition and processing"],
             "Data_Folder" :   [pv.data_dir, "Folder where the final data are saved"]
              }
 

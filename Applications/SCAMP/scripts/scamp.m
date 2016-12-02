@@ -144,9 +144,11 @@ end
 
 function [oneObject,thirtyObject]=myDamLoad(board,onePath,thirtyPath) % Runs dam_load, which then calls a cascade of other functions to open and organize raw data. All from Rosbash/Hall labs.
     cd(onePath);
-    oneObject = dam_load(board,'.',1,4);
+%     oneObject = dam_load(board,'.',1,4);
+    oneObject = dam_load('MyRun1CtM001','.',1,4);
     cd(thirtyPath);
-    thirtyObject = dam_load(board,'.',1,4);
+    thirtyObject = dam_load('MyRun30CtM001','.',1,4);
+%    thirtyObject = dam_load(board,'.',1,4);
 end
 
 function sleepRalph(src,evt,lbh,theList,onePath,thirtyPath) % Runs sleepRalph, which prints a figure for each board, showing sleep bouts in blue. Used for de-selecting dead flies. 
