@@ -27,6 +27,8 @@
 """
 import wx, os
 import wx.lib.newevent
+import wx.calendar
+
 ThumbnailClickedEvt, EVT_THUMBNAIL_CLICKED = wx.lib.newevent.NewCommandEvent()
 from wx.lib.filebrowsebutton import FileBrowseButton, DirBrowseButton
 
@@ -39,6 +41,7 @@ from db import debugprt
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Settings
 """
 pgm = 'pvg_panel_one.py'
+start_datetime = (2016, 11, 13, 3, 47, 38)
 
 """
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Thumbnail Panel
@@ -197,6 +200,7 @@ class panelConfigure(wx.Panel):
         self.sourceType = None
         self.track = None
         self.trackType = None
+        self.start_datetime = None
 
         lowerSizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -250,11 +254,13 @@ class panelConfigure(wx.Panel):
         rb3 = wx.RadioButton(self, -1, 'Folder' )
         source3 = DirBrowseButton (self, style=wx.DD_DIR_MUST_EXIST, labelText='', size=(300,-1), changeCallback = self.sourceCallback)
 
+        source4 = wx.calendar.CalendarCtrl(self, -1, wx.DateTime_Now())
 
         self.controls = []
         self.controls.append((rb1, source1))
         self.controls.append((rb2, source2))
         self.controls.append((rb3, source3))
+        self.controls.append((rb4, source4))
 
         for radio, source in self.controls:
             self.grid2.Add( radio , 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 2 )
@@ -395,9 +401,9 @@ class panelConfigure(wx.Panel):
         """
         # If monitor exists, get info. Else, set to null/default values.
         if options.HasMonitor(self.monitor_number):
-            sourceType, source, track, mask_file, trackType, isSDMonitor = options.GetMonitor(self.monitor_number)
+            sourceType, source, start_datetime, track, mask_file, trackType, isSDMonitor = options.GetMonitor(self.monitor_number)
         else:
-            sourceType, source, track, mask_file, trackType, isSDMonitor = [0, '', False, '', 1, False]
+            sourceType, source, start_datetime, track, mask_file, trackType, isSDMonitor = [0, '', False, '', 1, False]
 
         # If monitor is playing a camera
         if sourceType == 0 and source != '':
@@ -498,7 +504,7 @@ class panelConfigure(wx.Panel):
 # %%                                                Save Monitor Config
     def saveMonitorConfiguration(self):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        options.SetMonitor(self.monitor_number,
+        options.SetMonitor(self.monitor_number -1,          # -1 to account for 0 based indexing
                            self.thumbnail.sourceType,
                            self.thumbnail.source, #self.thumbnail.source+1 in dev code
                            self.thumbnail.track,
@@ -530,7 +536,7 @@ class panelConfigure(wx.Panel):
         Updates the dropdown box of monitors on lower half of panel one
         """
         # Generate new list of monitors
-        self.MonitorList = ['Monitor %s' % (int(m) + 1) for m in range(now)]
+        self.MonitorList = ['Monitor %s' % (int(m)) for m in range(now)]
 
         # Create a new combobox with the correct number of monitors
         self.thumbnailNumber = wx.ComboBox(self, -1, size=(-1,-1) ,

@@ -56,7 +56,7 @@ call_tracking = False  # if True each function will report it's beginning and en
 show_imgs = False  # if true, show images
 
 """ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Datetime settings  """
-real_dt = datetime.datetime(2016, 11, 13, 3, 47, 38)  # start datetime of movie
+real_dt = datetime.datetime(2016, 11, 17, 17, 51, 38)  # start datetime of movie
 delta_dt = 60  # write a row every minute
 
 t = datetime.time(19, 1, 00)  # get datetime for adjusting from 31 Dec 1969 at 19:01:00

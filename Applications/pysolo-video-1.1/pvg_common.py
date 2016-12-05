@@ -309,10 +309,11 @@ class pvg_config(myConfig):
             "FullSize" :      ['640, 480', "Specify the size for the actual acquisition from the webcams.\nMake sure your webcam supports this definition"],
             "FPS_preview" :   [5, "Refresh frequency (FPS) of the thumbnails during preview.\nSelect a low rate for slow computers"],
             "FPS_recording" : [.5, "Actual refresh rate (FPS) during acquisition and processing"],
-            "Data_Folder" :   [pv.data_dir, "Folder where the final data are saved"]
+            "Data_Folder" :   [pv.data_dir, "Folder where the final data are saved"],
+
              }
 
-        self.monitorProperties = ['sourceType', 'source', 'track', 'maskfile', 'trackType', 'isSDMonitor']
+        self.monitorProperties = ['sourceType', 'source', 'track', 'maskfile', 'trackType', 'isSDMonitor', 'start_datetime']
 
         myConfig.__init__(self, filename, temporary, defaultOptions)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
@@ -334,7 +335,7 @@ class pvg_config(myConfig):
         md = []
         if self.config.has_section(mn):
             for vn in self.monitorProperties:
-                md.append ( self.GetValue(mn, vn) )
+                md.append ( self.GetValue(mn, vn) )                               # -1 to account for 0 based indexing
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return md
 
@@ -370,6 +371,7 @@ class pvg_config(myConfig):
                 monitors[mon]['dataFolder'] = dataFolder
                 monitors[mon]['track'] = track
                 monitors[mon]['isSDMonitor'] = isSDMonitor
+                monitors[mon]['start_datetime'] = start_datetime
 
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return monitors
@@ -398,13 +400,15 @@ class previewPanel(wx.Panel):
         self.sourceType = 0
         self.source = ''
         self.mon = None
-        self.track = False
+        self.track = True
         self.isSDMonitor = False
-        self.trackType = 1
+        self.trackType = 0              # distance tracking
         self.drawROI = True
         self.timestamp = False
         self.camera = None
         self.resolution = None
+
+        self.start_datetime = (2016,1,1,1,1,1)      # date & time of start of video
 
         self.recording = False
         self.isPlaying = False

@@ -15,7 +15,16 @@ maskfile =
 c = \Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\Working_files\Monitor_1.msk
 tracktype = 0
 issdmonitor = False
+start_datetime = (2016, 11, 13, 3, 47, 38)
 
 [Monitor1]
 maskfile = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\20161108_092638\UL-7-12\Monitor_1.msk
+
+[Monitor-1]
+sourcetype = 1
+source = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Input\fly_movie.avi
+track = True
+maskfile = 
+tracktype = 0
+issdmonitor = False
 
