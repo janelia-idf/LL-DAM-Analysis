@@ -56,7 +56,7 @@ call_tracking = False  # if True each function will report it's beginning and en
 show_imgs = False  # if true, show images
 
 """ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Datetime settings  """
-real_dt = datetime.datetime(2016, 11, 13, 3, 47, 38)  # start datetime of movie
+real_dt = datetime.datetime(2016, 11, 8, 9, 26, 38)  # start datetime of movie
 delta_dt = 60  # write a row every minute
 
 t = datetime.time(19, 1, 00)  # get datetime for adjusting from 31 Dec 1969 at 19:01:00
@@ -355,16 +355,20 @@ class virtualCamMovie(Cam):
         im = cv.QueryFrame(self.capture)
 
         self.currentFrame += self.step
+        print('$$$$$$ current frame =', self.currentFrame)
 
         if not im:
             im = self.blackFrame
             sysout = sys.__stdout__
-            # print('$$$$$$, pysolovideo, getImage, 353, cv.QueryFrame = false')
+
+            print('$$$$$$, pysolovideo, getImage, 353, cv.QueryFrame = false')
+            return False                                                                    ## LL - added
+
 
 
         elif ((self.currentFrame > self.lastFrame) and (not self.loop)):
             sysout = sys.__stdout__
-            # print('$$$$$$, pysolovideo, getImage, 361, currentFrame > lastFrame')
+            print('$$$$$$, pysolovideo, getImage, 361, currentFrame > lastFrame')
 
 
             return False
@@ -1692,8 +1696,9 @@ class Monitor(object):
             if self.grabMovie: cv.WriteFrame(self.writer, frame)
 
         else:
-            sys.stdout = open(console_file, 'w')  # send console output to file
-            # print('$$$$$$ pysolovideo: monitor: getimage: NOT frame')
+#            sys.stdout = open(console_file, 'w')  # send console output to file
+            print('$$$$$$ pysolovideo: monitor: getimage: NOT frame     ----------- so done!')
+
             cv2.waitKey()
 
             sys.exit()
