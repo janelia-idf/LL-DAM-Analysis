@@ -355,16 +355,20 @@ class virtualCamMovie(Cam):
         im = cv.QueryFrame(self.capture)
 
         self.currentFrame += self.step
+        print('$$$$$$ current frame =', self.currentFrame)
 
         if not im:
             im = self.blackFrame
             sysout = sys.__stdout__
-            # print('$$$$$$, pysolovideo, getImage, 353, cv.QueryFrame = false')
+
+            print('$$$$$$, pysolovideo, getImage, 353, cv.QueryFrame = false')
+            return False                                                                    ## LL - added
+
 
 
         elif ((self.currentFrame > self.lastFrame) and (not self.loop)):
             sysout = sys.__stdout__
-            # print('$$$$$$, pysolovideo, getImage, 361, currentFrame > lastFrame')
+            print('$$$$$$, pysolovideo, getImage, 361, currentFrame > lastFrame')
 
 
             return False
@@ -1692,8 +1696,9 @@ class Monitor(object):
             if self.grabMovie: cv.WriteFrame(self.writer, frame)
 
         else:
-            sys.stdout = open(console_file, 'w')  # send console output to file
-            # print('$$$$$$ pysolovideo: monitor: getimage: NOT frame')
+#            sys.stdout = open(console_file, 'w')  # send console output to file
+            print('$$$$$$ pysolovideo: monitor: getimage: NOT frame     ----------- so done!')
+
             cv2.waitKey()
 
             sys.exit()
