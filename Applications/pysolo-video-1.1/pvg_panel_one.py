@@ -238,12 +238,24 @@ class panelConfigure(wx.Panel):
         lowerSizer.Add (self.sbSizer_1, 0, wx.EXPAND|wx.ALL, 5)
 
         # Static box2 (CENTER)
+        txt_date = wx.StaticText(self, -1, "Date:")
+        start_date = wx.DatePickerCtrl(self, wx.ID_ANY,
+                                       style=(wx.DP_DROPDOWN |
+                                              wx.DP_SHOWCENTURY))
+#        start_date_txt = start_date.GetValue().Format("%m-%d-%y")
+
+        self.date_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.date_sizer.Add(txt_date, 0, wx.ALL, 5)
+        self.date_sizer.Add(start_date, 0, wx.ALL, 5)
+
+        
         sb_2 = wx.StaticBox(self, -1, "Select Video input" )
         self.sbSizer_2 = wx.StaticBoxSizer (sb_2, wx.VERTICAL)
         self.grid2 = wx.FlexGridSizer( 0, 2, 0, 0 )
 
         self.n_cams = options.GetOption("Webcams")
         self.WebcamsList = [ 'Webcam %s' % (int(w) +1) for w in range( self.n_cams ) ]
+                            
         rb1 = wx.RadioButton(self, -1, 'Camera', style=wx.RB_GROUP)
         source1 = wx.ComboBox(self, -1, size=(285,-1) , choices = self.WebcamsList, style=wx.CB_DROPDOWN | wx.CB_READONLY | wx.CB_SORT)
         self.Bind(wx.EVT_COMBOBOX, self.sourceCallback, source1)
@@ -254,13 +266,13 @@ class panelConfigure(wx.Panel):
         rb3 = wx.RadioButton(self, -1, 'Folder' )
         source3 = DirBrowseButton (self, style=wx.DD_DIR_MUST_EXIST, labelText='', size=(300,-1), changeCallback = self.sourceCallback)
 
-        source4 = wx.calendar.CalendarCtrl(self, -1, wx.DateTime_Now())
 
         self.controls = []
         self.controls.append((rb1, source1))
         self.controls.append((rb2, source2))
         self.controls.append((rb3, source3))
-        self.controls.append((rb4, source4))
+
+     
 
         for radio, source in self.controls:
             self.grid2.Add( radio , 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 2 )
@@ -270,9 +282,10 @@ class panelConfigure(wx.Panel):
 
         self.controls[0][1].Enable(True)
 
-        # grid2.Add(wx.StaticText(self, -1, ""))
-
         self.sbSizer_2.Add( self.grid2 )
+        self.sbSizer_2.Add( self.date_sizer )
+
+
         lowerSizer.Add(self.sbSizer_2, 0, wx.EXPAND|wx.ALL, 5)
 
         # Static box3 (RIGHT)
