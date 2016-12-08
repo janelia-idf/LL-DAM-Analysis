@@ -993,7 +993,7 @@ class acquireFrame(wx.Frame):
 
 if __name__ == '__main__':
     if (console_to_file == True) :
-        sys.stdout = open(console_file, 'w')          # send console output to file
+        sys.stdout = open(console_file, 'w')          # send console output to file if true
     
     parser = optparse.OptionParser(usage='%prog [options] [argument]', version='%prog version 1.0')
     parser.add_option('-c', '--config', dest='config_file', metavar="CONFIG_FILE", help="The full path to the config file to open")
