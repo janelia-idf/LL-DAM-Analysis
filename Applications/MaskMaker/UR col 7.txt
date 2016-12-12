@@ -1,0 +1,9 @@
+x1 = 515
+x_len = 18
+x_sep = 5.55
+x_tilt = -.4
+
+y1 = 79
+y_len = 16
+y_sep = 1.6
+y_tilt = .4

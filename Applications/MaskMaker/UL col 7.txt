@@ -1,0 +1,9 @@
+x1 = 163
+x_len = 18
+x_sep = 5.55
+x_tilt = -.6
+
+y1 = 70
+y_len = 16
+y_sep = 1.6
+y_tilt = .5
