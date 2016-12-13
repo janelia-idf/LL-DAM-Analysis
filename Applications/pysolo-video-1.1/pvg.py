@@ -240,6 +240,8 @@ class mainFrame(wx.Frame):
         """
         filename = pv.DEFAULT_CONFIG                   # see pvg_common.py
 
+        print("$$$$$$ pvg; 243; default_config = ", filename)
+
         # set file types for find dialog
         wildcard = "PySolo Video config file (*.cfg)|*.cfg|" \
                  "All files (*.*)|*.*"    # adding space in here will mess it up!
@@ -295,7 +297,7 @@ class mainFrame(wx.Frame):
     def onConfigure(self, event):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
-        opens configure dialog box
+        opens configure dialog box                                                  $$$$$$  configuration?
         """
         frame_opt = pvg_OptionsPanel(self)      # see pvg_options.py
         #frame_opt.Show()

@@ -76,6 +76,9 @@ root_dir = buf.value + '\\GitHub\\LL-DAM-Analysis\\'
 data_dir = root_dir + 'Data\\Working_files\\'
 
 DEFAULT_CONFIG = 'pysolo_video.cfg'
+print("$$$$$$ pysolovideo; 79; main; root_dir = ", root_dir)
+print("$$$$$$ pysolovideo; 79; main; data_dir = ", data_dir)
+print("$$$$$$ pysolovideo; 79; main; default_config = ", DEFAULT_CONFIG)
 
 pySoloVideoVersion = 'dev'
 MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -944,7 +947,7 @@ class Arena():
         self.minuteFPS.append(FPS)
         try: self.flyDataMin[:, self.__n] = self.flyDataBuffer
         except:
-            sys.exit('Reached end of video ????   LL')
+            sys.exit('$$$$$$ pysolovideo; 950l compactSeconds; Reached end of video ????   LL')         # $$$$$$ replay continuously?
 
 
         if self.count_seconds + 1 >= self.period:
@@ -1378,6 +1381,8 @@ class Monitor(object):
         self.track = track
         self.arena.trackType = int(trackType)
         self.mask_file = mask_file
+
+        print("$$$$$$ pysolovideo; 1385; SetTracking; mask_file = ", self.mask_file)
         self.arena.outputFile = outputFile
 
         if mask_file:
@@ -1479,6 +1484,8 @@ class Monitor(object):
         Save the current crop data to a file
         """
         if not filename: filename = self.mask_file
+
+        print("$$$$$$ pysolovideo; 1488; saveROIS; mask file = ", filename)
         self.arena.saveROIS(filename)
         if call_tracking:  debugprt(self, currentframe(), pgm, 'end   ')
 
@@ -1488,6 +1495,7 @@ class Monitor(object):
         Load the crop data from a file
         """
         if not filename: filename = self.mask_file
+        print("$$$$$$ pysolovideo; 1498; loadROIS; mask file = ", filename)
         a = self.arena.loadROIS(filename)
         if call_tracking:  debugprt(self, currentframe(), pgm, 'end   ')
         return a

@@ -107,8 +107,6 @@ class panelGridView(wx.ScrolledWindow):
     def __init__(self, parent, gridSize, ThumbnailSize=(320,240) ): 
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         
-        print('$$$$$$ pvg_panel_one:  panelGridView:  line 102:  gridSize = ',gridSize)
-
 # %%                                                  Set up scrolling window
         wx.ScrolledWindow.__init__(self, parent, wx.ID_ANY, size=(-1,600))
         self.SetScrollbars(1, 1, 1, 1)
@@ -178,7 +176,6 @@ class panelGridView(wx.ScrolledWindow):
     def updateThumbs(self, old, new):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         self.ThumbnailSize = new
-        # print('$$$$$$ pvg_panel_one:  panelGridView:  line 173:  gridSize = ',gridSize)
 
         
 #        for i in range(0, self.gridSizer):                                                  # not working
@@ -370,6 +367,7 @@ class panelConfigure(wx.Panel):
         Opens the save file window
         """
         filename = pv.DEFAULT_CONFIG  # see pvg_common.py
+        print("$$$$$$ pvg_panel_one; default_config = ", filename)
 
         # set file types for find dialog
         wildcard = "PySolo Video config file (*.cfg)|*.cfg|" \
@@ -427,7 +425,7 @@ class panelConfigure(wx.Panel):
         elif self.trackPosition.GetValue(): trackType = 2     #  "XY_COORDS"
 
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
-        return trackType                                                        # this isn't getting written to config file correctly
+        return trackType                                                        # $$$$$$ this isn't getting written to config file correctly
 
 # %%                                                            play button
     def onPlay (self, event=None):
@@ -482,14 +480,15 @@ class panelConfigure(wx.Panel):
     def updateThumbnail(self):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
-        Refreshing thumbnail data
+        Refreshing thumbnail data                                                    $$$$$$ add start_datetime?
         """
         # If monitor exists, get info. Else, set to null/default values.
         if options.HasMonitor(self.monitor_number):
-            sourceType, source, start_datetime, track, mask_file, trackType, isSDMonitor = options.GetMonitor(self.monitor_number)
+            sourceType, source, track, mask_file, trackType, isSDMonitor = options.GetMonitor(self.monitor_number)
         else:
-            sourceType, source, start_datetime, track, mask_file, trackType, isSDMonitor = [0, '', False, '', 1, False]
+            sourceType, source, track, mask_file, trackType, isSDMonitor = [0, '', False, '', 1, False]
 
+        print("$$$$$$ pvg_panel_one; 491; UpdateThumbnail; mask_file = ", mask_file)                          # get mask file from default config?
         # If monitor is playing a camera
         if sourceType == 0 and source != '':
             source = self.WebcamsList[source]
@@ -589,7 +588,7 @@ class panelConfigure(wx.Panel):
     def onDateTimeChanged(self,event):
         date = self.calendar.GetDate()
         #        time = self.start_time.GetValue(self)
-        print("$$$$$$ pvg_panel_one; start date = ", date)
+        print("$$$$$$ pvg_panel_one; 593; start date = ", date)
         #        print("$$$$$$ pvg_panel_one; start time = ", time)
         #        self.start_datetime = datetime.datetime.combine(date, time)
         #       print("$$$$$$ pvg_panel_one; start time = ", self.start_datetime)
@@ -600,14 +599,15 @@ class panelConfigure(wx.Panel):
     def saveMonitorConfiguration(self):
 
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        options.SetMonitor(self.monitor_number -1,          # -1 to account for 0 based indexing
+        options.SetMonitor(self.monitor_number,          # already accounts for 0 based indexing
                            self.thumbnail.sourceType,
                            self.thumbnail.source,           #self.thumbnail.source+1 in dev code
-                           self.start_datetime,
+#                           self.start_datetime,
                            self.thumbnail.track,
                            self.mask_file,
                            self.trackType,                                      # this is not being saved correctly                             self.thumbnail.mon.isSDMonitor
                            )
+        print("$$$$$$ pvg_panel_one; 609; saveMonitorConfiguration; maskfile = ", self.mask_file)
         options.Save()
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
@@ -703,8 +703,6 @@ class panelOne(wx.Panel):
         self.sourceType = -1
 
         # Create a grid of thumbnails and a configure panel
-
-        print('$$$$$$ pvg_panel_one:  panelOne:  line 603:  gridSize = ',self.monitor_number)
 
         self.scrollThumbnails = panelGridView(self, gridSize=self.monitor_number, ThumbnailSize=self.tn_size)
         self.lowerPanel = panelConfigure(self)

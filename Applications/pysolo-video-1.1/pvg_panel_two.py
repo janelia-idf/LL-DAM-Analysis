@@ -174,10 +174,11 @@ class panelLiveView(wx.Panel):
         WebcamsList = [ 'Webcam %s' % (int(w) +1) for w in range( n_cams ) ]
 
         if options.HasMonitor(self.monitor_number):
-            sourceType, source, track, mask_file, trackType, isSDMonitor = options.GetMonitor(self.monitor_number)
+            sourceType, source, track, mask_file, trackType, isSDMonitor = options.GetMonitor(self.monitor_number)      # $$$$$$ add start_datetime?
             self.fsPanel.setMonitor( source )
             self.fsPanel.Play()
 
+            print("$$$$$$ pvg_panel_two; 181; onChangeMonitor; mask_file = ", mask_file)
             if mask_file:
                 self.fsPanel.mon.loadROIS(mask_file)
                 self.currentMaskTXT.SetValue(os.path.split(mask_file)[1] or '')

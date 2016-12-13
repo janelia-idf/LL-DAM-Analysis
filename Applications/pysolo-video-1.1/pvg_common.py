@@ -189,6 +189,8 @@ class acquireObject():
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
+
+        print("$$$$$$ pvg_common; 193; acquireObject_init; mask_file = ", mask_file)
         self.monitor = monitor
         self.keepGoing = False
         self.verbose = True                                                        # false turns off debug
@@ -199,6 +201,8 @@ class acquireObject():
         self.mon = pv.Monitor()
         self.mon.setSource(source, resolution)
         self.mon.setTracking(True, track_type, mask_file, outputFile)
+
+        print("$$$$$$ pvg_common; 205; acquireObject_init; mask_file = ", mask_file)
 
         if self.verbose: print("Verbose 247 - Monitor %s, track %s, track type %d, \n source %s, \n mask %s,  \n output file %s  "
                                % (monitor, track, track_type,
@@ -259,6 +263,8 @@ class acquireThread(threading.Thread):
                                   source,
                                   mask_file,
                                   outputFile) )
+        print("$$$$$$ pvg_common; 266; acquireThread_init; mask_file = ", mask_file)
+
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         
     def run(self, kbdint=False):
@@ -313,18 +319,19 @@ class pvg_config(myConfig):
 
              }
 
-        self.monitorProperties = ['sourceType', 'source', 'track', 'maskfile', 'trackType', 'isSDMonitor', 'start_datetime']
+        self.monitorProperties = ['sourceType', 'source', 'track', 'maskfile', 'trackType', 'isSDMonitor']          # $$$$$$ add start_datetime?
 
         myConfig.__init__(self, filename, temporary, defaultOptions)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def SetMonitor(self, monitor, *args):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
-        """
-        """
+
         mn = 'Monitor%s' % monitor
         for v, vn in zip( args, self.monitorProperties ):
             self.SetValue(mn, vn, v)
+
+            print("$$$$$$ pvg_common; 328; setmonitor; mn = ", mn)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def GetMonitor(self, monitor):
@@ -332,10 +339,13 @@ class pvg_config(myConfig):
         """
         """
         mn = 'Monitor%s' % monitor
+        print("$$$$$$ pvg_common; 336; GetMonitor; mn = ", mn)
+
         md = []
         if self.config.has_section(mn):
             for vn in self.monitorProperties:
                 md.append ( self.GetValue(mn, vn) )                               # -1 to account for 0 based indexing
+                print("$$$$$$ pvg_common; 340; GetMonitor; mn = ", mn)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return md
 
@@ -344,6 +354,8 @@ class pvg_config(myConfig):
         """
         """
         mn = 'Monitor%s' % monitor
+
+        print("$$$$$$ pvg_common; 350; hasmonitor; mn = ", mn)
         a = self.config.has_section(mn)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return a
@@ -372,6 +384,8 @@ class pvg_config(myConfig):
                 monitors[mon]['track'] = track
                 monitors[mon]['isSDMonitor'] = isSDMonitor
                 monitors[mon]['start_datetime'] = start_datetime
+
+        print("$$$$$$ pvg_common; 388; getMonitorsData; mask_file = ", mask_file)
 
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return monitors
@@ -700,5 +714,5 @@ class previewPanel(wx.Panel):
 
 #################
                                                   # DEBUG
-
+print("$$$$$$ pvg_common; 707; main; default_config = ",pv.DEFAULT_CONFIG)
 options = pvg_config(pv.DEFAULT_CONFIG)
