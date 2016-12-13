@@ -29,6 +29,7 @@ import pysolovideo as pv
 import ConfigParser, threading
 from inspect import currentframe                                                                     # debug
 from db import debugprt
+import datetime
 
 """
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Settings
@@ -129,6 +130,9 @@ class myConfig():
         """
         puts configuration values in config file
         """
+
+        print("$$$$$$ pvg_common; 134; SetValue; section, key, value = ", section, key, value)
+
         if not self.config.has_section(section):
             self.config.add_section(section)
 
@@ -143,6 +147,7 @@ class myConfig():
         Does some sanity checking to return tuple, integer and strings
         as required.
         """
+        print("$$$$$$ pvg_common; 146; GetValue; section = %s   key = %s", section, key)
         r = self.config.get(section, key)
 
         if type(r) == type(0) or type(r) == type(1.0):  # native int and float
@@ -309,17 +314,16 @@ class pvg_config(myConfig):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                      # debug
 
         defaultOptions = { 
-            "Monitors" :      [9, "Select the number of monitors connected to this machine"],
+            "Monitors" :      [3, "Select the number of monitors connected to this machine (up to 9"],
             "Webcams"  :      [1, "Select the number of webcams connected to this machine"],
             "ThumbnailSize" : ['320, 240', "Specify the size for the thumbnail previews"],
             "FullSize" :      ['640, 480', "Specify the size for the actual acquisition from the webcams.\nMake sure your webcam supports this definition"],
             "FPS_preview" :   [5, "Refresh frequency (FPS) of the thumbnails during preview.\nSelect a low rate for slow computers"],
             "FPS_recording" : [.5, "Actual refresh rate (FPS) during acquisition and processing"],
-            "Data_Folder" :   [pv.data_dir, "Folder where the final data are saved"],
-
+            "Data_Folder" :   [pv.data_dir, "Folder where the final data are saved"],                               #$$$$$$ what should the default really be and where should it be set?
              }
 
-        self.monitorProperties = ['sourceType', 'source', 'track', 'maskfile', 'trackType', 'isSDMonitor']          # $$$$$$ add start_datetime?
+        self.monitorProperties = ['sourceType', 'source', 'start_datetime', 'track', 'mask_file', 'trackType', 'isSDMonitor']          # $$$$$$ add start_datetime?
 
         myConfig.__init__(self, filename, temporary, defaultOptions)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
@@ -345,7 +349,7 @@ class pvg_config(myConfig):
         if self.config.has_section(mn):
             for vn in self.monitorProperties:
                 md.append ( self.GetValue(mn, vn) )                               # -1 to account for 0 based indexing
-                print("$$$$$$ pvg_common; 340; GetMonitor; mn = ", mn)
+                print("$$$$$$ pvg_common; 340; GetMonitor; mn, vn, md = ", mn, vn, md)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return md
 
@@ -413,16 +417,16 @@ class previewPanel(wx.Panel):
 
         self.sourceType = 0
         self.source = ''
+        self.start_datetime = datetime.datetime.now()      # $$$$$$  date & time of start of video defaults to today
         self.mon = None
         self.track = True
         self.isSDMonitor = False
         self.trackType = 0              # distance tracking
         self.drawROI = True
-        self.timestamp = False
+        self.timestamp = False                           # indicates whether a timestamp should be included in the video
         self.camera = None
         self.resolution = None
 
-        self.start_datetime = (2016,1,1,1,1,1)      # date & time of start of video
 
         self.recording = False
         self.isPlaying = False
