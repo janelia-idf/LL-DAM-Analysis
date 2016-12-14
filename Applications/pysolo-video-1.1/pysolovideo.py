@@ -947,7 +947,7 @@ class Arena():
         self.minuteFPS.append(FPS)
         try: self.flyDataMin[:, self.__n] = self.flyDataBuffer
         except:
-            sys.exit('$$$$$$ pysolovideo; 950l compactSeconds; Reached end of video ????   LL')         # $$$$$$ replay continuously?
+            print('$$$$$$ pysolovideo; 950l compactSeconds; Reached end of video ????   LL')         # $$$$$$ replay continuously?
 
 
         if self.count_seconds + 1 >= self.period:
