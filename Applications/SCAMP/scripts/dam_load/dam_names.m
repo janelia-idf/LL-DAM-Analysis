@@ -14,7 +14,7 @@ fprintf('DAM names    fix the prefix\n')
 list
 prefix
 if nargin >= 2
-  if ~isempty(prefix) & prefix(1)=='*'
+  if (~isempty(prefix)) && (strcmp(prefix(1),'*'))
     matches=[];
     pattern=prefix(2:end);
     for i=1:length(list)

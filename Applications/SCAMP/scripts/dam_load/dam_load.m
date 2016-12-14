@@ -61,7 +61,7 @@ function o = dam_load(prefix, directory, use_daylight, incubator)
 % Jeff Hall Lab, Kalman Bldg, Brandeis Univ, Waltham MA 02454 USA %%
 % Email: hall@brandeis.edu                                        %%
 %%(C)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-fprintf('DAM Load',prefix, directory, use_daylight, incubator)
+% fprintf('DAM Load',prefix, directory, use_daylight, incubator)
 switch (nargin)
  case 0
   if isunix

@@ -5,7 +5,7 @@ Created on Fri Oct 28 22:23:09 2016
 @author: Lori
 """
 rows = 8                    #  Chrimson/+ section
-columns = 6
+columns = 12
 
 filename = 'C:\\Users\\laughreyl\\Documents\\GitHub\\LL-DAM-Analysis\\Data\\Working_files\\automask.msk'
 
@@ -24,7 +24,7 @@ y_sep = 2.13
 y_tilt = .44
 """
 # %%    Upper Left column 1
-""""""
+"""
 x1 = 21
 x_len = 18
 x_sep = 5.55
@@ -35,7 +35,7 @@ y_len = 16
 y_sep = 1.6
 y_tilt = .4
 
-""""""
+"""
 # %%    Upper Left column 7
 """
 x1 = 163
@@ -84,18 +84,30 @@ y_len = 16
 y_sep = 1.6
 y_tilt = .4
 """
-# %%    Lower Right
+# %%    Upper Right middle third
 """
-x1 = 341
+x1 = 355 + 4*(18+5.55)
 x_len = 18
 x_sep = 5.55
 x_tilt = -.4
 
-y1 = 243
+y1 = 76
 y_len = 16
 y_sep = 1.6
 y_tilt = .4
 """
+# %%    Lower Right
+""""""
+x1 = 350
+x_len = 18
+x_sep = 5.55
+x_tilt = -.4
+
+y1 = 242
+y_len = 16
+y_sep = 1.6
+y_tilt = .4
+""""""
 
 ROI = 1
 

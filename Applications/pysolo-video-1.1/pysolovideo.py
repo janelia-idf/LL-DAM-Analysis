@@ -970,7 +970,7 @@ class Arena():
         Write the activity to file
         Kind of motion depends on user settings
 
-        Called every minute; flies treated at once
+        Called every period; flies treated at once
         1	09 Dec 11	19:02:19	1	0	1	0	0	0	?		[actual_activity]
         """
         global real_dt

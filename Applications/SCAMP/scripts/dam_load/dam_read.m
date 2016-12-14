@@ -22,7 +22,7 @@ function [a,boards,channels,start,int,len,headers,names]= ...
 % (one per channel)
 %
 % see also dam_load, dam_cleanup
-fprintf('DAM Read',prefix,directory)
+% fprintf('DAM Read',prefix,directory)
 cwd=cd;
 if nargin>1
   cd(directory);
