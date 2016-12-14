@@ -1,21 +1,21 @@
 [Options]
-monitors = 1
 webcams = 1
+data_folder = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\20161108_092638\UL-1-6
 thumbnailsize = 320, 240
 fullsize = 640, 480
 fps_recording = .5
 fps_preview = 5
-data_folder = C:\Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\20161108_092638\UL-1-6
+monitors = 1
 
 [Monitor0]
 sourcetype = 1
 source = C:\Users\Lori\Documents\GitHub\LL-DAM-Analysis\Input\fly_movie.avi
-start_datetime = (2016, 11, 17, 17, 51, 38)
 track = True
-mask_file = 
+maskfile = 
 c = \Users\laughreyl\Documents\GitHub\LL-DAM-Analysis\Data\Working_files\Monitor_1.msk
 tracktype = 0
 issdmonitor = False
+start_datetime = (2016, 11, 13, 3, 47, 38)
 
 [Monitor-1]
 sourcetype = 1

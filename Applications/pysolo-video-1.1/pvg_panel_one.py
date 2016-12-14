@@ -484,9 +484,9 @@ class panelConfigure(wx.Panel):
         """
         # If monitor exists, get info. Else, set to null/default values.
         if options.HasMonitor(self.monitor_number):
-            sourceType, source, start_datetime, track, mask_file, trackType, isSDMonitor = options.GetMonitor(self.monitor_number)
+            sourceType, source, track, mask_file, trackType, isSDMonitor = options.GetMonitor(self.monitor_number)
         else:
-            sourceType, source, start_datetime, track, mask_file, trackType, isSDMonitor = [0, '', False, '', 1, False]
+            sourceType, source, track, mask_file, trackType, isSDMonitor = [0, '', False, '', 1, False]
 
         print("$$$$$$ pvg_panel_one; 491; UpdateThumbnail; mask_file = ", mask_file)                          # get mask file from default config?
         # If monitor is playing a camera
@@ -698,7 +698,7 @@ class panelOne(wx.Panel):
         self.tn_size = options.GetOption("ThumbnailSize")
         self.n_cams = options.GetOption("Webcams")
 
-        self.temp_source  = ''                              # monitors start out blank
+        self.temp_source  = ''
         self.source = ''
         self.sourceType = -1
 
