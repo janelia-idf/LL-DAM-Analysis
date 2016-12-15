@@ -5,21 +5,20 @@ Created on Sat Oct 22 12:10:05 2016
 @author: laughreyl
 """
 
-import cv2, cv, os
+import os
+
+import cv2
 import numpy as np
-import copy
-    
+
+
 def showimg(title, img):
         img_nparry = np.asarray(img )
         cv2.imshow(title,img_nparry)
         cv2.waitKey()
         
 
-
-
         
-        
-movie_name = 'Z:\\LL-DAM-Analysis\\Input\\20161108 splits\\bias_video_cam_0_date_2016_11_08_time_09_26_38_v00103.avi'
+movie_name = 'c:\\Users\\labadmin\\Documents\\GitHub\\LL-DAM-Analysis\\fly_movie.avi'
 print("movie name = ", movie_name)
 print('file exists? ',os.path.isfile(movie_name))
 
