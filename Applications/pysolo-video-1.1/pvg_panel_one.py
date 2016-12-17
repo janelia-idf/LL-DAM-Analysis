@@ -296,7 +296,8 @@ class panelConfigure(wx.Panel):
         self.txt_time = wx.StaticText(self, -1, "Time (24-hour format):")
         self.spinbtn = wx.SpinButton(self, -1, wx.DefaultPosition, (-1, 20), wx.SP_VERTICAL)
         self.start_time = masked.TimeCtrl(self, -1, name="24 hour control", fmt24hr=True, spinButton=self.spinbtn)
-        self.Bind(wx.EVT_DATE_CHANGED, self.onDateTimeChanged, self.start_time)                                                                            # $$$$$$ - set default date to start_datetime
+        self.Bind(masked.EVT_TIMEUPDATE, self.onDateTimeChanged, self.start_time)                                                                            # $$$$$$ - set default date to start_datetime
+
         self.addWidgets(self.date_time_sizer, [self.txt_time, self.start_time, self.spinbtn])
 
         self.sbSizer_videofile.AddSpacer(50)
@@ -589,16 +590,16 @@ class panelConfigure(wx.Panel):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def onDateTimeChanged(self,event):
-        date = self.start_date.GetDate()
-        time = self.start_time.GetValue(self)
-        print("$$$$$$ pvg_panel_one; 593; start date = ", date)
-        print("$$$$$$ pvg_panel_one; start time = ", time)
-        self.start_datetime = datetime.datetime.combine(date, time)
+        date_wx = self.start_date.GetValue()
+        date_py = datetime.date(*map(int, date_wx.FormatISODate().split('-')))
+        time_wx = self.start_time.GetValue(self)
+        time_py = datetime.time(*map(int, time_wx.FormatISOTime().split(':')))
+        print("$$$$$$ pvg_panel_one; 593; start date = ", date_wx)
+        print("$$$$$$ pvg_panel_one; start time = ", time_py)
+        self.start_datetime = datetime.datetime.combine(date_py, time_py)
         print("$$$$$$ pvg_panel_one; start time = ", self.start_datetime)
 
-
-
-# %%                                                Save Monitor Config
+        # %%                                                Save Monitor Config
     def saveMonitorConfiguration(self):
 
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug

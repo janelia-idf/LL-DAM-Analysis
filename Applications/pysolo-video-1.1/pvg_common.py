@@ -30,6 +30,8 @@ import ConfigParser, threading
 from inspect import currentframe                                                                     # debug
 from db import debugprt
 import datetime
+from dateutil import parser
+
 
 
 """
@@ -147,10 +149,10 @@ class myConfig():
         """
         r = self.config.get(section, key)
 
-        if key == 'start_datetime':
-            r = r[1:-2]
-            r = r.split(',')
-            r = datetime.datetime(*map(int, r))
+        if key == 'start_datetime' and type(r) == type(''):         # datetime values
+            r = parser.parse(r)
+            return r
+        elif type(r) == datetime.datetime:
             return r
 
         if type(r) == type(0) or type(r) == type(1.0):  # native int and float
