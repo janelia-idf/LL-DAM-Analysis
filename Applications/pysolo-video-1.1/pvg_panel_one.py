@@ -199,8 +199,9 @@ class panelConfigure(wx.Panel):
         self.sourceType = None
         self.track = None
         self.trackType = None
-        self.start_date = None
-        self.start_time = None
+        self.start_date = datetime.datetime.now().date()
+        self.start_time = datetime.datetime.now().time()
+        self.start_datetime = datetime.datetime.now()
 
         lowerSizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -285,7 +286,8 @@ class panelConfigure(wx.Panel):
 
         self.txt_date = wx.StaticText(self, -1, "Date:")
         self.start_date = wx.DatePickerCtrl(self, wx.ID_ANY, style = wx.DP_DROPDOWN | wx.DP_SHOWCENTURY)
-                                                                                    # $$$$$$ - set default date to start_datetime
+
+        self.Bind(wx.EVT_DATE_CHANGED, self.onDateTimeChanged, self.start_date)                                                                            # $$$$$$ - set default date to start_datetime
 
         self.date_time_sizer.Add(self.txt_date, 0, wx.ALL, 5)  # --- add to datetime row, center panel, lower sizer
         self.date_time_sizer.Add(self.start_date, 0, wx.ALL, 5)
@@ -294,6 +296,7 @@ class panelConfigure(wx.Panel):
         self.txt_time = wx.StaticText(self, -1, "Time (24-hour format):")
         self.spinbtn = wx.SpinButton(self, -1, wx.DefaultPosition, (-1, 20), wx.SP_VERTICAL)
         self.start_time = masked.TimeCtrl(self, -1, name="24 hour control", fmt24hr=True, spinButton=self.spinbtn)
+        self.Bind(wx.EVT_DATE_CHANGED, self.onDateTimeChanged, self.start_time)                                                                            # $$$$$$ - set default date to start_datetime
         self.addWidgets(self.date_time_sizer, [self.txt_time, self.start_time, self.spinbtn])
 
         self.sbSizer_videofile.AddSpacer(50)
@@ -484,9 +487,9 @@ class panelConfigure(wx.Panel):
         """
         # If monitor exists, get info. Else, set to null/default values.
         if options.HasMonitor(self.monitor_number):
-            sourceType, source, track, mask_file, trackType, isSDMonitor = options.GetMonitor(self.monitor_number)
+            sourceType, source, start_datetime, track, mask_file, trackType, isSDMonitor = options.GetMonitor(self.monitor_number)
         else:
-            sourceType, source, track, mask_file, trackType, isSDMonitor = [0, '', False, '', 1, False]
+            sourceType, source, start_datetime, track, mask_file, trackType, isSDMonitor = [0, '', False, '', 1, False]
 
         print("$$$$$$ pvg_panel_one; 491; UpdateThumbnail; mask_file = ", mask_file)                          # get mask file from default config?
         # If monitor is playing a camera
@@ -586,28 +589,28 @@ class panelConfigure(wx.Panel):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def onDateTimeChanged(self,event):
-        date = self.calendar.GetDate()
-        #        time = self.start_time.GetValue(self)
+        date = self.start_date.GetDate()
+        time = self.start_time.GetValue(self)
         print("$$$$$$ pvg_panel_one; 593; start date = ", date)
-        #        print("$$$$$$ pvg_panel_one; start time = ", time)
-        #        self.start_datetime = datetime.datetime.combine(date, time)
-        #       print("$$$$$$ pvg_panel_one; start time = ", self.start_datetime)
+        print("$$$$$$ pvg_panel_one; start time = ", time)
+        self.start_datetime = datetime.datetime.combine(date, time)
+        print("$$$$$$ pvg_panel_one; start time = ", self.start_datetime)
 
-        raw_input("press enter to continue")
+
 
 # %%                                                Save Monitor Config
     def saveMonitorConfiguration(self):
 
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        options.SetMonitor(self.monitor_number,          # already accounts for 0 based indexing
+        options.SetMonitor(self.monitor_number,          # monitor_number is 0-indexed
                            self.thumbnail.sourceType,
                            self.thumbnail.source,           #self.thumbnail.source+1 in dev code
-#                           self.start_datetime,
+                           self.start_datetime,
                            self.thumbnail.track,
                            self.mask_file,
                            self.trackType,                                      # this is not being saved correctly                             self.thumbnail.mon.isSDMonitor
                            )
-        print("$$$$$$ pvg_panel_one; 609; saveMonitorConfiguration; maskfile = ", self.mask_file)
+        print("$$$$$$ pvg_panel_one; 609; saveMonitorConfiguration; mask_file = ", self.mask_file)
         options.Save()
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 

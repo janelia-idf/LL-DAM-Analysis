@@ -147,6 +147,12 @@ class myConfig():
         """
         r = self.config.get(section, key)
 
+        if key == 'start_datetime':
+            r = r[1:-2]
+            r = r.split(',')
+            r = datetime.datetime(*map(int, r))
+            return r
+
         if type(r) == type(0) or type(r) == type(1.0):  # native int and float
             if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
             return r
@@ -323,7 +329,7 @@ class pvg_config(myConfig):
 
              }
 
-        self.monitorProperties = ['sourceType', 'source', 'start_datetime', 'track', 'maskfile', 'trackType', 'isSDMonitor']          # $$$$$$ add start_datetime?
+        self.monitorProperties = ['sourceType', 'source', 'start_datetime', 'track', 'mask_file', 'trackType', 'isSDMonitor']          # $$$$$$ add start_datetime?
 
         myConfig.__init__(self, filename, temporary, defaultOptions)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
@@ -348,7 +354,7 @@ class pvg_config(myConfig):
         md = []
         if self.config.has_section(mon_name):
             for vn in self.monitorProperties:
-                md.append ( self.GetValue(mon_name, vn) )                               # -1 to account for 0 based indexing
+                md.append ( self.GetValue(mon_name, vn) )                               # mon_name is 1-indexed
                 print("$$$$$$ pvg_common; 340; GetMonitor; mon_name = ", mon_name)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return md
@@ -359,7 +365,7 @@ class pvg_config(myConfig):
         """
         mon_name = 'Monitor%s' % (monitor +1)                        # monitor is 0-indexed, mon_name is 1-indexed
 
-        a = self.config.has_section(mon_name)                                           # $$$$$$  !!!!!!!   why is this returning false?
+        a = self.config.has_section(mon_name)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return a
 
