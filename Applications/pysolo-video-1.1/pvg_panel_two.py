@@ -149,8 +149,7 @@ class panelLiveView(wx.Panel):
 
 
         self.SetSizer(sizer_1)
-        print wx.Window.FindFocus()
-        
+
         self.Bind( wx.EVT_CHAR, self.fsPanel.onKeyPressed )
 
     def StopPlaying(self):
@@ -160,10 +159,7 @@ class panelLiveView(wx.Panel):
 
 
     def onChangeMonitor(self, event):
-        """
-        FIX THIS
-        this is a mess
-        """
+
 
         if self.fsPanel.isPlaying: self.fsPanel.Stop()
 
@@ -222,7 +218,7 @@ class panelLiveView(wx.Panel):
         """
         path = self.onSaveMask(None)
         mn = self.monitor_name.replace(' ','')
-        options.SetValue(mn, 'maskfile', path)
+        options.SetValue(mn, 'mask_file', path)
         options.Save()
 
     def onLoadMask(self, event):
