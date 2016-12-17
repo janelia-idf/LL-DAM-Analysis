@@ -29,6 +29,8 @@ import pysolovideo as pv
 import ConfigParser, threading
 from inspect import currentframe                                                                     # debug
 from db import debugprt
+import datetime
+
 
 """
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Settings
@@ -185,7 +187,7 @@ class myConfig():
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Acquire Object        
 class acquireObject():
-    def __init__(self, monitor, source, resolution, mask_file, track, track_type, dataFolder):
+    def __init__(self, monitor, source, start_datetime, resolution, mask_file, track, track_type, dataFolder):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
@@ -200,13 +202,14 @@ class acquireObject():
 
         self.mon = pv.Monitor()
         self.mon.setSource(source, resolution)
-        self.mon.setTracking(True, track_type, mask_file, outputFile)
+        self.mon.setTracking(True, track_type, start_datetime, mask_file, outputFile)
 
         print("$$$$$$ pvg_common; 205; acquireObject_init; mask_file = ", mask_file)
 
-        if self.verbose: print("Verbose 247 - Monitor %s, track %s, track type %d, \n source %s, \n mask %s,  \n output file %s  "
+        if self.verbose: print("Verbose 247 - Monitor %s, track %s, track type %d, \n source %s, \n start_datetime, \n mask %s,  \n output file %s  "
                                % (monitor, track, track_type,
                                   source,
+                                  start_datetime,
                                   mask_file,
                                   outputFile) )
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
@@ -243,7 +246,7 @@ class acquireObject():
         
 class acquireThread(threading.Thread):
 
-    def __init__(self, monitor, source, resolution, mask_file, track, track_type, dataFolder):
+    def __init__(self, monitor, source, start_datetime, resolution, mask_file, track, track_type, dataFolder):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
@@ -256,11 +259,12 @@ class acquireThread(threading.Thread):
 
         self.mon = pv.Monitor()
         self.mon.setSource(source, resolution)
-        self.mon.setTracking(True, track_type, mask_file, outputFile)
+        self.mon.setTracking(True, track_type, start_datetime, mask_file, outputFile)
 
-        if self.verbose: print("Verbose 301 - Monitor %s, track %s, track type %d, \n source %s, \n mask %s,  \n output file %s  "
+        if self.verbose: print("Verbose 301 - Monitor %s, track %s, track type %d, \n source %s, \n start_datetime %s, \n mask %s,  \n output file %s  "
                                % (monitor, track, track_type,
                                   source,
+                                  start_datetime,
                                   mask_file,
                                   outputFile) )
         print("$$$$$$ pvg_common; 266; acquireThread_init; mask_file = ", mask_file)
@@ -319,7 +323,7 @@ class pvg_config(myConfig):
 
              }
 
-        self.monitorProperties = ['sourceType', 'source', 'track', 'maskfile', 'trackType', 'isSDMonitor']          # $$$$$$ add start_datetime?
+        self.monitorProperties = ['sourceType', 'source', 'start_datetime', 'track', 'maskfile', 'trackType', 'isSDMonitor']          # $$$$$$ add start_datetime?
 
         myConfig.__init__(self, filename, temporary, defaultOptions)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
@@ -327,25 +331,25 @@ class pvg_config(myConfig):
     def SetMonitor(self, monitor, *args):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
 
-        mn = 'Monitor%s' % monitor
+        mon_name = 'Monitor%s' % (monitor +1)                         # monitor is 0-indexed, mon_name is 1-indexed
         for v, vn in zip( args, self.monitorProperties ):
-            self.SetValue(mn, vn, v)
+            self.SetValue(mon_name, vn, v)
 
-            print("$$$$$$ pvg_common; 328; setmonitor; mn = ", mn)
+            print("$$$$$$ pvg_common; 328; setmonitor; mon_name = ", mon_name)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
     def GetMonitor(self, monitor):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                           # debug
         """
         """
-        mn = 'Monitor%s' % monitor
-        print("$$$$$$ pvg_common; 336; GetMonitor; mn = ", mn)
+        mon_name = 'Monitor%s' % (monitor +1)                        # monitor is 0-indexed, mon_name is 1-indexed
+        print("$$$$$$ pvg_common; 336; GetMonitor; mon_name = ", mon_name)
 
         md = []
-        if self.config.has_section(mn):
+        if self.config.has_section(mon_name):
             for vn in self.monitorProperties:
-                md.append ( self.GetValue(mn, vn) )                               # -1 to account for 0 based indexing
-                print("$$$$$$ pvg_common; 340; GetMonitor; mn = ", mn)
+                md.append ( self.GetValue(mon_name, vn) )                               # -1 to account for 0 based indexing
+                print("$$$$$$ pvg_common; 340; GetMonitor; mon_name = ", mon_name)
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return md
 
@@ -353,10 +357,9 @@ class pvg_config(myConfig):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
-        mn = 'Monitor%s' % monitor
+        mon_name = 'Monitor%s' % (monitor +1)                        # monitor is 0-indexed, mon_name is 1-indexed
 
-        print("$$$$$$ pvg_common; 350; hasmonitor; mn = ", mn)
-        a = self.config.has_section(mn)
+        a = self.config.has_section(mon_name)                                           # $$$$$$  !!!!!!!   why is this returning false?
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return a
 
@@ -372,20 +375,18 @@ class pvg_config(myConfig):
         resolution = self.GetOption('FullSize')
         dataFolder = self.GetOption('Data_Folder')
         
-        for mon in range(0,ms):
-            if self.HasMonitor(mon):
-                _,source,track,mask_file,track_type,isSDMonitor = self.GetMonitor(mon)
+        for mon in range(0,ms):                           # mon is 0-indexed
+            if self.HasMonitor(mon):                        # HasMonitor expects a 0-indexed monitor number
+                _,source,start_datetime,track,mask_file,track_type,isSDMonitor = self.GetMonitor(mon)
                 monitors[mon] = {}
                 monitors[mon]['source'] = source
+                monitors[mon]['start_datetime'] = start_datetime
                 monitors[mon]['resolution'] = resolution
                 monitors[mon]['mask_file'] = mask_file
                 monitors[mon]['track_type'] = track_type
                 monitors[mon]['dataFolder'] = dataFolder
                 monitors[mon]['track'] = track
                 monitors[mon]['isSDMonitor'] = isSDMonitor
-                monitors[mon]['start_datetime'] = start_datetime
-
-        print("$$$$$$ pvg_common; 388; getMonitorsData; mask_file = ", mask_file)
 
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
         return monitors
@@ -413,6 +414,7 @@ class previewPanel(wx.Panel):
 
         self.sourceType = 0
         self.source = ''
+        self.start_datetime = datetime.datetime.now()  # date & time of start of video
         self.mon = None
         self.track = True
         self.isSDMonitor = False
@@ -422,7 +424,6 @@ class previewPanel(wx.Panel):
         self.camera = None
         self.resolution = None
 
-        self.start_datetime = (2016,1,1,1,1,1)      # date & time of start of video
 
         self.recording = False
         self.isPlaying = False

@@ -978,12 +978,10 @@ class Arena():
         """
         global real_dt
         # Here we build the header
-        # year, month, day, hh, mn, sec
-        # movie_dt = datetime.datetime.fromtimestamp( self.monitor.getFrameTime() )    # NOT GETTING CORRECT date/time info
-        # delta_dt = movie_dt - zero_dt
-        # real_dt = start_dt +delta_dt
-        real_dt = real_dt + datetime.timedelta(0, delta_dt)  # first real_dt and delta_dt are hard-coded in.  FIX THIS
-        real_dt_str = real_dt.strftime('%d %b %y\t%H:%M:%S')
+        # year, month, day, hour, min, sec    :  yy mmm dd \t hh:mm:ss
+
+        # date and time of movie start
+        real_dt_str = start_datetime.strftime('%d %b %y\t%H:%M:%S')
 
         # monitor is active
         active = '1'
@@ -1362,7 +1360,7 @@ class Monitor(object):
             self.CaptureFromFrames(camera, resolution, options)
         if call_tracking:  debugprt(self, currentframe(), pgm, 'end   ')
 
-    def setTracking(self, track, trackType=0, mask_file='', outputFile=''):
+    def setTracking(self, track, trackType=0, start_datetime = datetime.datetime.now(), mask_file='', outputFile=''):
         if call_tracking:  debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         Set the tracking parameters

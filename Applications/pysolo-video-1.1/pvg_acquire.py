@@ -881,14 +881,14 @@ class pvg_AcquirePanel(wx.Panel):
         if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
-        monitorsData = self.options.getMonitorsData()
+        monitorsData = self.options.getMonitorsData()       # monitorsData is 0-indexed
 
         self.grid.Clear()
         self.monitors = {}
 
-        for mn in monitorsData:
+        for monitor in monitorsData:
 
-            m = monitorsData[mn]
+            m = monitorsData[monitor]                       # monitor is 0-indexed
 
             try:
                 s = os.path.split( m['source'] )[1]
@@ -896,14 +896,15 @@ class pvg_AcquirePanel(wx.Panel):
                 s = 'Camera %02d' % ( m['source'] + 1 )
 
             mf = os.path.split(m['mask_file'])[1]
-            df = 'Monitor%02d.txt' % (mn+1)
-            row = [mn, s, mf, df, m['track_type'], m['track'] ]
+            df = 'Monitor%d.txt' % (monitor)
+            row = [monitor+1, s, mf, df, m['track_type'], m['track'] ]                          # Show monitor info in table using 1-indexed monitor number
             self.grid.AddRow(row)
 
 
-        for mn in monitorsData:    # collects specs for monitors from config
-            m = monitorsData[mn]
-            self.monitors[mn] = ( acquireThread(mn, m['source'], 
+        for monitor in monitorsData:    # collects specs for monitors from config  monitors is 0-indexed
+            m = monitorsData[monitor]
+            self.monitors[monitor] = ( acquireThread(monitor, m['source'],
+                                                m['start_datetime'],
                                                 m['resolution'], 
                                                 m['mask_file'], 
                                                 m['track'], 
