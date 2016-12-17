@@ -11,8 +11,8 @@ fps_preview = 5
 sourcetype = 1
 source = C:\Users\Lori\Documents\GitHub\LL-DAM-Analysis\Input\fly_movie.avi
 track = True
-mask_file = C:\Users\Lori\Documents\GitHub\LL-DAM-Analysis\Working_files\Monitor_1.msk
+mask_file = C:\Users\Lori\Documents\GitHub\LL-DAM-Analysis\Data\Working_files\Monitor_1.msk
 tracktype = 0
 issdmonitor = False
-start_datetime = 2016-12-17 13:55:06.703000
+start_datetime = 2016-12-27 00:59:00
 

@@ -170,7 +170,7 @@ class panelLiveView(wx.Panel):
         WebcamsList = [ 'Webcam %s' % (int(w) +1) for w in range( n_cams ) ]
 
         if options.HasMonitor(self.monitor_number):
-            sourceType, source, track, mask_file, trackType, isSDMonitor = options.GetMonitor(self.monitor_number)      # $$$$$$ add start_datetime?
+            sourceType, source, start_datetime, track, mask_file, trackType, isSDMonitor = options.GetMonitor(self.monitor_number)      # $$$$$$ add start_datetime?
             self.fsPanel.setMonitor( source )
             self.fsPanel.Play()
 
@@ -185,7 +185,7 @@ class panelLiveView(wx.Panel):
                 self.sourceTXTBOX.SetValue( os.path.split(source)[1] )
 
         else:
-            sourceType, source, track, mask_file, trackType = [0, '', False, '', 1]
+            sourceType, source, start_datetime, track, mask_file, trackType = [0, '', datetime.datetime.now(), False, '', 1]
             self.sourceTXTBOX.SetValue('No Source for this monitor')
 
 
