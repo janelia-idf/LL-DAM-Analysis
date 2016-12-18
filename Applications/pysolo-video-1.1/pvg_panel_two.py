@@ -25,7 +25,7 @@
 """
 import wx, os
 from pvg_common import previewPanel, options
-import pysolovideo as pv
+
 
 """
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Settings

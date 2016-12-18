@@ -28,21 +28,21 @@
 """
 import wx, os, sys
 
-from pvg_common import options
+import pvg_common as cmn
 from pvg_panel_one import panelOne
 from pvg_options import pvg_OptionsPanel
 from pvg_panel_two import panelLiveView
 from pysolovideo import pySoloVideoVersion
 import pysolovideo as pv
 from inspect import currentframe                                                                     # debug
-from db import debugprt
+
 """
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Settings
 """ 
 
 pgm = 'pvg.py'
 console_to_file = False             # controls whether console output goes to console or a file
-console_file = pv.data_dir + 'stdout.txt'
+console_file = cmn.data_dir + 'stdout.txt'
 
 """
 # %%                                                screen height & width
@@ -61,7 +61,7 @@ class mainNotebook(wx.Notebook):
     """
 
     def __init__(self, *args, **kwds):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
 
         kwds["style"] = wx.NB_LEFT
         wx.Notebook.__init__(self, *args, **kwds)       # initialize notebook
@@ -75,28 +75,28 @@ class mainNotebook(wx.Notebook):
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
 
         self.Layout()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                    Page changing
     def OnPageChanging(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Switches between notebook pages.
         """
         self.panelOne.StopPlaying()                    # see pvg_panel_one.py
         self.panelTwo.StopPlaying()                    # see pvg_panel_two.py
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                        Refresh all pages
     def updateUI(self):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Refreshes all pages of notebook.
         """
         self.panelOne.onRefresh()                    # see pvg_panel_one.py
         self.panelTwo.onRefresh()                    # see pvg_panel_two.py
         self.Layout()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
         
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Main Frame
@@ -105,7 +105,7 @@ class mainFrame(wx.Frame):
     Creates the main window of the application.
     """
     def __init__(self, *args, **kwds):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
 
         kwds["style"] = wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
@@ -113,11 +113,11 @@ class mainFrame(wx.Frame):
         self.__set_properties("pySolo Video",0.9)   # set title and frame/screen ratio
         self.__menubar__()
         self.__do_layout()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                      Set window properties
     def __set_properties(self, window_title, size_ratio ):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Set the title of the main window.
         Set the size of the main window relative to the size of the user's display.
@@ -128,11 +128,11 @@ class mainFrame(wx.Frame):
         self.SetSize((screen_width*size_ratio,
                       screen_height*size_ratio))     # set size of window
         self.Center()                               # center the window
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                  Put notebook in window.
     def __do_layout(self):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Puts a notebook in the main window.
         """
@@ -141,12 +141,12 @@ class mainFrame(wx.Frame):
         mainSizer = wx.BoxSizer(wx.HORIZONTAL)
         mainSizer.Add(self.videoNotebook, 1, wx.EXPAND, 0)
         self.SetSizer(mainSizer)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 
 # %%                                                            Create Menubar
     def __menubar__(self):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Creates menu bar at top of window.
         """
@@ -201,11 +201,11 @@ class mainFrame(wx.Frame):
         wx.EVT_MENU(self, ID_FILE_EXIT, self.onFileExit)
         wx.EVT_MENU(self, ID_OPTIONS_SET, self.onConfigure)
         wx.EVT_MENU(self, ID_HELP_ABOUT, self.onAbout)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                              About        
     def onAbout(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Shows the about dialog.
         """
@@ -223,7 +223,7 @@ class mainFrame(wx.Frame):
         """ Show the about dialog. """
         dlg.ShowModal()
         dlg.Destroy()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                            Save File
     def onFileSave(self, event):                                               
@@ -234,11 +234,11 @@ class mainFrame(wx.Frame):
 
 # %%                                                        Save file as
     def onFileSaveAs(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Opens the save file window
         """
-        filename = pv.DEFAULT_CONFIG                   # see pvg_common.py
+        filename = cmn.DEFAULT_CONFIG                   # see pvg_common.py
 
         print("$$$$$$ pvg; 243; default_config = ", filename)
 
@@ -247,21 +247,21 @@ class mainFrame(wx.Frame):
                  "All files (*.*)|*.*"    # adding space in here will mess it up!
 
         dlg = wx.FileDialog(                    # make a save window
-            self, message="Save file as ...", defaultDir=pv.data_dir,
+            self, message="Save file as ...", defaultDir=cmn.data_dir,
             defaultFile=filename, wildcard=wildcard,
             style=(wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
             )
 
         if dlg.ShowModal() == wx.ID_OK:         # show the save window
             path = dlg.GetPath()                # gets the path from the save dialog
-            options.Save(filename=path)
+            cmn.options.Save(filename=path)
 
         dlg.Destroy()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%
     def onFileOpen(self, event):                                                # viewing all files is not an option
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """                                                                     # .cfg files don't show.  you can ask for it, but it doesn't load
         Opens the open file window                                              # no complaints about non-existent files
         """
@@ -282,20 +282,20 @@ class mainFrame(wx.Frame):
             options.New(path)
 
         dlg.Destroy()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%
     def onFileExit(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Calls close function
         """
         self.Close()                            # from wxpython
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%
     def onConfigure(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         opens configure dialog box                                                  $$$$$$  configuration?
         """
@@ -309,7 +309,7 @@ class mainFrame(wx.Frame):
         elif res == wx.ID_CANCEL:
             print "no changes were made"                                        # prints to console
         frame_opt.Destroy()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Main Program
 

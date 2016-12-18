@@ -34,24 +34,20 @@ __license__ = "Python"
 #       Revisions by Caitlin Laughrey and Loretta E Laughrey in 2016.
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Imports
-import wx, os, sys, datetime
-from win32api import GetSystemMetrics    # to get screen resolution
+import wx, os, sys
 import optparse
 from wx.lib.filebrowsebutton import FileBrowseButton
 import wx.grid as gridlib
 import operator
+import pvg_common as cmn
 import pysolovideo as pv
-from pvg_common import pvg_config, acquireThread
-from pvg_panel_one import panelOne
-from pvg_options import pvg_OptionsPanel
-from pvg_panel_two import panelLiveView
 from inspect import currentframe                                                                     # debug
-from db import debugprt
+import threading
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Settings
 pgm = 'pvg_acquire.py'              # identifies script file name for debug code
 console_to_file = False             # controls whether console output goes to console or a file
-console_file = pv.data_dir + 'stdout.txt'
+console_file = cmn.data_dir + 'stdout.txt'
 
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -59,45 +55,45 @@ console_file = pv.data_dir + 'stdout.txt'
 # Not present in dev version
 class customDataTable(gridlib.PyGridTableBase):
     def __init__(self, colLabels, dataTypes, useValueCleaner=True):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         gridlib.PyGridTableBase.__init__(self)
         self.useValueCleaner = useValueCleaner
         self.colLabels = colLabels
         self.dataTypes = dataTypes
         self.data = [['']*len(self.dataTypes)]
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
     #--------------------------------------------------
     # required methods for the wxPyGridTableBase interface
 
     def GetNumberRows(self):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                           # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                           # debug
  
         try:
-            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+            if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
             return len(self.data)
         except:
-            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+            if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
             return 0
 
     def GetNumberCols(self):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         a = len (self.colLabels)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def IsEmptyCell(self, row, col):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         try:
             a = not self.data[row][col]
-            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+            if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
             return a
         except IndexError:
             not self.data[row][col]
-            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+            if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
             return True
 
     def Reset(self, colLabels, dataTypes):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Re-initialise the table
         reset(colLabels, dataTypes)
@@ -113,10 +109,10 @@ class customDataTable(gridlib.PyGridTableBase):
             self.dataTypes = dataTypes
 
         self.ClearTable()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def ClearTable(self):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Clear the table
         """
@@ -125,11 +121,11 @@ class customDataTable(gridlib.PyGridTableBase):
                 gridlib.GRIDTABLE_NOTIFY_ROWS_DELETED,
                 0, self.GetNumberRows() ))
         self.data = []
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 
     def GetValue(self, row, col):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         # customdatatable getvalue')                        # debug
         """
         (row, col)
@@ -138,24 +134,24 @@ class customDataTable(gridlib.PyGridTableBase):
         try:
             not self.data[row][col]
             a = self.data[row][col]
-            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+            if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
             return a
         except IndexError:
             not self.data[row][col]
-            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+            if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
             return ''
 
     def InsertColumn(self, col_pos, col_type=gridlib.GRID_VALUE_FLOAT+':6,2', col_label=''):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Add one grid column before col_pos, with type set to col_type and label col_label
         """
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
         
     def transpose(whole_table):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         a = map(lambda *row: list(row), *whole_table)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'%%% REMAINDER OF TRANSPOSE NOT DONE.    end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'%%% REMAINDER OF TRANSPOSE NOT DONE.    end   ')
         return a
 
         empty_col = [''] * self.GetNumberCols()                                   #  What's This ????
@@ -173,11 +169,11 @@ class customDataTable(gridlib.PyGridTableBase):
                 gridlib.GridTableMessage(self,
                 gridlib.GRIDTABLE_NOTIFY_COLS_INSERTED,
                 col_pos, 1         ))
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 
     def Sort(self, bycols, descending=False):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         sort the table by multiple columns
             bycols:  a list (or tuple) specifying the column numbers to sort by
@@ -197,10 +193,10 @@ class customDataTable(gridlib.PyGridTableBase):
 
         msg=wx.grid.GridTableMessage(self, wx.grid.GRIDTABLE_REQUEST_VIEW_GET_VALUES)
         self.GetView().ProcessTableMessage(msg)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def AddRow (self, rows):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Add one or more rows at the bottom of the table / sheet
         row can be an array of values or a 2-dimenstional array of rows and values
@@ -219,10 +215,10 @@ class customDataTable(gridlib.PyGridTableBase):
                 gridlib.GRIDTABLE_NOTIFY_ROWS_APPENDED,
                 n_rows         ))
 
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def RemRow (self, rows):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Remove one or more rows
         """
@@ -233,10 +229,10 @@ class customDataTable(gridlib.PyGridTableBase):
                 gridlib.GridTableMessage(self,
                 gridlib.GRIDTABLE_NOTIFY_ROWS_DELETED,
                 len(rows)         ))
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def SetData(self, data=None):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Set the whole content of the table to data
         """
@@ -252,19 +248,19 @@ class customDataTable(gridlib.PyGridTableBase):
         self.GetView().ProcessTableMessage(
                 gridlib.GridTableMessage(None,
                 gridlib.GRIDTABLE_REQUEST_VIEW_GET_VALUES))
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
         
     def SetRow (self, row, data):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         data = self.cleanFromMask(data)
         try:
             self.data[row] = data
         except:
             self.AddRow(data)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def SetValue(self, row, col, value):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         # setvalue')                                             # debug        
         """
         (row, col, value)
@@ -282,35 +278,35 @@ class customDataTable(gridlib.PyGridTableBase):
                     gridlib.GridTableMessage(self,
                     gridlib.GRIDTABLE_NOTIFY_ROWS_APPENDED,
                     1                    ) )
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
         
     #--------------------------------------------------
     # Some optional methods
 
     def GetColLabelValue(self, col):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Called when the grid needs to display labels
         """
         a = self.colLabels[col]
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
         return self.colLabels[col]
 
 
     def GetTypeName(self, row, col):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Called to determine the kind of editor/renderer to use by
         default, doesn't necessarily have to be the same type used
         natively by the editor/renderer if they know how to convert.
         """
         a = self.dataTypes[col]
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
         return a
 
 
     def CanGetValueAs(self, row, col, typeName):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         # cangetvalueas')                           # debug
         """
         Called to determine how the data can be fetched and stored by the
@@ -319,20 +315,20 @@ class customDataTable(gridlib.PyGridTableBase):
         """
         colType = self.dataTypes[col].split(':')[0]
         if typeName == colType:
-            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+            if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
             return True
         else:
-            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+            if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
             return False
 
     def CanSetValueAs(self, row, col, typeName):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         a = self.CanGetValueAs(row, col, typeName)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def cleanFromMask(self, l):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Goes through the list l and make sure it doesn't contain
         any masked value
@@ -351,7 +347,7 @@ class customDataTable(gridlib.PyGridTableBase):
             except:
                 pass
 
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
         return l
 
 
@@ -361,7 +357,7 @@ class CustTableGrid(gridlib.Grid):
     functions for the table are proxied from here
     """
     def __init__(self, parent, colLabels, dataTypes, enableEdit = False, useValueCleaner=True, useMenu=True):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
 
         gridlib.Grid.__init__(self, parent, -1)
         self.table = customDataTable(colLabels, dataTypes, useValueCleaner)
@@ -388,10 +384,10 @@ class CustTableGrid(gridlib.Grid):
         #self.Bind(gridlib.EVT_GRID_CELL_LEFT_DCLICK, self.OnLeftDClick)
 
         if useMenu: self.Bind(gridlib.EVT_GRID_CELL_RIGHT_CLICK, self.OnContextMenu)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def OnColumnHeaderPaint(self, evt):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         w = self.GetGridColLabelWindow()
         dc = wx.PaintDC(w)
         clientRect = w.GetClientRect()
@@ -428,30 +424,30 @@ class CustTableGrid(gridlib.Grid):
             dc.SetFont(font)
             dc.DrawLabel("%s" % self.GetTable().colLabels[col],
                      rect, wx.ALIGN_CENTER | wx.ALIGN_TOP)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def Clear(self, *args, **kwargs):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Clear the table empty
         """
         self.table.ClearTable(*args, **kwargs)
         self.AutoSizeColumns()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 
     def Reset(self, *args, **kwargs):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Reinitialize the table
         """
 
         self.table.Reset(*args, **kwargs)
         self.AutoSizeColumns()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def InsertCol (self, *args, **kwargs):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         (self, col_pos, col_type=gridlib.GRID_VALUE_FLOAT+':6,2', col_label='')
         Add one grid column before col_pos, with type set to col_type and label col_label
@@ -459,19 +455,19 @@ class CustTableGrid(gridlib.Grid):
 
         self.table.InsertColumn (*args, **kwargs)
         self.AutoSizeColumns()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 
     def SetColsSize(self, cols_size):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
         for col in range(len(cols_size)):
             self.SetColSize(col, cols_size[col])
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def GetData (self):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Return a bidimensional array with a copy
         of the data in the spreadsheet
@@ -485,11 +481,11 @@ class CustTableGrid(gridlib.Grid):
                     pass
 
         a = all_data
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def SetData(self, *kargs, **kwargs):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         (data)
         Set the data of the table to the given value
@@ -497,19 +493,19 @@ class CustTableGrid(gridlib.Grid):
         """
         self.table.SetData(*kargs, **kwargs)
         self.AutoSizeColumns()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def GoToEnd(self):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Go to the end of the table
         """
         while self.MovePageDown():
             pass
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def AddRow(self, *kargs, **kwargs):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Add one or more rows at the bottom of the table / sheet
         row can be an array of values or a 2-dimenstional array of rows and values
@@ -519,10 +515,10 @@ class CustTableGrid(gridlib.Grid):
         self.AutoSizeColumns()
         #row = self.GetNumberRows()
         #self.GoToEnd()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def RemRow(self, *kargs, **kwargs):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Add one or more rows at the bottom of the table / sheet
         row can be an array of values or a 2-dimenstional array of rows and values
@@ -531,47 +527,47 @@ class CustTableGrid(gridlib.Grid):
         self.table.RemRow(*kargs, **kwargs)
         self.AutoSizeColumns()
         row = self.GetNumberRows()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def GetNumberRows(self, *kargs, **kwargs):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Return the number of Rows
         """
         a = self.table.GetNumberRows ()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def GetNumberCols(self, *kargs, **kwargs):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Return the number of cols
         """
         a = self.table.GetNumberCols ()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
         return a
 
     def HideCol(self, col):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         (col)
         Hide the specified column by setting its size to 0
         """
         self.SetColSize(col, 0)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def OnKeyUp(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Records whether the Ctrl Key is up or down
         """
         if event.GetKeyCode() == 308:
             self.CtrlDown = False
         event.Skip()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
     def OnKeyDown(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Responds to the following keys:
         Enter -> Jumps to next cell
@@ -588,12 +584,12 @@ class CustTableGrid(gridlib.Grid):
 
         if event.GetKeyCode() != wx.WXK_RETURN:
             event.Skip()
-            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+            if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
             return
 
         if event.ControlDown():   # the edit control needs this key
             event.Skip()
-            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+            if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
             return
 
         self.DisableCellEditControl()
@@ -602,7 +598,7 @@ class CustTableGrid(gridlib.Grid):
             success = self.MoveCursorRight(event.ShiftDown())
             size_of_current_col = self.GetColSize(self.GetGridCursorCol())
             if size_of_current_col != 0 or not success: 
-                 if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+                 if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
                  break
 
         if not success:
@@ -615,22 +611,22 @@ class CustTableGrid(gridlib.Grid):
                 #Add a new row here?
                 pass
             
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
             
 
     def OnLeftClick(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         On mouse click checks if the cell contain a checkbox and if it does
         will change its status
         """
         self.ForceRefresh()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 
     def OnSort(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Clicking on the label of the columns sorts data in one order, a second click reverses the order.
         """
@@ -648,11 +644,11 @@ class CustTableGrid(gridlib.Grid):
 
             self.table.Sort( sorting_order, self.sortedColumnDescending)
             self.Refresh()
-            if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+            if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
 
     def OnContextMenu(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Creates and handles a popup menu
         """
@@ -692,10 +688,10 @@ class CustTableGrid(gridlib.Grid):
 
         self.PopupMenu(menu)
         menu.Destroy()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
     def OnCopyCol(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Copy to clipboard the content of the entire currently
         selected column, including the column label
@@ -708,10 +704,10 @@ class CustTableGrid(gridlib.Grid):
             wx.TheClipboard.Close()
         else:
             wx.MessageBox("Unable to open the clipboard", "Error")
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
     def OnCopyRow(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Copy to clipboard the content of the entire currently
         selected row
@@ -724,18 +720,18 @@ class CustTableGrid(gridlib.Grid):
             wx.TheClipboard.Close()
         else:
             wx.MessageBox("Unable to open the clipboard", "Error")
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
     # I do this because I don't like the default behaviour of not starting the
     # cell editor on double clicks, but only a second click.
     def OnLeftDClick(self, evt):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         if self.CanEnableCellControl():
             self.EnableCellEditControl()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
     def OnCopyAll(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Copy the all table to clipboard
         """
@@ -746,10 +742,10 @@ class CustTableGrid(gridlib.Grid):
             wx.TheClipboard.Close()
         else:
             wx.MessageBox("Unable to open the clipboard", "Error")
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
     def OnCopySelected(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Copy selected cells to system clipboard
         """
@@ -760,10 +756,10 @@ class CustTableGrid(gridlib.Grid):
             wx.TheClipboard.Close()
         else:
             wx.MessageBox("Unable to open the clipboard", "Error")
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
     def OnExportToFile(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Save away the content of the grid as CSV file
         """
@@ -776,10 +772,10 @@ class CustTableGrid(gridlib.Grid):
             filehandle.write(self.DataToCSV(','))
             filehandle.close()
         dlg.Destroy()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
     def DataToCSV(self, separator=',', onlySel = False):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Convert the data in the grid to CSV value format (or equivalent)
         """
@@ -798,11 +794,11 @@ class CustTableGrid(gridlib.Grid):
                 c+=1
             csv += notEmptyLine
             r +=1
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
         return csv
 
     def OnCheckUncheckItems(self, check_value, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Check uncheck all checkable items in the selected rows
         """
@@ -814,16 +810,16 @@ class CustTableGrid(gridlib.Grid):
                 self.table.SetValue(r,c, check_value)
             r += 1
         self.ForceRefresh()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
 class pvg_AcquirePanel(wx.Panel):
     def __init__(self, parent):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
 
         wx.Panel.__init__(self, parent, wx.ID_ANY)
         self.parent = parent
 
-        os.chdir(pv.data_dir)                    # debug
+        os.chdir(cmn.data_dir)                    # debug
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         self.FBconfig = FileBrowseButton(self, -1, labelText='Pick file', size=(300,-1), changeCallback = self.configCallback)
         
@@ -857,28 +853,28 @@ class pvg_AcquirePanel(wx.Panel):
         mainSizer.Add(btnSizer, 0, wx.ALL, 5)
         self.SetSizer(mainSizer)
 
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
     def configCallback(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
         self.loadFile( self.FBconfig.GetValue() )
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
 
     def loadFile(self, filename):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
-        self.options = pvg_config(filename)
+        self.options = cmn.pvg_config(filename)
         self.updateTable()
         self.parent.sb.SetStatusText('Loaded file %s' % filename)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
         return True
 
     def updateTable(self):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
         monitorsData = self.options.getMonitorsData()       # monitorsData is 0-indexed
@@ -910,22 +906,22 @@ class pvg_AcquirePanel(wx.Panel):
                                                 m['track'], 
                                                 m['track_type'], 
                                                 m['dataFolder']) )
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
             
     def isToTrack(self, monitor):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
         d = self.grid.GetData()
 
         for row in d:
             if monitor == row[0]: 
-                if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+                if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
                 return row[-1]
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
     def onStart(self, event=None):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
         self.acquiring = True
@@ -933,7 +929,7 @@ class pvg_AcquirePanel(wx.Panel):
         self.startBtn.Enable(not self.acquiring)
         c = 0
 
-        for mon in self.monitors:
+        for mon in self.monitors:                   #  mon is 0-indexed
             if self.isToTrack(mon):
 
                 self.monitors[mon].doTrack()
@@ -941,10 +937,10 @@ class pvg_AcquirePanel(wx.Panel):
                 c+=1
 
         self.parent.sb.SetStatusText('Tracking %s Monitors' % (str(int(c))))    
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
     
     def onStop(self, event):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
         self.acquiring = False
@@ -954,11 +950,73 @@ class pvg_AcquirePanel(wx.Panel):
             self.monitors[mon].halt()
 
         self.parent.sb.SetStatusText('All tracking is now stopped')
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
+
+class acquireThread(threading.Thread):
+    def __init__(self, monitor, source, start_datetime, resolution, mask_file, track, track_type, dataFolder):
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
+        """
+        """
+        threading.Thread.__init__(self)
+        self.monitor = monitor
+        self.keepGoing = False
+        self.verbose = True
+        self.track = track
+        outputFile = os.path.join(dataFolder,
+                                  'Monitor%d.txt' % (monitor + 1))  # account for computer indexing diff from humans
+
+        self.mon = pv.Monitor()
+        self.mon.setSource(source, resolution)
+        self.mon.setTracking(True, track_type, start_datetime, mask_file, outputFile)
+
+        if self.verbose: print(
+        "Verbose 301 - Monitor %s, track %s, track type %d, \n source %s, \n start_datetime %s, \n mask %s,  \n output file %s  "
+        % (monitor, track, track_type,
+           source,
+           start_datetime,
+           mask_file,
+           outputFile))
+        print("$$$$$$ pvg_common; 266; acquireThread_init; mask_file = ", mask_file)
+
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'end   ')
+
+    def run(self, kbdint=False):
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
+        """
+        """
+
+        if kbdint:
+
+            while self.keepGoing:
+                try:
+                    self.mon.GetImage()
+                except KeyboardInterrupt:
+                    self.halt()
+
+        else:
+            while self.keepGoing:
+                self.mon.GetImage()
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'end   ')
+
+    def doTrack(self):
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
+        """
+        """
+        self.keepGoing = True
+        self.start()
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'end   ')
+
+    def halt(self):
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
+        """
+        """
+        self.keepGoing = False
+        if self.verbose: print ("Verbose 339: Stopping capture")
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'end   ')
 
 class acquireFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')        #  
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')        #  
         kwargs["size"] = (800, 600)
 
         wx.Frame.__init__(self, *args, **kwargs)
@@ -967,12 +1025,12 @@ class acquireFrame(wx.Frame):
         self.SetStatusBar(self.sb)
 
         self.acq_panel =  pvg_AcquirePanel(self)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
     def loadConfig(self, filename=None):
         """
         """
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         if ~os.path.isfile(filename):
             
             if filename is None:
@@ -981,15 +1039,15 @@ class acquireFrame(wx.Frame):
                 filename = os.path.join (pDir, DEFAULT_CONFIG)
                 filename = DEFAULT_CONFIG
         self.acq_panel.loadFile(filename)
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
         return True
 
     def Start(self):
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         """
         self.acq_panel.onStart()
-        if pv.call_tracking: debugprt(self,currentframe(),pgm,'end   ')   #
+        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')   #
 
 
 if __name__ == '__main__':
@@ -1008,7 +1066,7 @@ if __name__ == '__main__':
     app.SetTopWindow(frame_acq)
     frame_acq.Show(options.showgui)
 
-    configfile = pv.DEFAULT_CONFIG
+    configfile = cmn.DEFAULT_CONFIG
     cfgloaded = frame_acq.loadConfig(configfile)
 
     if cfgloaded and options.acquire:
