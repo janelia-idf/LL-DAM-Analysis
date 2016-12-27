@@ -43,9 +43,12 @@ class panelLiveView(wx.Panel):
     """
     def __init__(self, parent,  config_obj, configDict):
         """
+        Shows fullsize video and a mask making panel
         """
 
         wx.Panel.__init__(self, parent, -1)
+        self.config_obj = config_obj
+        self.configDict = configDict
 
         self.n_mons = configDict['Options, monitors']
         self.fs_size = configDict['Options, fullsize']

@@ -38,6 +38,9 @@ call_tracking = False  # if True each function will report it's beginning and en
 show_imgs = False  # if true, show images
 pgm = 'pvg_common.py'                   # identifies file name to debug call tracer
 
+DEFAULT_data_dir = '\\Documents\\GitHub\\LL-DAM-Analysis\\Data\\Working_files\\'
+DEFAULT_configfile = 'pysolo_video.cfg'
+pDir = os.path.join(os.environ['USERPROFILE'], DEFAULT_data_dir)
 
 # -------------------------------------------------------------------------------  Config Object
 class Configuration:
@@ -60,105 +63,135 @@ class Configuration:
         setValue    sets an new value for a key from config dictionary
         save        saves configuration to a file
         """
+        self.pDir = pDir
+        self.full_filename = self.getFilename(filename)      # gets or creates a valid filename for the config file and creates one if there is no config file
+        self.config_obj = self.getConfigObj()                # reads the config file
+        self.configDict = self.getConfigDict()              # creates dictionary of config options for easy reference
 
-        self.DEFAULT_data_dir = '\\Documents\\GitHub\\LL-DAM-Analysis\\Data\\Working_files\\'
-        self.DEFAULT_configfile = 'pysolo_video.cfg'
+        return [self.config_obj, self.configDict, self.configfile]
 
-    # start with the default config directory for pDir
-        self.pDir = os.environ['USERPROFILE'] + self.DEFAULT_data_dir
+    def getFilename(self, filename):
+        self.full_filename = filename
+    # make sure folder is accessible  & make a new config file there
+        if os.access(self.full_filename, os.W_OK):
+            self.full_filename = filename
+            self.pDir = os.path.split(self.full_filename[0])
+            return                                              # valid filename given, no need to create a default configuration
 
-    # make sure we have a full_path filename
-        if filename == None :
-            self.full_filename =  os.path.join(self.pDir, self.DEFAULT_configfile)
-        elif filename == os.path.split(filename)[1] :
-            self.full_filename = os.path.join(self.pDir, filename)
-            
-    # make sure file is accessible & if not create the directory & make a new config file there
-        if not os.access(self.pDir, os.W_OK):
+        if not os.access(self.pDir, os.W_OK):             # if not accessible use default directory
             os.makedirs(self.pDir)
-            self.configOptsFromScratch(self.full_filename)
-        elif not os.access(self.full_filename, os.W_OK):
-            self.configOptsFromScratch(self.full_filename)
 
-        self.config_obj = ConfigParser.RawConfigParser()            # read the config file
+        if filename is None:                              # if no filename use default filename
+            self.full_filename =  os.path.join(self.pDir, self.DEFAULT_configfile)
+
+        if filename == os.path.split(filename)[1] :       # a filename was given without a path:  create a file with default options in default path
+            self.full_filename = os.path.join(self.pDir, filename)
+
+        self.configDict = self.defaultConfig()              # create a default dictionary
+
+        self.save_Config(new=True)                                  # save the configuration to the filename
+
+
+
+# %% ----------------------------------------------------------  Create configuration dictionary from scratch and create file
+    def defaultConfig(self):
+
+        self.configDict = {
+            'Options, webcams': 0,
+            'Options, thumbnailsize': (320, 240),
+            'Options, fullsize': (640, 480),
+            'Options, fps_preview': 5,
+            'Options, monitors': 1,
+            'Options, pDir': (os.path.split(self.full_filename)[0]),
+            'Monitor1, mon_name': 'Monitor1',
+            'Monitor1, sourcetype': 1,
+            'Monitor1, issdmonitor': False,
+            'Monitor1, source': None,
+            'Monitor1, fps_recording': 1,
+            'Monitor1, start_datetime': datetime.datetime.now(),
+            'Monitor1, track': False,
+            'Monitor1, tracktype': 0,
+            'Monitor1, maskfile': None,
+            'Monitor1, output_folder': None
+        }
+
+    # save to file
+        self.save_Config(new=True)
+
+        #  ---------------------------------------------------------------------- reads the config file to make the config_obj
+    def getConfigObj(self):
+
+        self.config_obj = ConfigParser.RawConfigParser()                    # read the config file
         self.config_obj.read(self.full_filename)
 
-        # create configuration dictionary
+# -----------------------------------------------------------------------  create configuration dictionary
+    def getConfigDict(self):
         self.configDict = {}
+
     # Options
         self.opt_keys = ['webcams', 'thumbnailsize', 'fullsize',  'fps_preview', 'monitors', 'pDir']
+
+        if not self.config_obj.has_section('Options'):
+            self.config_obj.add_section('Options')
+
         for key in self.opt_keys:
+            if not self.config_obj.has_option('Options',key):
+                self.config_obj.setValue('Options', key, None)
             value = self.getValue('Options', key)               # TODO:  are we doing this twice without need?
             indexStr = 'Options, ' + key
             self.configDict[indexStr] = value
+
     #Monitors
         self.mon_keys = ['sourcetype','issdmonitor', 'source','fps_recording','start_datetime','track','tracktype','maskfile','output_folder']
-        if self.getValue('Options','monitors') > 0 :
-            for mon_num in range(1, self.getValue('Options','monitors')+1 ):
-                mon_name = 'Monitor%d' % mon_num
+
+        if not self.config_obj.has_option('Options','monitors'):
+            mon_num = 0
+        else:
+            mon_num = self.getValue('Options','monitors')
+
+        if type(mon_num) != type(0)  or mon_num == None:
+            mon_num = 0
+
+
+        for m in range(1, mon_num+1 ):
+                mon_name = 'Monitor%d' % m
+                if not self.config_obj.has_option(mon_name, key):
+                    self.config_obj.setValue(mon_name, key, None)
                 for key in self.mon_keys:
                     value = self.getValue(mon_name, key)
                     indexStr = mon_name + ', ' + key
                     self.configDict[indexStr] = value
+
         if call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
-# %% ----------------------------------------------------------  Create configuration options from scratch and create file
-    def configOptsFromScratch(self, full_filename):
-
-        config_obj = ConfigParser.RawConfigParser()            # read the config file
-
-        config_obj.add_section('Options')
-        defaultOptions = {
-            'webcams':0,
-            'thumbnailSize': (320, 240),
-            'fullsize': (640, 480),
-            'fps_preview': 5,
-            'monitors': 0,
-            'pDir': (os.path.split(full_filename)[0])
-        }
-        for key in defaultOptions:
-            config_obj.set('Options', key, defaultOptions[key])
-
-        config_obj.add_section('Monitor1')
-        defaultMonitor = {
-            'sourcetype': 1,
-            'issdmonitor': False,
-            'source': None,
-            'fps_recording': 1,
-            'start_datetime': datetime.datetime.now(),
-            'track': False,
-            'tracktype': 0,
-            'maskfile': None,
-            'output_folder': None
-        }
-        for key in defaultMonitor:
-            config_obj.set('Monitor1', key, defaultMonitor[key])
-
-    # save to file
-        with open(full_filename, 'wb') as configfile:
-            config_obj.write(configfile)
 # %% ----------------------------------------------------------------------------   Set options from menu
     def onOptionSet(self):
         print('set options from menu')      # TODO: write this function
 # %%  ----------------------------------------------------------------------------  Save config file
-    def Save_config(self, config_obj, config, full_filename):
+    def save_Config(self, new):
         if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')        
         """
-        Saves the configuration to full_filename.
+        Saves the configuration dictionary to full_filename.
         """
+        if new:
+            self.config_obj = ConfigParser.RawConfigParser()
+            self.config_obj.add_section('Options')
+            self.config_obj.add_section('Monitor1')
+
     # update configuration object with current config dictionary
         opt_keys = ['webcams', 'thumbnailsize', 'fullsize', 'fps_preview', 'monitors', 'pDir']
         for key in opt_keys:
-            self.setValue('Options', key, config['Options, '+key])
+            self.config_obj.set('Options', key, self.configDict['Options, '+key])
 
         mon_keys = ['sourcetype','issdmonitor', 'source','fps_recording','start_datetime','track','tracktype','maskfile','output_folder']
-        if config['Options, monitors'] > 0:
-            for mon_num in range(1, config['Options, monitors']):
+        if self.configDict['Options, monitors'] > 0:
+            for mon_num in range(1, self.configDict['Options, monitors']):
                 mon_name = 'Monitor%d' % mon_num
                 for key in mon_keys:
-                    self.setValue(mon_name, key, config[mon_name + ', '+key])
+                    self.config_obj.set(mon_name, key, self.configDict[mon_name + ', '+key])
+
     # save to file
-        with open(full_filename, 'wb') as configfile:
+        with open(self.full_filename, 'wb') as configfile:                      # TODO: prompt to avoid accidental overwrite
             self.config_obj.write(configfile)
 
         if call_tracking: debugprt(self,currentframe(),pgm,'end   ')
@@ -171,7 +204,7 @@ class Configuration:
         if not self.config_obj.has_section(section):
             self.config_obj.add_section(section)
         if not self.config_obj.has_option(section, key):
-            self.config_obj.add_option(section, key)
+            self.config_obj.set(section, key)
 
         self.config_obj.set(section, key, value)
 
@@ -181,11 +214,19 @@ class Configuration:
         if call_tracking: debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         get value from config file based on section and keyword
-        Does some sanity checking to return tuple, integer and strings, datetimes, as required.
+        Do some sanity checking to return tuple, integer and strings, datetimes, as required.
         """
+
+        #                                                                       # no value
+        if  not self.config_obj.has_option(section, key):
+            r = None
+
         r = self.config_obj.get(section, key)
 
-            # check input types:
+        if r == 'None' :
+            r = None
+            return r
+
         if key == 'start_datetime' and type(r) == type(''):                     # datetime values
             try: r = parser.parse(r)
             except: r = datetime.datetime.now()
@@ -203,14 +244,14 @@ class Configuration:
             return r
 
         try:
-            int(r) == int(0)                                                   # int as text
+            int(r) == int(0)                                                   # int
             if call_tracking: debugprt(self, currentframe(), pgm, 'end   ')
             return int(r)
         except:
             None
 
         try:
-            float(r) == float(1.1)                                              # float as text
+            float(r) == float(1.1)                                              # float
             if call_tracking: debugprt(self, currentframe(), pgm, 'end   ')
             return float(r)
         except:
@@ -222,9 +263,10 @@ class Configuration:
             if call_tracking: debugprt(self,currentframe(),pgm,'end   ')
             return r
 
-        return r                                                                # all else has failed:  return as string
+        return r                                                             # all else has failed:  return as string
+
     # %% ------------------------------------------------------------------------------------ Save file as
-    def onFileSaveAs(self, config_obj, configDict):
+    def onFileSaveAs(self):
         if call_tracking: debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         Opens the save file window
@@ -234,15 +276,15 @@ class Configuration:
         wildcard = "PySolo Video config file (*.cfg)|*.cfg|" \
                    "All files (*.*)|*.*"                            # adding space in here will mess it up!
 
-        dlg = wx.FileDialog(None,
-            message="Save file as ...", defaultDir=configDict['Options, pDir'],
-            defaultFile=os.path.split(self.full_filename)[1], wildcard=wildcard,
-            style=(wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+        dlg = wx.FileDialog(self,
+                message="Save file as ...", defaultDir=self.configDict['Options, pDir'],
+                defaultFile=os.path.split(self.full_filename)[1], wildcard=wildcard,
+                style=(wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
         )
 
         if dlg.ShowModal() == wx.ID_OK:  # show the save window
-            path = dlg.GetPath()  # gets the path from the save dialog
-            self.Save_config(config_obj, configDict, path)                          # TODO:  save is writing a blank file
+            self.full_filename = dlg.GetPath()  # gets the path from the save dialog
+            self.Save_config(new=False)                          # TODO:  save is writing a blank file
 
         dlg.Destroy()
         if call_tracking: debugprt(self, currentframe(), pgm, 'end   ')

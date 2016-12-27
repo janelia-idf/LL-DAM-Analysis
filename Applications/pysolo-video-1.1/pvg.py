@@ -71,7 +71,7 @@ class mainNotebook(wx.Notebook):
         self.panelOne = panelOne(self, config_obj, configDict)                  # create thumbnail pg
         self.AddPage(self.panelOne, 'Thumbnails')
 
-        self.panelTwo = panelLiveView(self, configDict)             # create mask maker pg
+        self.panelTwo = panelLiveView(self, config_obj, configDict)             # create mask maker pg
         self.AddPage(self.panelTwo, 'Mask Maker')
 
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
@@ -96,7 +96,7 @@ class mainNotebook(wx.Notebook):
         Refreshes all pages of notebook.
         """
         self.panelOne.onRefresh()                    # see pvg_panel_one.py
-        self.panelTwo.onRefresh()                    # see pvg_panel_two.py
+        self.panelTwo.onRefresh(config_obj, configDict)                    # see pvg_panel_two.py
         self.Layout()
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
@@ -109,16 +109,16 @@ class mainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
 
-        config_obj = cmn.Configuration()                  # get configuration & dictionary
-        configDict = config_obj.configDict
-        configfile = config_obj.full_filename
+        filename = cmn.Configuration(os.path.join(cmn.pDir, cmn.DEFAULT_configfile))
+        [self.config_obj, self.configDict, self.configfile] = cmn.Configuration(filename)                  # get configuration & dictionary
 
         kwds["style"] = wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
 
         self.__set_properties("pySolo Video",0.9)   # set title and frame/screen ratio
-        self.__menubar__(config_obj, configDict, configfile)
+        self.__menubar__()
         self.__do_layout()
+
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                      Set window properties
@@ -134,6 +134,7 @@ class mainFrame(wx.Frame):
         self.SetSize((screen_width*size_ratio,
                       screen_height*size_ratio))     # set size of window
         self.Center()                               # center the window
+
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                  Put notebook in window.
@@ -142,16 +143,17 @@ class mainFrame(wx.Frame):
         """
         Puts a notebook in the main window.
         """
-        self.videoNotebook = mainNotebook(self, -1)
+        self.videoNotebook = mainNotebook(self, wx.ID_ANY)
 
         mainSizer = wx.BoxSizer(wx.HORIZONTAL)
         mainSizer.Add(self.videoNotebook, 1, wx.EXPAND, 0)
         self.SetSizer(mainSizer)
+
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 
 # %%                                                            Create Menubar
-    def __menubar__(self, config_obj, configDict, configfile):
+    def __menubar__(self):
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Creates menu bar at top of window.
@@ -198,11 +200,11 @@ class mainFrame(wx.Frame):
 
 # %%                                          connect menu objects to functions        
         """ Connect the menu objects to their functions """
-        wx.EVT_MENU(self, ID_FILE_OPEN, config_obj.onFileOpen)                          # TODO:  stop this from executing the functions
-        wx.EVT_MENU(self, ID_FILE_SAVE, config_obj.Save_config(config_obj, configDict, configfile))
-        wx.EVT_MENU(self, ID_FILE_SAVE_AS, config_obj.onFileSaveAs(config_obj, configDict))
+        wx.EVT_MENU(self, ID_FILE_OPEN, self.config_obj.onFileOpen)                          # TODO:  stop this from executing the functions
+        wx.EVT_MENU(self, ID_FILE_SAVE, self.config_obj.Save_config())
+        wx.EVT_MENU(self, ID_FILE_SAVE_AS, self.config_obj.onFileSaveAs())
         wx.EVT_MENU(self, ID_FILE_EXIT, self.onFileExit)
-        wx.EVT_MENU(self, ID_OPTIONS_SET, config_obj.onOptionSet)
+        wx.EVT_MENU(self, ID_OPTIONS_SET, self.config_obj.onOptionSet)
         wx.EVT_MENU(self, ID_HELP_ABOUT, self.onAbout)
 
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')

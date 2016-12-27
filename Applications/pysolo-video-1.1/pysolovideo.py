@@ -125,7 +125,7 @@ class Cam:
         return a
 
     def saveSnapshot(self, filename, quality=90, timestamp=False):
-        if cmn.call_tracking:  cmn.cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
+        if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         """
         img = self.getImage(timestamp, imgType)
@@ -146,7 +146,7 @@ class realCam(Cam):
     camera is handled through opencv and images can be transformed to PIL
     """
 
-    def __init__(self, devnum=0, resolution=(640, 480),  config_obj, configDict):
+    def __init__(self, devnum=0, resolution=(640, 480)):
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
 
         self.devnum = devnum
@@ -589,11 +589,11 @@ class Arena():
     The class arena takes care of the flies
     """
 
-    def __init__(self, parent):
+    def __init__(self, parent, config_obj, configDict):                        # TODO: use configDict to get parameters
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
 
-        opt_properties = cmn.myConfig()
-        mon_properties = cmn.pvg_config()
+        self.config_obj = config_obj
+        self.configDict = configDict
 
         self.monitor = parent
 
@@ -1112,12 +1112,16 @@ class Monitor(object):
     The class arena takes care of the flies
     """
 
-    def __init__(self):
+    def __init__(self, config_obj, configDict):                # TODO: use configDict to get parameters
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         A Monitor contains a cam, which can be either virtual or real.
         Everything is handled through openCV
         """
+
+        self.config_obj = config_obj
+        self.configDict = configDict
+
         self.count = 0
 
         self.grabMovie = False
@@ -1192,7 +1196,7 @@ class Monitor(object):
 
         cv.PolyLine(img, [ROI], is_closed=1, color=color, thickness=1, lineType=line_type, shift=0)
 
-        if ROInum != None:
+        if ROInum is not None:
             x, y = ROI[0]
             font = cv.InitFont(cv.CV_FONT_HERSHEY_PLAIN, 1, 1, 0, 1, 8)
             textcolor = (255, 255, 255)
@@ -1327,7 +1331,7 @@ class Monitor(object):
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         """
-        a = self.cam != None
+        a = self.cam is not None
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'end   ')
         return a
 
@@ -1361,9 +1365,9 @@ class Monitor(object):
         outputFile  text        the txt file where results will be saved
         """
 
-        if trackType == None: trackType = 0
-        if mask_file == None: mask_file = ''
-        if outputFile == None: outputFile = ''
+        if trackType is None: trackType = 0
+        if mask_file is None: mask_file = ''
+        if outputFile is None: outputFile = ''
 
         self.track = track
         self.arena.trackType = int(trackType)
@@ -1596,7 +1600,7 @@ class Monitor(object):
 
                 contour = contours
                 totalNumberOfContours = 0
-                while (contour.h_next() != None):
+                while (contour.h_next() is not None):
                     totalNumberOfContours = totalNumberOfContours + 1
                     contour = contour.h_next()
                 # test each contour

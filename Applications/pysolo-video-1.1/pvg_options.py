@@ -26,7 +26,7 @@
 """
 from inspect import currentframe
 import wx, os
-from pvg_common import options
+import pvg_common
 """
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Settings
 """

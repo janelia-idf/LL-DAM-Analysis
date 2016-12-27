@@ -55,6 +55,8 @@ class previewPanel(wx.Panel):
         if cmn.call_tracking:  cmn.debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
 
         wx.Panel.__init__(self, parent, wx.ID_ANY, style=wx.WANTS_CHARS)
+        self.config_obj = config_obj
+        self.configDict = configDict
 
         self.parent = parent
         mon_name =  'Monitor%d' % mon_num
@@ -339,7 +341,7 @@ class previewPanel(wx.Panel):
         """
         """
 
-        if self.camera != None and self.resolution != None and not self.mon.hasSource():
+        if self.camera is not None and self.resolution is not None and not self.mon.hasSource():
             self.mon.setSource(self.camera, self.resolution)
 
         if self.mon:
@@ -364,7 +366,7 @@ class previewPanel(wx.Panel):
         if cmn.call_tracking:  cmn.debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
         """
         """
-        a = (self.mon != None)
+        a = (self.mon is not None)
         if cmn.call_tracking:  cmn.debugprt(self,currentframe(),pgm,'end   ')
         return a
 
@@ -376,7 +378,9 @@ class thumbnailPanel(previewPanel):
     def __init__( self, parent, monitor_number,  config_obj, configDict ):               # monitor_number is 1-indexed
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
 
-        previewPanel.__init__(self, parent, monitor_number, configDict)
+        previewPanel.__init__(self, parent, monitor_number, config_obj, configDict)
+        self.config_obj = config_obj
+        self.configDict = configDict
 
         self.mon_num = monitor_number
         self.size = configDict['Options, thumbnailsize']                    #  TODO: what if this is the Mask Maker panel?
@@ -435,6 +439,9 @@ class panelGridView(wx.ScrolledWindow):
         self.SetScrollbars(1, 1, 1, 1)
         self.SetScrollRate(10, 10)
 
+        self.config_obj = config_obj
+        self.configDict = configDict
+
         self.parent = parent
         n_mons = configDict['Options, monitors']
         self.grid_mainSizer = wx.GridSizer(6,3,2,2)
@@ -442,7 +449,7 @@ class panelGridView(wx.ScrolledWindow):
 # %%                                              Populate the thumbnail grid
         self.previewPanels = []
         for mon_num in range(0, n_mons):                                                # counts 0 to n_mons-1 which will match 0-indexed previewPanels list
-            self.previewPanels.append ( thumbnailPanel(self, mon_num +1, configDict) )
+            self.previewPanels.append ( thumbnailPanel(self, mon_num +1, config_obj, configDict) )
             self.grid_mainSizer.Add(self.previewPanels[mon_num])                      # the previewPanels list will be 0-indexed
 
 # %%                                              Make elements visible in UI
@@ -510,8 +517,13 @@ class lowerPanel(wx.Panel):
     """
     def __init__(self, parent,  config_obj, configDict):
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+
         wx.Panel.__init__(self, parent, wx.ID_ANY, size=(-1,300),
             style=wx.SUNKEN_BORDER|wx.TAB_TRAVERSAL)
+
+        self.config_obj = config_obj
+        self.configDict = self.configDict
+
         self.parent = parent
 
         lowerSizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -771,20 +783,20 @@ class lowerPanel(wx.Panel):
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                    Click Thumbnail
-    def onThumbnailClicked(self, evt):
+    def onThumbnailClicked(self, evt, config_obj, configDict):
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Picking thumbnail by clicking on it
         Event handler for changing monitor via clicking on thumbnail
         """
-        self.monitor_number = evt.number #+ 1
+        self.mon_num = evt.number #+ 1
         self.thumbnail = evt.thumbnail
         self.thumbnailNumber.SetValue(self.MonitorList[self.monitor_number])
-        self.updateThumbnail()
+        self.updateThumbnail(self.mon_num, config_obj, configDict)
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                    Monitor dropdown box
-    def onChangingMonitor(self, evt, configDict, config_obj):
+    def onChangingMonitor(self, evt, config_obj, configDict):
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Picking thumbnail by using the dropbox
@@ -797,7 +809,7 @@ class lowerPanel(wx.Panel):
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                            Refresh thumbnail and controls
-    def updateThumbnail(self, mon_num, configDict, config_obj ):                # TODO:  this should be in Configuration if it isn't already
+    def updateThumbnail(self, mon_num, config_obj, configDict ):                # TODO:  this should be in Configuration if it isn't already
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Updates the lower panel controls with new thumbnail info
@@ -1027,7 +1039,10 @@ class panelOne(wx.Panel):
     """
     def __init__(self, parent,  config_obj, configDict):                                     # TODO: fix the configDict keys
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
+
         wx.Panel.__init__(self, parent)
+        self.config_obj = config_obj
+        self.configDict = configDict
 
         # Create a grid of thumbnails and a configure panel
 
