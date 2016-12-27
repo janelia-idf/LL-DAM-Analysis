@@ -146,7 +146,7 @@ class realCam(Cam):
     camera is handled through opencv and images can be transformed to PIL
     """
 
-    def __init__(self, devnum=0, resolution=(640, 480)):
+    def __init__(self, devnum=0, resolution=(640, 480),  config_obj, configDict):
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
 
         self.devnum = devnum
@@ -1868,5 +1868,44 @@ class Monitor(object):
 
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'end   ')
         return frame
+
+
+# -------------------------------------------------------------------------------------------- Acquire Object
+class acquireObject():
+    def __init__(self, monitor,  config_obj, configDict):
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
+        """
+        """
+        self.keepGoing = False
+
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'end   ')
+
+    # %%                                                        Run
+    def run(self, kbdint=False):
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
+        """
+        checks to see if program should keep going.
+        """
+        while self.keepGoing:
+            self.keepGoing = self.mon.GetImage()
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'end   ')
+
+    # %%                                                        Start
+    def start(self):
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
+        """
+        """
+        self.keepGoing = True
+        self.run()
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'end   ')
+
+    # %%                                                            Halt
+    def halt(self):
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
+        """
+        """
+        self.keepGoing = False
+        if self.verbose: print ("Verbose: Stopping capture")
+        if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'end   ')
 
 

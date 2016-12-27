@@ -24,8 +24,7 @@
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Imports
 """
 import wx, os
-from pvg_common import previewPanel, options
-
+import pvg_common
 
 """
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Settings
@@ -42,17 +41,15 @@ class panelLiveView(wx.Panel):
     Panel Number 2
     Live view of selected camera
     """
-    def __init__(self, parent):
+    def __init__(self, parent,  config_obj, configDict):
         """
         """
 
-        wx.Panel.__init__(self, parent, wx.ID_ANY)
+        wx.Panel.__init__(self, parent, -1)
 
-        self.monitor_number = options.GetOption("Monitors")
-        self.fs_size = options.GetOption("FullSize")
-        self.monitor_name = ''
-
-        self.fsPanel = previewPanel(self, size=self.fs_size)
+        self.n_mons = configDict['Options, monitors']
+        self.fs_size = configDict['Options, fullsize']
+        self.monitor_name = 'Monitor1'
 
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
         sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
@@ -60,31 +57,33 @@ class panelLiveView(wx.Panel):
         sizer_4 = wx.BoxSizer(wx.VERTICAL)
 
         #Static box1: monitor input
-        sb_1 = wx.StaticBox(self, -1, "Select Monitor")#, size=(250,-1))
+        sb_1 = wx.StaticBox(self, wx.ID_ANY, "Select Monitor")
         self.sbSizer_1 = wx.StaticBoxSizer (sb_1, wx.VERTICAL)
-        self.MonitorList = ['Monitor %s' % (int(m) + 1) for m in range(self.monitor_number)]
-        self.thumbnailNumber = wx.ComboBox(self, -1, size=(-1,-1) , choices=self.MonitorList, style=wx.CB_DROPDOWN | wx.CB_READONLY | wx.CB_SORT)
+        if self.n_mons >0:
+            self.MonitorList = ['Monitor %s' % (int(m)) for m in range(1, self.n_mons)]
+        else: self.MonitorList = 'Monitor1'
+        self.thumbnailNumber = wx.ComboBox(self, wx.ID_ANY, choices=self.MonitorList, style=wx.CB_DROPDOWN | wx.CB_READONLY | wx.CB_SORT)
         self.Bind(wx.EVT_COMBOBOX, self.onChangeMonitor, self.thumbnailNumber)
 
-        self.sourceTXTBOX =  wx.TextCtrl (self, -1, "No monitor selected", style=wx.TE_READONLY)
+        self.sourceTXTBOX =  wx.TextCtrl (self, wx.ID_ANY, "No monitor selected", style=wx.TE_READONLY)
 
         self.sbSizer_1.Add ( self.thumbnailNumber, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
         self.sbSizer_1.Add ( self.sourceTXTBOX, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT|wx.TOP|wx.EXPAND, 5 )
 
         #Static box2: mask parameters
-        sb_2 = wx.StaticBox(self, -1, "Mask Editing")#, size=(250,-1))
+        sb_2 = wx.StaticBox(self, wx.ID_ANY, "Mask Editing")
         sbSizer_2 = wx.StaticBoxSizer (sb_2, wx.VERTICAL)
         fgSizer_1 = wx.FlexGridSizer( 0, 2, 0, 0 )
 
         self.btnClear = wx.Button( self, wx.ID_ANY, label="Clear All")
-        self.Bind(wx.EVT_BUTTON, self.fsPanel.ClearAll, self.btnClear)
+        self.Bind(wx.EVT_BUTTON, self.onClearAll, self.btnClear)
 
         self.btnClearLast = wx.Button( self, wx.ID_ANY, label="Clear selected")
-        self.Bind(wx.EVT_BUTTON, self.fsPanel.ClearLast, self.btnClearLast)
+        self.Bind(wx.EVT_BUTTON, self.onClearLast, self.btnClearLast)
 
 
         self.btnAutoFill = wx.Button( self, wx.ID_ANY, label="Auto Fill")
-        self.Bind(wx.EVT_BUTTON, self.fsPanel.AutoMask, self.btnAutoFill)
+        self.Bind(wx.EVT_BUTTON, self.onAutoMask, self.btnAutoFill)
 
         fgSizer_1.Add (self.btnClear)
         fgSizer_1.Add (self.btnClearLast)
@@ -94,10 +93,10 @@ class panelLiveView(wx.Panel):
 
 
         #Static box3: mask I/O
-        sb_3 = wx.StaticBox(self, -1, "Mask File")#, size=(250,-1))
+        sb_3 = wx.StaticBox(self, wx.ID_ANY, "Mask File")
         sbSizer_3 = wx.StaticBoxSizer (sb_3, wx.VERTICAL)
 
-        self.currentMaskTXT = wx.TextCtrl (self, -1, "No Mask Loaded", style=wx.TE_READONLY)
+        self.currentMaskTXT = wx.TextCtrl (self, wx.ID_ANY, "No Mask Loaded", style=wx.TE_READONLY)
 
         btnSizer_1 = wx.BoxSizer(wx.HORIZONTAL)
         self.btnLoad = wx.Button( self, wx.ID_ANY, label="Load Mask")
@@ -117,7 +116,7 @@ class panelLiveView(wx.Panel):
         ##
 
         #Static box4: help
-        sb_4 = wx.StaticBox(self, -1, "Help")
+        sb_4 = wx.StaticBox(self, wx.ID_ANY, "Help")
         sbSizer_4 = wx.StaticBoxSizer (sb_4, wx.VERTICAL)
         titleFont = wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD)
         instr = [ ('Left mouse button - single click outside ROI', 'Start dragging ROI. ROI will be a perfect rectangle'),
@@ -130,9 +129,9 @@ class panelLiveView(wx.Panel):
                   ]
 
         for title, text in instr:
-            t = wx.StaticText(self, -1, title); t.SetFont(titleFont)
+            t = wx.StaticText(self, wx.ID_ANY, title); t.SetFont(titleFont)
             sbSizer_4.Add( t, 0, wx.ALL, 2 )
-            sbSizer_4.Add(wx.StaticText(self, -1, text) , 0 , wx.ALL, 2 )
+            sbSizer_4.Add(wx.StaticText(self, wx.ID_ANY, text) , 0 , wx.ALL, 2 )
             sbSizer_4.Add ( (wx.StaticLine(self)), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 5 )
 
         sizer_4.Add(self.sbSizer_1, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT|wx.TOP|wx.EXPAND, 5 )
@@ -141,7 +140,6 @@ class panelLiveView(wx.Panel):
         sizer_4.Add(sbSizer_4, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT|wx.TOP|wx.EXPAND, 5 )
 
 
-        sizer_3.Add(self.fsPanel, 0, wx.LEFT|wx.TOP, 20 )
         sizer_3.Add(sizer_4, 0, wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
         sizer_1.Add(sizer_3, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
@@ -150,7 +148,19 @@ class panelLiveView(wx.Panel):
 
         self.SetSizer(sizer_1)
 
-        self.Bind( wx.EVT_CHAR, self.fsPanel.onKeyPressed )
+        self.Bind( wx.EVT_CHAR, self.onKeyPressed )
+
+    def onClearAll(self):
+        print('Clear All clicked')  # TODO: write this function
+
+    def onClearLast(self):
+        print('Clear Last clicked')  # TODO: write this function
+
+    def onAutoMask(self):
+        print('Auto Mask clicked')  # TODO: write this function
+
+    def onKeyPressed(self):
+        print('Key Pressed')  # TODO: write this function
 
     def StopPlaying(self):
         """
@@ -166,7 +176,7 @@ class panelLiveView(wx.Panel):
         self.monitor_name = event.GetString()
         self.monitor_number = self.MonitorList.index( self.monitor_name )
 
-        n_cams = options.GetOption("Webcams")
+        n_cams = configDict['Options, webcams']
         WebcamsList = [ 'Webcam %s' % (int(w) +1) for w in range( n_cams ) ]
 
         if options.HasMonitor(self.monitor_number):
@@ -243,12 +253,12 @@ class panelLiveView(wx.Panel):
 
         dlg.Destroy()
 
-    def onRefresh(self):
-        if self.monitor_number != options.GetOption("Monitors"):
-            self.monitor_number = options.GetOption("Monitors")
+    def onRefresh(self, configDict):
+        if self.monitor_number != configDict['Options, Monitors']:
+            self.monitor_number = configDict['Options, Monitors']
             self.sbSizer_1.Hide(0)
             self.sbSizer_1.Remove(0)
             self.MonitorList = ['Monitor %s' % (int(m) + 1) for m in range(self.monitor_number)]
-            self.thumbnailNumber = wx.ComboBox(self, -1, size=(-1,-1) , choices=self.MonitorList, style=wx.CB_DROPDOWN | wx.CB_READONLY | wx.CB_SORT)
+            self.thumbnailNumber = wx.ComboBox(self, wx.ID_ANY, choices=self.MonitorList, style=wx.CB_DROPDOWN | wx.CB_READONLY | wx.CB_SORT)
             self.sbSizer_1.Insert (1, self.thumbnailNumber, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
             self.sbSizer_1.Layout()

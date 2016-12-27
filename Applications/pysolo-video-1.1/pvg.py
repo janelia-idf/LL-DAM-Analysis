@@ -24,25 +24,23 @@
 #       Revisions by Caitlin Laughrey and Loretta E Laughrey in 2016.
 
 """
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% imports
+# -------------------------------------------------------------------------------- imports
 """
 import wx, os, sys
-
 import pvg_common as cmn
 from pvg_panel_one import panelOne
 from pvg_options import pvg_OptionsPanel
 from pvg_panel_two import panelLiveView
 from pysolovideo import pySoloVideoVersion
-import pysolovideo as pv
+from win32api import GetSystemMetrics                       # to get screen resolution
 from inspect import currentframe                                                                     # debug
 
 """
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Settings
+# -------------------------------------------------------------------------  developer  Settings
 """ 
 
 pgm = 'pvg.py'
 console_to_file = False             # controls whether console output goes to console or a file
-console_file = cmn.data_dir + 'stdout.txt'
 
 """
 # %%                                                screen height & width
@@ -50,11 +48,11 @@ console_file = cmn.data_dir + 'stdout.txt'
 Get screen_width & screen_height:   Screen resolution information
       Allows all object sizes to be sized relative to the display.
 """
-from win32api import GetSystemMetrics    # to get screen resolution
+
 screen_width = GetSystemMetrics(0)   # get the screen resolution of this monitor
 screen_height = GetSystemMetrics(1)
 
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Main Notebook
+# -------------------------------------------------------------------------------------  Main Notebook
 class mainNotebook(wx.Notebook):
     """
     The main notebook containing all the panels for data displaying and analysis
@@ -63,14 +61,18 @@ class mainNotebook(wx.Notebook):
     def __init__(self, *args, **kwds):
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
 
+        config_obj = cmn.Configuration()                 # get configuration dictionary
+        configDict = config_obj.configDict
+
+    # create a notebook
         kwds["style"] = wx.NB_LEFT
-        wx.Notebook.__init__(self, *args, **kwds)       # initialize notebook
+        wx.Notebook.__init__(self, *args, **kwds)
 
-        self.panelOne = panelOne(self)                  # create thumbnail pg
-        self.AddPage(self.panelOne, "Thumbnails")
+        self.panelOne = panelOne(self, config_obj, configDict)                  # create thumbnail pg
+        self.AddPage(self.panelOne, 'Thumbnails')
 
-        self.panelTwo = panelLiveView(self)             # create live view pg
-        self.AddPage(self.panelTwo, "Live View")
+        self.panelTwo = panelLiveView(self, configDict)             # create mask maker pg
+        self.AddPage(self.panelTwo, 'Mask Maker')
 
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
 
@@ -99,7 +101,7 @@ class mainNotebook(wx.Notebook):
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
         
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Main Frame
+# --------------------------------------------------------------------------------------- Main Window
 class mainFrame(wx.Frame):
     """
     Creates the main window of the application.
@@ -107,11 +109,15 @@ class mainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
 
+        config_obj = cmn.Configuration()                  # get configuration & dictionary
+        configDict = config_obj.configDict
+        configfile = config_obj.full_filename
+
         kwds["style"] = wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
 
         self.__set_properties("pySolo Video",0.9)   # set title and frame/screen ratio
-        self.__menubar__()
+        self.__menubar__(config_obj, configDict, configfile)
         self.__do_layout()
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
@@ -145,7 +151,7 @@ class mainFrame(wx.Frame):
 
 
 # %%                                                            Create Menubar
-    def __menubar__(self):
+    def __menubar__(self, config_obj, configDict, configfile):
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         Creates menu bar at top of window.
@@ -155,19 +161,17 @@ class mainFrame(wx.Frame):
         ID_FILE_OPEN = wx.NewId()
         ID_FILE_SAVE = wx.NewId()
         ID_FILE_SAVE_AS = wx.NewId()
-#        ID_FILE_CLOSE =  wx.NewId()
         ID_FILE_EXIT = wx.NewId()
-        ID_HELP_ABOUT = wx.NewId()
         ID_OPTIONS_SET = wx.NewId()
+        ID_HELP_ABOUT = wx.NewId()
 
 # %%                                                      Create menu options
         """ Create file-menu objects  ( '&' indicates shortcut key) """
-        filemenu =  wx.Menu()
+        filemenu = wx.Menu()
         filemenu. Append(ID_FILE_OPEN, '&Open File', 'Open a file')
         filemenu. Append(ID_FILE_SAVE, '&Save File', 'Save current file')
         filemenu. Append(ID_FILE_SAVE_AS, '&Save as...',
                          'Save current data in a new file')
-#        filemenu. Append(ID_FILE_CLOSE, '&Close File', 'Close')
         filemenu. AppendSeparator()         # draws horizontal separater line
         filemenu. Append(ID_FILE_EXIT, 'E&xit Program', 'Exit')
 
@@ -194,13 +198,13 @@ class mainFrame(wx.Frame):
 
 # %%                                          connect menu objects to functions        
         """ Connect the menu objects to their functions """
-        wx.EVT_MENU(self, ID_FILE_OPEN, self.onFileOpen)
-        wx.EVT_MENU(self, ID_FILE_SAVE, self.onFileSave)
-        wx.EVT_MENU(self, ID_FILE_SAVE_AS, self.onFileSaveAs)
-#        wx.EVT_MENU(self, ID_FILE_CLOSE, self.onFileClose)
+        wx.EVT_MENU(self, ID_FILE_OPEN, config_obj.onFileOpen)                          # TODO:  stop this from executing the functions
+        wx.EVT_MENU(self, ID_FILE_SAVE, config_obj.Save_config(config_obj, configDict, configfile))
+        wx.EVT_MENU(self, ID_FILE_SAVE_AS, config_obj.onFileSaveAs(config_obj, configDict))
         wx.EVT_MENU(self, ID_FILE_EXIT, self.onFileExit)
-        wx.EVT_MENU(self, ID_OPTIONS_SET, self.onConfigure)
+        wx.EVT_MENU(self, ID_OPTIONS_SET, config_obj.onOptionSet)
         wx.EVT_MENU(self, ID_HELP_ABOUT, self.onAbout)
+
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                              About        
@@ -232,57 +236,6 @@ class mainFrame(wx.Frame):
         """
         options.Save()                              # see pvg_common.py
 
-# %%                                                        Save file as
-    def onFileSaveAs(self, event):
-        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        """
-        Opens the save file window
-        """
-        filename = cmn.DEFAULT_CONFIG                   # see pvg_common.py
-
-        print("$$$$$$ pvg; 243; default_config = ", filename)
-
-        # set file types for find dialog
-        wildcard = "PySolo Video config file (*.cfg)|*.cfg|" \
-                 "All files (*.*)|*.*"    # adding space in here will mess it up!
-
-        dlg = wx.FileDialog(                    # make a save window
-            self, message="Save file as ...", defaultDir=cmn.data_dir,
-            defaultFile=filename, wildcard=wildcard,
-            style=(wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
-            )
-
-        if dlg.ShowModal() == wx.ID_OK:         # show the save window
-            path = dlg.GetPath()                # gets the path from the save dialog
-            cmn.options.Save(filename=path)
-
-        dlg.Destroy()
-        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
-
-# %%
-    def onFileOpen(self, event):                                                # viewing all files is not an option
-        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        """                                                                     # .cfg files don't show.  you can ask for it, but it doesn't load
-        Opens the open file window                                              # no complaints about non-existent files
-        """
-        #  set file types for find dialog
-        wildcard = "pySolo Video config file (*.cfg)|*.cfg|" \
-                   " All files (*.*)|*.*"    # don't add any spaces!
-
-        dlg = wx.FileDialog(                    # make an open-file window
-            self, message="Choose a file",
-            defaultDir=os.getcwd(),
-            defaultFile="",
-            wildcard=wildcard,
-            style=wx.OPEN | wx.CHANGE_DIR
-            )
-
-        if dlg.ShowModal() == wx.ID_OK:         # show the open-file window
-            path = dlg.GetPath()
-            options.New(path)
-
-        dlg.Destroy()
-        if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%
     def onFileExit(self, event):
@@ -315,6 +268,8 @@ class mainFrame(wx.Frame):
 
 if __name__ == "__main__":
     if (console_to_file == True) :
+        config_obj = cmn.Configuration()
+        console_file = config_obj['Options, pDir'] + 'stdout.txt'
         sys.stdout = open(console_file, 'w')          # send console output to file
 
     app = wx.App()
