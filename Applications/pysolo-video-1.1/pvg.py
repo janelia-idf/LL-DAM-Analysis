@@ -58,20 +58,22 @@ class mainNotebook(wx.Notebook):
     The main notebook containing all the panels for data displaying and analysis
     """
 
-    def __init__(self, *args, **kwds):
+    def __init__(self, parent, cfg):
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
 
-        config_obj = cmn.Configuration()                 # get configuration dictionary
-        configDict = config_obj.configDict
+        self.cfg = cfg
+        self.config_obj = self.cfg.config_obj
+        self.configDict = self.cfg.configDict
+        self.full_filename = self.cfg.full_filename
 
     # create a notebook
-        kwds["style"] = wx.NB_LEFT
-        wx.Notebook.__init__(self, *args, **kwds)
 
-        self.panelOne = panelOne(self, config_obj, configDict)                  # create thumbnail pg
+        wx.Notebook.__init__(self, parent, wx.ID_ANY, style = wx.NB_LEFT)
+
+        self.panelOne = panelOne(self, self.cfg)                  # create thumbnail pg
         self.AddPage(self.panelOne, 'Thumbnails')
 
-        self.panelTwo = panelLiveView(self, config_obj, configDict)             # create mask maker pg
+        self.panelTwo = panelLiveView(self, self.cfg)             # create mask maker pg
         self.AddPage(self.panelTwo, 'Mask Maker')
 
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
@@ -109,8 +111,14 @@ class mainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
 
-        filename = cmn.Configuration(os.path.join(cmn.pDir, cmn.DEFAULT_configfile))
-        [self.config_obj, self.configDict, self.configfile] = cmn.Configuration(filename)                  # get configuration & dictionary
+        self.full_filename = os.path.join(cmn.pDir, cmn.DEFAULT_configfile)
+
+
+        self.cfg = cmn.Configuration(self.full_filename)
+        self.config_obj = self.cfg.config_obj
+        self.configDict = self.cfg.configDict
+        self.full_filename = self.cfg.full_filename
+
 
         kwds["style"] = wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
@@ -143,8 +151,7 @@ class mainFrame(wx.Frame):
         """
         Puts a notebook in the main window.
         """
-        self.videoNotebook = mainNotebook(self, wx.ID_ANY)
-
+        self.videoNotebook = mainNotebook(self, self.cfg)
         mainSizer = wx.BoxSizer(wx.HORIZONTAL)
         mainSizer.Add(self.videoNotebook, 1, wx.EXPAND, 0)
         self.SetSizer(mainSizer)
@@ -200,12 +207,12 @@ class mainFrame(wx.Frame):
 
 # %%                                          connect menu objects to functions        
         """ Connect the menu objects to their functions """
-        wx.EVT_MENU(self, ID_FILE_OPEN, self.config_obj.onFileOpen)                          # TODO:  stop this from executing the functions
-        wx.EVT_MENU(self, ID_FILE_SAVE, self.config_obj.Save_config())
-        wx.EVT_MENU(self, ID_FILE_SAVE_AS, self.config_obj.onFileSaveAs())
-        wx.EVT_MENU(self, ID_FILE_EXIT, self.onFileExit)
-        wx.EVT_MENU(self, ID_OPTIONS_SET, self.config_obj.onOptionSet)
-        wx.EVT_MENU(self, ID_HELP_ABOUT, self.onAbout)
+        self.Bind(wx.EVT_MENU, self.cfg.onFileOpen, id=ID_FILE_OPEN)
+        self.Bind(wx.EVT_MENU, self.cfg.save_Config, id=ID_FILE_SAVE)
+        self.Bind(wx.EVT_MENU, self.cfg.onFileSaveAs, id=ID_FILE_SAVE_AS)
+        self.Bind(wx.EVT_MENU, self.onFileExit, id=ID_FILE_EXIT)
+        self.Bind(wx.EVT_MENU, self.cfg.onOptionSet, id=ID_OPTIONS_SET)
+        self.Bind(wx.EVT_MENU, self.onAbout, id=ID_HELP_ABOUT)
 
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
@@ -232,12 +239,13 @@ class mainFrame(wx.Frame):
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                            Save File
+    """
     def onFileSave(self, event):                                               
-        """                                                                    
+        """ """
         Calls the save function.
-        """
+        """"""
         options.Save()                              # see pvg_common.py
-
+    """
 
 # %%
     def onFileExit(self, event):
@@ -270,8 +278,7 @@ class mainFrame(wx.Frame):
 
 if __name__ == "__main__":
     if (console_to_file == True) :
-        config_obj = cmn.Configuration()
-        console_file = config_obj['Options, pDir'] + 'stdout.txt'
+        console_file = os.path.join(cmn.pDir, 'stdout.txt')
         sys.stdout = open(console_file, 'w')          # send console output to file
 
     app = wx.App()

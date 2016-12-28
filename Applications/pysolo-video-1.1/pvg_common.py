@@ -40,7 +40,8 @@ pgm = 'pvg_common.py'                   # identifies file name to debug call tra
 
 DEFAULT_data_dir = '\\Documents\\GitHub\\LL-DAM-Analysis\\Data\\Working_files\\'
 DEFAULT_configfile = 'pysolo_video.cfg'
-pDir = os.path.join(os.environ['USERPROFILE'], DEFAULT_data_dir)
+pDir = (os.environ['USERPROFILE']) + DEFAULT_data_dir
+
 
 # -------------------------------------------------------------------------------  Config Object
 class Configuration:
@@ -64,32 +65,31 @@ class Configuration:
         save        saves configuration to a file
         """
         self.pDir = pDir
-        self.full_filename = self.getFilename(filename)      # gets or creates a valid filename for the config file and creates one if there is no config file
-        self.config_obj = self.getConfigObj()                # reads the config file
-        self.configDict = self.getConfigDict()              # creates dictionary of config options for easy reference
+        self.getFilename(filename)          # gets or creates a valid filename for the config file and creates one if there is no config file
+        self.getConfigObj()                 # reads the config file
+        self.getConfigDict()                # creates dictionary of config options for easy reference
 
-        return [self.config_obj, self.configDict, self.configfile]
+        return
 
     def getFilename(self, filename):
         self.full_filename = filename
     # make sure folder is accessible  & make a new config file there
         if os.access(self.full_filename, os.W_OK):
-            self.full_filename = filename
-            self.pDir = os.path.split(self.full_filename[0])
-            return                                              # valid filename given, no need to create a default configuration
+            self.pDir = os.path.split(self.full_filename)[0]
+            return                                 # valid filename given, no need to create a default configuration
 
         if not os.access(self.pDir, os.W_OK):             # if not accessible use default directory
             os.makedirs(self.pDir)
 
         if filename is None:                              # if no filename use default filename
-            self.full_filename =  os.path.join(self.pDir, self.DEFAULT_configfile)
+            self.full_filename =  os.path.join(self.pDir, DEFAULT_configfile)
 
         if filename == os.path.split(filename)[1] :       # a filename was given without a path:  create a file with default options in default path
             self.full_filename = os.path.join(self.pDir, filename)
 
         self.configDict = self.defaultConfig()              # create a default dictionary
 
-        self.save_Config(new=True)                                  # save the configuration to the filename
+        self.save_Config(new=True)                          # save the configuration to the filename
 
 
 
@@ -118,11 +118,13 @@ class Configuration:
     # save to file
         self.save_Config(new=True)
 
-        #  ---------------------------------------------------------------------- reads the config file to make the config_obj
+
+#  ---------------------------------------------------------------------- reads the config file to make the config_obj
     def getConfigObj(self):
 
         self.config_obj = ConfigParser.RawConfigParser()                    # read the config file
         self.config_obj.read(self.full_filename)
+
 
 # -----------------------------------------------------------------------  create configuration dictionary
     def getConfigDict(self):
@@ -136,13 +138,13 @@ class Configuration:
 
         for key in self.opt_keys:
             if not self.config_obj.has_option('Options',key):
-                self.config_obj.setValue('Options', key, None)
+                self.config_obj.set('Options', key, None)
             value = self.getValue('Options', key)               # TODO:  are we doing this twice without need?
             indexStr = 'Options, ' + key
             self.configDict[indexStr] = value
 
     #Monitors
-        self.mon_keys = ['sourcetype','issdmonitor', 'source','fps_recording','start_datetime','track','tracktype','maskfile','output_folder']
+        self.mon_keys = ['mon_name','sourcetype','issdmonitor', 'source','fps_recording','start_datetime','track','tracktype','maskfile','output_folder']
 
         if not self.config_obj.has_option('Options','monitors'):
             mon_num = 0
@@ -156,17 +158,20 @@ class Configuration:
         for m in range(1, mon_num+1 ):
                 mon_name = 'Monitor%d' % m
                 if not self.config_obj.has_option(mon_name, key):
-                    self.config_obj.setValue(mon_name, key, None)
+                    self.config_obj.set(mon_name, key, None)
                 for key in self.mon_keys:
                     value = self.getValue(mon_name, key)
                     indexStr = mon_name + ', ' + key
                     self.configDict[indexStr] = value
+
+
 
         if call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %% ----------------------------------------------------------------------------   Set options from menu
     def onOptionSet(self):
         print('set options from menu')      # TODO: write this function
+
 # %%  ----------------------------------------------------------------------------  Save config file
     def save_Config(self, new):
         if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')        
@@ -183,7 +188,7 @@ class Configuration:
         for key in opt_keys:
             self.config_obj.set('Options', key, self.configDict['Options, '+key])
 
-        mon_keys = ['sourcetype','issdmonitor', 'source','fps_recording','start_datetime','track','tracktype','maskfile','output_folder']
+        mon_keys = ['mon_name','sourcetype','issdmonitor', 'source','fps_recording','start_datetime','track','tracktype','maskfile','output_folder']
         if self.configDict['Options, monitors'] > 0:
             for mon_num in range(1, self.configDict['Options, monitors']):
                 mon_name = 'Monitor%d' % mon_num
@@ -191,7 +196,7 @@ class Configuration:
                     self.config_obj.set(mon_name, key, self.configDict[mon_name + ', '+key])
 
     # save to file
-        with open(self.full_filename, 'wb') as configfile:                      # TODO: prompt to avoid accidental overwrite
+        with open(self.full_filename, 'wb') as configfile:
             self.config_obj.write(configfile)
 
         if call_tracking: debugprt(self,currentframe(),pgm,'end   ')
@@ -217,13 +222,14 @@ class Configuration:
         Do some sanity checking to return tuple, integer and strings, datetimes, as required.
         """
 
-        #                                                                       # no value
-        if  not self.config_obj.has_option(section, key):
+        #
+        if  not self.config_obj.has_option(section, key):                       # does option exist?
             r = None
+            return r
 
         r = self.config_obj.get(section, key)
 
-        if r == 'None' :
+        if r == 'None' :                                                        # None type
             r = None
             return r
 
@@ -284,7 +290,7 @@ class Configuration:
 
         if dlg.ShowModal() == wx.ID_OK:  # show the save window
             self.full_filename = dlg.GetPath()  # gets the path from the save dialog
-            self.Save_config(new=False)                          # TODO:  save is writing a blank file
+            self.save_Config(new=False)                          # TODO:  save is writing a blank file
 
         dlg.Destroy()
         if call_tracking: debugprt(self, currentframe(), pgm, 'end   ')

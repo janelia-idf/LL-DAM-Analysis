@@ -41,17 +41,20 @@ class panelLiveView(wx.Panel):
     Panel Number 2
     Live view of selected camera
     """
-    def __init__(self, parent,  config_obj, configDict):
+    def __init__(self, parent, cfg):
         """
         Shows fullsize video and a mask making panel
         """
 
         wx.Panel.__init__(self, parent, -1)
-        self.config_obj = config_obj
-        self.configDict = configDict
 
-        self.n_mons = configDict['Options, monitors']
-        self.fs_size = configDict['Options, fullsize']
+        self.cfg = cfg
+        self.config_obj = self.cfg.config_obj
+        self.configDict = self.cfg.configDict
+        self.full_filename = self.cfg.full_filename
+
+        self.n_mons = self.configDict['Options, monitors']
+        self.fs_size = self.configDict['Options, fullsize']
         self.monitor_name = 'Monitor1'
 
         sizer_1 = wx.BoxSizer(wx.VERTICAL)

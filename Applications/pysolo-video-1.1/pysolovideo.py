@@ -589,11 +589,13 @@ class Arena():
     The class arena takes care of the flies
     """
 
-    def __init__(self, parent, config_obj, configDict):                        # TODO: use configDict to get parameters
+    def __init__(self, parent, cfg):                        # TODO: use configDict to get parameters
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
 
-        self.config_obj = config_obj
-        self.configDict = configDict
+        self.cfg = cfg
+        self.config_obj = self.cfg.config_obj
+        self.configDict = self.cfg.configDict
+        self.full_filename = self.cfg.full_filename
 
         self.monitor = parent
 
@@ -955,19 +957,17 @@ class Arena():
         self.__n += 1
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'end   ')
 
-    def writeActivity(self, mon, fps=.5, extend=True):          # mon is 0-indexed
+    def writeActivity(self, mon, cfg, extend=True):          # mon is 0-indexed
         if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         Write the activity to file
         Kind of motion depends on user settings
         """
         # -----------------  get configuration options
-        config_opts = cmn.myConfig()
-        webcams, monitors, data_folder, fullsize, thumbnailsize, fps_recording, fps_preview = config_opts()
-
-        # -----------------  get the monitor configuration information
-        mon_config = cmn.pvg_config()
-        sourceType, source, start_datetime, track, mask_file, track_type, isSDMonitor = mon_config.GetMonitor(mon)      # mon is 0-indexed
+        self.cfg = cfg
+        self.config_obj = self.cfg.config_obj
+        self.configDict = self.cfg.configDict
+        self.full_filename = self.cfg.full_filename
 
         # ----------------- Build the header
         # row line number, date, time, active, damscan, tracktype, sleepDep, monitor, unused, light
@@ -1112,15 +1112,17 @@ class Monitor(object):
     The class arena takes care of the flies
     """
 
-    def __init__(self, config_obj, configDict):                # TODO: use configDict to get parameters
+    def __init__(self, cfg):                # TODO: use configDict to get parameters
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         A Monitor contains a cam, which can be either virtual or real.
         Everything is handled through openCV
         """
 
-        self.config_obj = config_obj
-        self.configDict = configDict
+        self.cfg = cfg
+        self.config_obj = self.cfg.config_obj
+        self.configDict = self.cfg.configDict
+        self.full_filename = self.cfg.full_filename
 
         self.count = 0
 
@@ -1876,10 +1878,15 @@ class Monitor(object):
 
 # -------------------------------------------------------------------------------------------- Acquire Object
 class acquireObject():
-    def __init__(self, monitor,  config_obj, configDict):
+    def __init__(self, monitor, cfg):
         if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         """
+        self.cfg = cfg
+        self.config_obj = self.cfg.config_obj
+        self.configDict = self.cfg.configDict
+        self.full_filename = self.cfg.full_filename
+
         self.keepGoing = False
 
         if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'end   ')
