@@ -25,6 +25,7 @@
  ---------------------------------------------------------------------------------   imports
 """
 import wx, os
+import cv2, cv
 import ConfigParser                     # configuration file handler
 from inspect import currentframe        # debug call tracer                                                              # debug
 from db import debugprt                 # debug call tracer
@@ -87,7 +88,7 @@ class Configuration:
         if filename == os.path.split(filename)[1] :       # a filename was given without a path:  create a file with default options in default path
             self.full_filename = os.path.join(self.pDir, filename)
 
-        self.configDict = self.defaultConfig()              # create a default dictionary
+        self.defaultConfig()             # create a default dictionary
 
         self.save_Config(new=True)                          # save the configuration to the filename
 
@@ -144,14 +145,14 @@ class Configuration:
             self.configDict[indexStr] = value
 
     #Monitors
-        self.mon_keys = ['mon_name','sourcetype','issdmonitor', 'source','fps_recording','start_datetime','track','tracktype','maskfile','output_folder']
+        self.mon_keys = ['sourcetype','issdmonitor', 'source','fps_recording','start_datetime','track','tracktype','maskfile','output_folder']
 
         if not self.config_obj.has_option('Options','monitors'):
             mon_num = 0
         else:
             mon_num = self.getValue('Options','monitors')
 
-        if type(mon_num) != type(0)  or mon_num == None:
+        if type(mon_num) != type(0)  or mon_num is None:
             mon_num = 0
 
 
@@ -170,7 +171,7 @@ class Configuration:
 
 # %% ----------------------------------------------------------------------------   Set options from menu
     def onOptionSet(self):
-        print('set options from menu')      # TODO: write this function
+        print('set options from menu')      # TODO: used?
 
 # %%  ----------------------------------------------------------------------------  Save config file
     def save_Config(self, new):
@@ -188,7 +189,7 @@ class Configuration:
         for key in opt_keys:
             self.config_obj.set('Options', key, self.configDict['Options, '+key])
 
-        mon_keys = ['mon_name','sourcetype','issdmonitor', 'source','fps_recording','start_datetime','track','tracktype','maskfile','output_folder']
+        mon_keys = ['sourcetype','issdmonitor', 'source','fps_recording','start_datetime','track','tracktype','maskfile','output_folder']
         if self.configDict['Options, monitors'] > 0:
             for mon_num in range(1, self.configDict['Options, monitors']):
                 mon_name = 'Monitor%d' % mon_num
@@ -253,15 +254,15 @@ class Configuration:
             int(r) == int(0)                                                   # int
             if call_tracking: debugprt(self, currentframe(), pgm, 'end   ')
             return int(r)
-        except:
-            None
+        except Exception:
+            pass
 
         try:
             float(r) == float(1.1)                                              # float
             if call_tracking: debugprt(self, currentframe(), pgm, 'end   ')
             return float(r)
-        except:
-            None
+        except Exception:
+            pass
 
         if ',' in r:                                                         # tuple of two integers
             r = tuple(r[1:-1].split(','))
@@ -320,6 +321,64 @@ class Configuration:
 
         dlg.Destroy()
         if call_tracking: debugprt(self, currentframe(), pgm, 'end   ')
+
+
+"""
+# --------------------------------------------------------------------------------------  Video Display Panel
+"""
+class singleVideoImage(wx.Panel):
+    """
+    A panel showing video image mon_name
+    fps and size are provided by the calling program.  This function cannot differentiate between full size and thumbnail.
+    """
+    def __init__(self, parent, mon_num, fps, size, cfg, keymode=True):             # TODO: what does keymode do?
+        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+
+        self.imgFrame = wx.Panel.__init__(self, parent, wx.ID_ANY, style=wx.WANTS_CHARS)            # any key pressed (incl. tab, enter, etc.) will be input
+
+        self.cfg = cfg
+        self.config_obj = self.cfg.config_obj
+        self.configDict = self.cfg.configDict
+        self.full_filename = self.cfg.full_filename
+
+        self.parent = parent
+        self.mon_name = 'Monitor%d' % mon_num
+        self.size = size
+#        self.SetMinSize(self.size)                                     # TODO: setminsize cause trouble.  need a setsizer?
+        self.interval = 1000/fps # fps determines refresh interval in ms
+
+        self.SetBackgroundColour('#A9A9A9')
+
+    # collect monitor information
+        self.sourceType = self.configDict[self.mon_name + ', sourcetype']
+        self.source = self.configDict[self.mon_name + ', source']
+        self.isSDMonitor = self.configDict[self.mon_name + ', issdmonitor']
+
+        self.playVideo()
+
+    def playVideo(self):
+        capture = cv2.VideoCapture(self.source)
+        for k in range(0, 10):
+            if not capture.isOpened():
+                capture = cv2.VideoCapture(self.source)
+                cv2.waitKey(1000)
+
+        if capture.isOpened():
+            print('Capture successful')
+            cv2.namedWindow(self.mon_name, cv.CV_WINDOW_NORMAL)
+            retval, imgFrame = capture.read()
+            while retval:
+                cv2.resizeWindow(self.mon_name, self.size[0], self.size[1])
+                imgSized = cv2.resize(imgFrame, self.size)
+                cv2.imshow(self.mon_name, imgSized)
+                cv2.waitKey(self.interval)
+                retval, imgFrame = capture.read()
+            capture.release()
+
+        else:
+            print('could not open file')
+
+
 
 
 

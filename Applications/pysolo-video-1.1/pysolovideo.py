@@ -69,31 +69,38 @@ pySoloVideoVersion = 'dev'
 MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 
-def getCameraCount():
-    if cmn.call_tracking:  cmn.debugprt(currentframe(), pgm, 'begin          ')
-    """
-    FIX THIS
-    """
-    n = 0
-    Cameras = True
-
-    while Cameras:
-        try:
-            print (cv.CaptureFromCAM(n))
-            n += 1
-        except:
-            Cameras = False
-    if cmn.call_tracking:  cmn.cmn.debugprt(self, currentframe(), pgm, 'end   ')
-    return n
+# 
 
 
-class Cam:
+class Cam:                                                      # TODO: no __init__
     """
     Functions and properties inherited by all cams
     """
 
+    def __init__(self):
+        print(' initiating class Cam')
+
+    def getCameraCount(self):  # TODO:  where does this go?                                                                                                   TO
+
+        if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
+        """
+        FIX THIS
+        """
+        n = 0
+        Cameras = True
+
+        while Cameras:
+            try:
+                print (cv.CaptureFromCAM(n))
+                n += 1
+            except:
+                Cameras = False
+        if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'end   ')
+        return n
+        
+        
     def __addText__(self, frame, text=None):
-        if cmn.call_tracking:  cmn.cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
+        if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         Add current time as stamp to the image
         """
@@ -112,16 +119,16 @@ class Cam:
 
         cv.PutText(frame, text, (x, y), font, textcolor)
 
-        if cmn.call_tracking:  cmn.cmn.debugprt(self, currentframe(), pgm, 'end   ')
+        if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'end   ')
         return frame
 
     def getResolution(self):
-        if cmn.call_tracking:  cmn.cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
+        if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         Returns frame resolution as tuple (w,h)
         """
         a = self.resolution
-        if cmn.call_tracking:  cmn.cmn.debugprt(self, currentframe(), pgm, 'end   ')
+        if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'end   ')
         return a
 
     def saveSnapshot(self, filename, quality=90, timestamp=False):
@@ -185,7 +192,7 @@ class realCam(Cam):
         """
         Set resolution of the camera we are acquiring from
         """
-        x = int(x);
+        x = int(x)
         y = int(y)
         self.resolution = (x, y)
         cv.SetCaptureProperty(self.camera, cv.CV_CAP_PROP_FRAME_WIDTH, x)
@@ -250,7 +257,7 @@ class realCam(Cam):
         """
         print "attempting to close stream"
 
-        del (self.camera)  # cv.ReleaseCapture(self.camera)
+        del self.camera  # cv.ReleaseCapture(self.camera)
         self.camera = None
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'end   ')
 
@@ -354,7 +361,7 @@ class virtualCamMovie(Cam):
 
 
 
-        elif ((self.currentFrame > self.lastFrame) and (not self.loop)):
+        elif (self.currentFrame > self.lastFrame) and (not self.loop):
             sysout = sys.__stdout__
             print('$$$$$$, pysolovideo, getImage, 361, currentFrame > lastFrame')
 
@@ -579,7 +586,7 @@ class virtualCamFrames(Cam):
             return False
 
 
-class Arena():
+class Arena:
     """
     The arena define the space where the flies move
     Carries information about the ROI (coordinates defining each vial) and
@@ -589,14 +596,14 @@ class Arena():
     The class arena takes care of the flies
     """
 
-    def __init__(self, parent, cfg):                        # TODO: use configDict to get parameters
+    def __init__(self, parent, mon_num, cfg):                        # TODO: use configDict to get parameters
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
 
         self.cfg = cfg
         self.config_obj = self.cfg.config_obj
         self.configDict = self.cfg.configDict
         self.full_filename = self.cfg.full_filename
-
+        self.mon_num = mon_num
         self.monitor = parent
 
         self.ROIS = []  # Regions of interest
@@ -660,7 +667,7 @@ class Arena():
         ly = max([y1, y2, y3, y4])
 
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'end   ')
-        return ((lx, uy), (rx, ly))
+        return (lx, uy), (rx, ly)
 
     def __distance(self, (x1, y1), (x2, y2)):
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
@@ -941,7 +948,7 @@ class Arena():
 
 
         if self.count_seconds + 1 >= self.period:
-            self.writeActivity(fps=np.mean(self.minuteFPS))
+            self.writeActivity(self.mon_num, self.cfg, fps=np.mean(self.minuteFPS))                 # TODO: expected int, got ndarray instead?
             self.count_seconds = 0
             self.__n = 0
             self.minuteFPS = []
@@ -957,7 +964,7 @@ class Arena():
         self.__n += 1
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'end   ')
 
-    def writeActivity(self, mon, cfg, extend=True):          # mon is 0-indexed
+    def writeActivity(self, mon, cfg, fps=1, extend=True):          # mon is 0-indexed
         if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         Write the activity to file
@@ -1039,12 +1046,12 @@ class Arena():
         x1 = fs[:, :, :1]
         y1 = fs[:, :, 1:]
 
-        d = self.__distance((x, y), (x1, y1))
+        distCalc = self.__distance((x, y), (x1, y1))
         # print('$$$$$$, pysolovideo, calcdists, 1021, x = ,', str(x[0]), ', y = ,', str(y[0]), ', x1 = ,', str(x1[0]),
         #       ', y1 = ,', str(y1[0]), 'd = ', str(d[0]))
 
         # we sum everything BUT the last bit of information otherwise we have data duplication
-        values = d[:, :-1, :].sum(axis=1).reshape(-1)
+        values = distCalc[:, :-1, :].sum(axis=1).reshape(-1)
         activity = '\t'.join(['%s' % int(v) for v in values])
         # print('$$$$$$, pysolovideo, writeactivity, calculatedistances, 1030, activity = ,', activity, ', values = ,',values)
 
@@ -1067,9 +1074,9 @@ class Arena():
 
             fs = np.roll(fd, -1, 0)
 
-            x = fd[:, :1];
+            x = fd[:, :1]
             y = fd[:, 1:]  # THESE COORDINATES ARE RELATIVE TO THE ROI
-            x1 = fs[:, :1];
+            x1 = fs[:, :1]
             y1 = fs[:, 1:]
 
             if horizontal:
@@ -1112,7 +1119,7 @@ class Monitor(object):
     The class arena takes care of the flies
     """
 
-    def __init__(self, cfg):                # TODO: use configDict to get parameters
+    def __init__(self, mon_num, cfg):                # TODO: use configDict to get parameters
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         A Monitor contains a cam, which can be either virtual or real.
@@ -1123,6 +1130,7 @@ class Monitor(object):
         self.config_obj = self.cfg.config_obj
         self.configDict = self.cfg.configDict
         self.full_filename = self.cfg.full_filename
+        self.mon_num = mon_num
 
         self.count = 0
 
@@ -1130,7 +1138,7 @@ class Monitor(object):
         self.writer = None
         self.cam = None
 
-        self.arena = Arena(self)
+        self.arena = Arena(self, self.mon_num, self.cfg)
         print('arena returned: ')
         print(self.arena)
 
@@ -1539,15 +1547,15 @@ class Monitor(object):
         (x, y), (x1, y1) = pt1, pt2
         w, h = (x1 - x), (y1 - y)
 
-        d = h / rows
+        d_mask = h / rows
         l = (w / cols) - int(food / 2 * w)
 
         k = 0
         for v in range(rows):
-            ROI[k] = (x, y), (x + l, y + d)
-            ROI[k + 1] = (x1 - l, y), (x1, y + d)
+            ROI[k] = (x, y), (x + l, y + d_mask)
+            ROI[k + 1] = (x1 - l, y), (x1, y + d_mask)
             k += 2
-            y += d
+            y += d_mask
 
         nROI = []
         for R in ROI:
@@ -1586,7 +1594,7 @@ class Monitor(object):
             for l in range(N):
                 # hack: use Canny instead of zero threshold level.
                 # Canny helps to catch squares with gradient shading
-                if (l == 0):
+                if l == 0:
                     cv.Canny(tgray, gray, 0, thresh, 5)
                     cv.Dilate(gray, gray, None, 1)
                 else:
@@ -1602,7 +1610,7 @@ class Monitor(object):
 
                 contour = contours
                 totalNumberOfContours = 0
-                while (contour.h_next() is not None):
+                while contour.h_next() is not None:
                     totalNumberOfContours = totalNumberOfContours + 1
                     contour = contour.h_next()
                 # test each contour
@@ -1610,7 +1618,7 @@ class Monitor(object):
                 # print 'total number of contours %d' % totalNumberOfContours                                                # debug
                 contourNumber = 0
 
-                while (contourNumber < totalNumberOfContours):
+                while contourNumber < totalNumberOfContours:
 
                     # print 'contour #%d' % contourNumber                                                # debug
                     # print 'number of points in contour %d' % len(contour)                                                # debug
@@ -1634,14 +1642,14 @@ class Monitor(object):
                         for i in range(5):
                             # find minimum angle between joint
                             # edges (maximum of cosine)
-                            if (i >= 2):
-                                t = abs(self.__angle(result[i % 4], result[i - 2], result[i - 1]))
-                                if s < t:
-                                    s = t
+                            if i >= 2:
+                                t_abs = abs(self.__angle(result[i % 4], result[i - 2], result[i - 1]))
+                                if s < t_abs:
+                                    s = t_abs
                         # if cosines of all angles are small
                         # (all angles are ~90 degree) then write quandrange
                         # vertices to resultant sequence
-                        if (s < 0.3):
+                        if s < 0.3:
                             pt = [result[i] for i in range(4)]
                             squares.append(pt)
                             print ('current # of squares found %d' % len(squares))
@@ -1720,13 +1728,13 @@ class Monitor(object):
         # if delta >= 1: # if one-half second has elapsed
         self.lasttime = ct
         self.arena.compactSeconds(self.__tempFPS, delta)  # average the coordinates and transfer from buffer to array
-        self.processingFPS = self.__tempFPS;
+        self.processingFPS = self.__tempFPS
         self.__tempFPS = 0
         # endif
 
         if cmn.call_tracking:  cmn.debugprt(self, currentframe(), pgm, 'end   ')
 
-    def showimg(self, title, img):  # displays an image                 # debug
+    def showimg(self, title, img):  # displays an image                 # TODO:  used?
         img_nparry = np.asarray(img[:, :])
         cv2.imshow(title, img_nparry)
         cv2.waitKey()
@@ -1840,7 +1848,7 @@ class Monitor(object):
                 if track_one and not contour:  # this will make sure we are tracking only the biggest rectangle
                     pt1 = (bound_rect[0], bound_rect[1])
                     pt2 = (bound_rect[0] + bound_rect[2], bound_rect[1] + bound_rect[3])
-                    points.append(pt1);
+                    points.append(pt1)
                     points.append(pt2)
                     cv.Rectangle(frame, pt1, pt2, cv.CV_RGB(255, 0, 0), 1)
 
@@ -1877,8 +1885,8 @@ class Monitor(object):
 
 
 # -------------------------------------------------------------------------------------------- Acquire Object
-class acquireObject():
-    def __init__(self, monitor, cfg):
+class acquireObject:
+    def __init__(self, mon_num, cfg):
         if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'begin     ')  # debug
         """
         """

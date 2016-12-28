@@ -36,26 +36,27 @@ pgm = 'pvg_acquire.py'
 
 
 
-class panelLiveView(wx.Panel):
+class panelTwo(wx.Panel):
     """
     Panel Number 2
-    Live view of selected camera
+    Live view of selected monitor with tools for making masks
     """
-    def __init__(self, parent, cfg):
+    def __init__(self, cfg):
         """
         Shows fullsize video and a mask making panel
         """
 
-        wx.Panel.__init__(self, parent, -1)
+        wx.Panel.__init__(self, mon_num, wx.ID_ANY)
 
         self.cfg = cfg
         self.config_obj = self.cfg.config_obj
         self.configDict = self.cfg.configDict
         self.full_filename = self.cfg.full_filename
 
-        self.n_mons = self.configDict['Options, monitors']
-        self.fs_size = self.configDict['Options, fullsize']
-        self.monitor_name = 'Monitor1'
+        self.n_mons = self.configDict['Options, monitors']          # for select monitor combobox
+        self.fs_size = self.configDict['Options, fullsize']         # for monitor panel
+        self.mon_num = mon_num                                      # use the monitor that was being configured on panel one
+        self.mon_name = 'Monitor%d' % mon_num
 
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
         sizer_2 = wx.BoxSizer(wx.HORIZONTAL)

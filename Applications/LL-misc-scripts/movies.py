@@ -5,39 +5,64 @@ Created on Sat Oct 22 12:10:05 2016
 @author: laughreyl
 """
 
-import cv2, cv, os
+import cv2, cv, os, wx
 import numpy as np
-import copy
-    
+
+"""
 def showimg(title, img):
         img_nparry = np.asarray(img )
         cv2.imshow(title,img_nparry)
         cv2.waitKey()
         
+"""
 
-movie_name = 'F:\\Videos\\bias_video_cam_0_date_2016_07_27_time_16_04_13_v001.avi'
-print("movie name = ", movie_name)
-print('file exists? %s',os.path.isfile(movie_name))
+class mainFrame(wx.Panel):
+    def __init__(self):
 
-capture = cv2.VideoCapture(movie_name)
-for k in range(0,10):
-    if not capture.isOpened():
-        capture = cv2.VideoCapture(movie_name)
-        cv2.waitKey(1000)
-        print "Wait for the header"
+        self.source = 'c:\\Users\\Lori\\Documents\\GitHub\\LL-DAM-Analysis\\Input\\fly_movie.avi'
 
+        self.size = (300,300)
+#        wx.Panel.__init__(self, wx.ID_ANY, size=self.size, name='thumbnail')
 
-if( capture.isOpened() ):
-    print(' opened' )
-else : print('not opened')
+        self.interval = 1000 # fps determines refresh interval in ms
+        self.mon_name = 'Monitor 1'
 
-frame_width = capture.get(cv2.cv.CV_CAP_PROP_FRAME_WIDTH)        # Width of the frames in the video stream.
-frame_height = capture.get(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT)       # Height of the frames in the video stream.
-frame_rate = capture.get(cv2.cv.CV_CAP_PROP_FPS)                   # Frame rate.
-frame_count = capture.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT)          # Number of frames in the video file.
+        print("movie name = ", self.source)
+        print('file exists? %s',os.path.isfile(self.source))
+        print( self.size, self.interval)
+        cv.NamedWindow('Monitor Panel', cv2.WINDOW_NORMAL
+                          | wx.NO_BORDER
+)
 
-print(frame_width, frame_height, frame_rate, frame_count)
+        self.playVideo('Monitor Panel')
 
+    def playVideo(self, mon_panel):
+        capture = cv2.VideoCapture(self.source)
+        for k in range(0, 10):
+            if not capture.isOpened():
+                capture = cv2.VideoCapture(self.source)
+                cv2.waitKey(1000)
 
-capture.release()
+        if capture.isOpened():
+            print('Capture successful')
+            retval, imgFrame = capture.read()
+            while retval:
 
+                cv2.resizeWindow(mon_panel, 200,200)
+                imgSized = cv2.resize(imgFrame, (200,200))
+                cv2.imshow(mon_panel,imgSized)
+                cv2.waitKey(self.interval)
+                retval, imgFrame = capture.read()
+            capture.release()
+
+        else:
+            print('could not open file')
+
+if __name__ == "__main__":
+    app = wx.App()
+    wx.InitAllImageHandlers()
+
+    frame_1 = mainFrame()           # Create the main window.
+    app.SetTopWindow(frame_1)                   # Makes this window the main window
+    frame_1.Show()                              # Shows the main window
+    app.MainLoop()                              # Begin user interactions.

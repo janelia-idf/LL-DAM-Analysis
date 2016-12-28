@@ -28,10 +28,10 @@
 """
 import wx, os, sys
 import pvg_common as cmn
-from pvg_panel_one import panelOne
-from pvg_options import pvg_OptionsPanel
-from pvg_panel_two import panelLiveView
-from pysolovideo import pySoloVideoVersion
+import pvg_panel_one as p1
+import pvg_panel_two as p2
+#from pvg_options import pvg_OptionsPanel
+#from pysolovideo import pySoloVideoVersion
 from win32api import GetSystemMetrics                       # to get screen resolution
 from inspect import currentframe                                                                     # debug
 
@@ -70,10 +70,11 @@ class mainNotebook(wx.Notebook):
 
         wx.Notebook.__init__(self, parent, wx.ID_ANY, style = wx.NB_LEFT)
 
-        self.panelOne = panelOne(self, self.cfg)                  # create thumbnail pg
+        self.panelOne = p1.panelOne(self, self.cfg)                        # create thumbnail pg;
         self.AddPage(self.panelOne, 'Thumbnails')
+        mon_num = self.panelOne.mon_num
 
-        self.panelTwo = panelLiveView(self, self.cfg)             # create mask maker pg
+        self.panelTwo = p2.maskPanel(self, mon_num, self.cfg)             # create mask maker pg
         self.AddPage(self.panelTwo, 'Mask Maker')
 
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
@@ -87,8 +88,9 @@ class mainNotebook(wx.Notebook):
         """
         Switches between notebook pages.
         """
-        self.panelOne.StopPlaying()                    # see pvg_panel_one.py
-        self.panelTwo.StopPlaying()                    # see pvg_panel_two.py
+        p1.StopPlaying()                    # see pvg_panel_one.py
+        p2.StopPlaying()                    # see pvg_panel_two.py
+        
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                        Refresh all pages
@@ -97,9 +99,10 @@ class mainNotebook(wx.Notebook):
         """
         Refreshes all pages of notebook.
         """
-        self.panelOne.onRefresh()                    # see pvg_panel_one.py
-        self.panelTwo.onRefresh(config_obj, configDict)                    # see pvg_panel_two.py
+        self.p1.onRefresh()                    # see pvg_panel_one.py
+        self.p2.onRefresh(self.cfg)                    # see pvg_panel_two.py
         self.Layout()
+        
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
         
@@ -113,12 +116,10 @@ class mainFrame(wx.Frame):
 
         self.full_filename = os.path.join(cmn.pDir, cmn.DEFAULT_configfile)
 
-
         self.cfg = cmn.Configuration(self.full_filename)
         self.config_obj = self.cfg.config_obj
         self.configDict = self.cfg.configDict
         self.full_filename = self.cfg.full_filename
-
 
         kwds["style"] = wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
@@ -224,7 +225,7 @@ class mainFrame(wx.Frame):
         """
 
         """ Text for the dialog box. """
-        about = 'pySolo-Video - v %s\n\n' % pySoloVideoVersion
+        about = 'pySolo-Video - v %s\n\n' % 'Laughrey Development'
         about += 'by Giorgio F. Gilestro\n'
         about += 'updated by Caitlin Laughrey and Loretta E Laughrey in 2016\n\n'
         about += 'Visit http://www.pysolo.net for more information'
@@ -256,12 +257,13 @@ class mainFrame(wx.Frame):
         self.Close()                            # from wxpython
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
-# %%
+# %%                                                                # TODO:  used?
+    """
     def onConfigure(self, event):
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        """
+        """"""
         opens configure dialog box                                                  $$$$$$  configuration?
-        """
+        """"""
         frame_opt = pvg_OptionsPanel(self)      # see pvg_options.py
         #frame_opt.Show()
         res = frame_opt.ShowModal()             # displays the dialog box
@@ -273,11 +275,11 @@ class mainFrame(wx.Frame):
             print "no changes were made"                                        # prints to console
         frame_opt.Destroy()
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
-
+    """
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Main Program
 
 if __name__ == "__main__":
-    if (console_to_file == True) :
+    if console_to_file:
         console_file = os.path.join(cmn.pDir, 'stdout.txt')
         sys.stdout = open(console_file, 'w')          # send console output to file
 
