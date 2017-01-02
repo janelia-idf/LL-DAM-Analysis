@@ -34,8 +34,9 @@ import datetime
 from inspect import currentframe                                                                     # debug
 import pvg_common as cmn
 
+
 ThumbnailClickedEvt, EVT_THUMBNAIL_CLICKED = wx.lib.newevent.NewCommandEvent()
-from wx.lib.filebrowsebutton import FileBrowseButton, DirBrowseButton
+from wx.lib.filebrowsebutton_LL import FileBrowseButton, DirBrowseButton
 
 
 """
@@ -46,9 +47,11 @@ start_datetime = (2016, 11, 13, 3, 47, 38)
 
 
 # -------------------------------------------------------------------------------------------  Mask Maker Functions
-class maskMakerFunctions:
+class maskMakerFunctions():
 
     def __init__(self):
+
+        print('mask maker functions called')
         # %%                                                                    # TODO: not needed for displaying the video image?  put these somewhere else
         """
         self.start_datetime = self.configDict[mon_name + ', start_datetime']           # date & time of start of video
@@ -412,7 +415,7 @@ class monitorPanel(singleVideoImage):
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 """
-# ------------------------------------------------------------------------------------------- Panel Grid View
+# ------------------------------------------------------------------------------------------- configuration panel
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Panel Configuration
 class configPanel(wx.Panel):
@@ -435,167 +438,236 @@ class configPanel(wx.Panel):
         self.parent = parent
 
         lowerSizer = wx.BoxSizer(wx.HORIZONTAL)
+            # has lowLeftSizer, lowRightSizer
+# ------------------------------------------------------------------------------------Low Left Sizer
+        lowLeftSizer = wx.BoxSizer(wx.VERTICAL)
+        # has savebtn, monitor select combobox, play & stop btns, current source, monButtonSizer, sourceSelectGrid,
+        # applybtn
 
-        # --------------------------------------------------------------------------- Static box   MONITOR SELECTION
-        # ---------------------------------------------------------------------------  Monitor selection
-        # make monitor list for monitor selection combobox
+    # ---------------------------------------------------------------------------  Monitor selection
+    # monitor selection combobox
+        # Select Monitor Sizer named section
+        self.sb_selectmonitor = wx.StaticBox(self, wx.ID_ANY, 'Select Monitor')
+        sbSizer_selectmonitor = wx.StaticBoxSizer(self.sb_selectmonitor, wx.VERTICAL)
+
         if self.configDict['Options, monitors'] >0 :                        # there are monitors in the config file
-            n_mons = self.configDict['Options, monitors']
-            self.MonitorList = ['Monitor %s' % (int(m)) for m in range( 1, n_mons )]
-            source = self.configDict['Monitor1, source']
-            self.currentSource = wx.TextCtrl (self, wx.ID_ANY, style=wx.TE_READONLY)
+            n_mons = self.configDict['Options, monitors']                   # how many?
+            self.monitorList = ['Monitor %s' % (int(m)) for m in range( 1, n_mons+1 )]    # make list
+
+            self.source = self.configDict['Monitor1, source']
+            self.currentSource = wx.TextCtrl (self, wx.ID_ANY, os.path.split(self.source)[1],
+                                              style=wx.TE_READONLY | wx.EXPAND)    # get current source
+
         else:
-            self.MonitorList = ['Monitor 1']                                # if there are no monitors in the config file, create an empty monitor 1
-            self.currentSource = wx.TextCtrl (self, wx.ID_ANY, 'No source selected', style=wx.TE_READONLY)
-        self.monitor_names = wx.ComboBox(self, wx.ID_ANY, choices=self.MonitorList, style=wx.CB_DROPDOWN | wx.CB_READONLY | wx.CB_SORT)
+            self.monitorList = ['Monitor 1']                                # if there are no monitors in the config
+            # file, create an empty monitor 1
+            self.currentSource = wx.TextCtrl (self, wx.ID_ANY, 'No source selected', style=wx.TE_READONLY | wx.EXPAND)
+
+        self.monitor_names = wx.ComboBox(self, wx.ID_ANY, choices=self.monitorList,
+                                         style=wx.CB_DROPDOWN | wx.CB_READONLY | wx.CB_SORT)
+        self.monitor_names.Selection = self.mon_num -1
         self.Bind ( wx.EVT_COMBOBOX, self.onChangingMonitor, self.monitor_names)
 
-    # Select Monitor Sizer
-        sb_selectmonitor = wx.StaticBox(self, wx.ID_ANY, 'Select Monitor')
-        self.sbSizer_selectmonitor = wx.StaticBoxSizer (sb_selectmonitor, wx.VERTICAL)
-
-        self.sbSizer_selectmonitor.Add ( self.monitor_names, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
-        self.sbSizer_selectmonitor.Add ( self.currentSource, 0, wx.EXPAND|wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
-
-    # Monitor control buttons
+    # Monitor comboxbox & control buttons
         btnSizer_1 = wx.BoxSizer(wx.HORIZONTAL)
+
         self.btnPlay = wx.Button( self, wx.ID_FORWARD, label="Play")
-        self.btnStop = wx.Button( self, wx.ID_STOP, label="Stop")
         self.Bind(wx.EVT_BUTTON, self.onPlay, self.btnPlay)
+        self.btnStop = wx.Button( self, wx.ID_STOP, label="Stop")
         self.Bind(wx.EVT_BUTTON, self.onStop, self.btnStop)
+        self.btnSave = wx.Button( self, wx.ID_ANY, label='Save')
+        self.Bind(wx.EVT_BUTTON, self.cfg.onFileSaveAs, self.btnSave)                   # TODO: this should only save one monitor, not all
+
         self.btnPlay.Enable(False); self.btnStop.Enable(False)
 
-        btnSizer_1.Add ( self.btnPlay , 0, wx.ALIGN_LEFT|wx.ALL, 5 )
-        btnSizer_1.Add ( self.btnStop , 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.DOWN, 5 )
+        # enable buttons
+        if self.currentSource != '':
+            self.btnPlay.Enable(True)
+            self.btnSave.Enable(True)
 
-        self.sbSizer_selectmonitor.Add ( btnSizer_1, 0, wx.EXPAND|wx.ALIGN_BOTTOM|wx.TOP, 5 )
+        btnSizer_1.Add ( self.monitor_names, 2, wx.EXPAND | wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT | wx.TOP, 5)
+        btnSizer_1.Add ( self.btnPlay , 1, wx.ALIGN_LEFT|wx.ALL, 5 )
+        btnSizer_1.Add ( self.btnStop , 1, wx.ALIGN_CENTER|wx.ALL, 5 )
+        btnSizer_1.Add (self.btnSave, 1, wx.ALIGN_RIGHT | wx.ALL, 5 )
 
-        lowerSizer.Add (self.sbSizer_selectmonitor, 0, wx.EXPAND|wx.ALL, 5)
+        sbSizer_selectmonitor.Add (btnSizer_1, 0, wx.EXPAND|wx.ALIGN_BOTTOM|wx.TOP, 5 )
+        sbSizer_selectmonitor.Add(self.currentSource, 0, wx.EXPAND | wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT | wx.TOP, 5)
 
+        lowLeftSizer.Add (sbSizer_selectmonitor, 0, wx.EXPAND|wx.ALL, 5)
+
+        lowLeftSizer.AddSpacer(20)
     # -------------------------------------------------------------------------------------  Video Input Selection
-
+        # Select source Sizer named section
         sb_videofile = wx.StaticBox(self, wx.ID_ANY, "Select Video input")
-        self.sbSizer_videofile = wx.StaticBoxSizer(sb_videofile, wx.VERTICAL)
+        sbSizer_videofile = wx.StaticBoxSizer(sb_videofile, wx.VERTICAL)
 
-        self.grid2 = wx.FlexGridSizer(0, 2, 0, 0)
+        sourceGridSizer = wx.FlexGridSizer(0, 2, 0, 0)
 
-
-        rb1 = wx.RadioButton(self, wx.ID_ANY, 'Camera', style=wx.RB_GROUP)          # select camera source
+        self.rb1 = wx.RadioButton(self, wx.ID_ANY, 'Camera', style=wx.RB_GROUP)          # select camera source
         self.n_cams = self.configDict['Options, webcams']
         self.WebcamsList = ['Webcam %s' % (int(w) + 1) for w in range(self.n_cams)]
-        source1 = wx.ComboBox(self, wx.ID_ANY, size=(285, -1), choices=self.WebcamsList,
-                              style=wx.CB_DROPDOWN | wx.CB_READONLY | wx.CB_SORT)
-        self.Bind(wx.EVT_COMBOBOX, self.sourceCallback, source1)
+        self.source1 = wx.ComboBox(self, wx.ID_ANY, choices=self.WebcamsList,
+                              style= wx.EXPAND | wx.CB_DROPDOWN | wx.CB_READONLY | wx.CB_SORT)
+        self.Bind(wx.EVT_COMBOBOX, self.sourceCallback, self.source1)
 
-        rb2 = wx.RadioButton(self, wx.ID_ANY, 'File')                               # select video file source
-        source2 = FileBrowseButton(self, -1, labelText='',
-                                   size=(300, -1), changeCallback=self.sourceCallback)
+        self.rb2 = wx.RadioButton(self, wx.ID_ANY, 'File')                               # select video file source
+        self.source2 = FileBrowseButton(self, id = wx.ID_ANY,
+                                labelText = '', buttonText = 'Browse',
+                                toolTip = 'Type filename or click browse to choose video file',
+                                dialogTitle = 'Choose a video file',
+                                startDirectory = os.path.split(self.configDict[self.mon_name + ', source'])[0],
+                                initialValue = os.path.split(self.source)[1],
+                                fileMask = '*.*', fileMode = wx.ALL,
+                                changeCallback=self.sourceCallback, name = 'videoBrowseButton'  )
 
-        rb3 = wx.RadioButton(self, wx.ID_ANY, 'Folder')                             # select folder  TODO: what does select folder do?
-        source3 = DirBrowseButton(self, style=wx.DD_DIR_MUST_EXIST, labelText='', size=(300, -1),
-                                  changeCallback=self.sourceCallback)
+        # select folder                                                 TODO: what does select folder do?
+#        self.rb3 = wx.RadioButton(self, wx.ID_ANY, 'Folder')
+        #                                                               TODO: does this start in right directory?
+#        self.source3 = DirBrowseButton(self, style=wx.DD_DIR_MUST_EXIST, labelText='Source 3',
+#                                  changeCallback=self.sourceCallback)
 
         self.controls = []
-        self.controls.append((rb1, source1))
-        self.controls.append((rb2, source2))
-        self.controls.append((rb3, source3))
+        self.controls.append((self.rb1, self.source1))
+        self.controls.append((self.rb2, self.source2))
+#        self.controls.append((self.rb3, self.source3))
 
         for radio, source in self.controls:
-            self.grid2.Add(radio, 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL | wx.ALL, 2)
-            self.grid2.Add(source, 0, wx.ALIGN_CENTRE | wx.ALIGN_CENTER_VERTICAL | wx.ALL, 2)
+            sourceGridSizer.Add(radio, wx.ID_ANY, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL | wx.ALL, 2)
+            sourceGridSizer.Add(source, 2, wx.EXPAND | wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL | wx.ALL, 2)
             self.Bind(wx.EVT_RADIOBUTTON, self.onChangeSource, radio)
-            source.Enable(False)
+            self.Bind(wx.EVT_TEXT, self.onChangeSource, source)
+#            self.source.Enable(False)
 
-        self.controls[0][1].Enable(True)
-        self.sbSizer_videofile.Add(self.grid2)
+        self.controls[0][1].Enable(True)                    # TODO: only enable buttons for radio that is true
+
+        sbSizer_videofile.Add(sourceGridSizer, 0, wx.EXPAND | wx.ALIGN_CENTER, 5)
 
         # ------------------------------------------------------------------------  apply button
         self.applyButton = wx.Button( self, wx.ID_APPLY)
         self.applyButton.SetToolTip(wx.ToolTip("Apply to Monitor"))
         self.Bind(wx.EVT_BUTTON, self.onApplySource, self.applyButton)
 
-        self.sbSizer_videofile.Add(self.applyButton, 0, wx.ALIGN_LEFT, 5 )
+        sbSizer_videofile.Add(self.applyButton, 0,wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL | wx.ALL, 2 )
 
+        lowLeftSizer.Add(sbSizer_videofile, 0, wx.EXPAND|wx.BOTTOM|wx.ALL, 5)
 
-        # ---------------------------------------------------------------------  date picker
+        sbSizer_videofile.AddSpacer(10)
+
+        lowerSizer.Add(lowLeftSizer, 0, wx.EXPAND|wx.ALL, 5)
+# ---------------------------------------------------------------------------------Low Right Sizer
+        lowRightSizer = wx.BoxSizer(wx.VERTICAL)
+        # has lowRightTop and lowRightBottom
+
+# ---------------------------------------------------------------------------------Low Right Top Sizer
+        lowRightTopSizer = wx.BoxSizer(wx.HORIZONTAL)
+        # has time controls and tracking options
+        # ---------------------------------------------------------------------  datetime sizer
+        # Select date time named section
         sb_datetime = wx.StaticBox(self, wx.ID_ANY, "Video Start Date and Time")
-        self.date_time_sizer = wx.StaticBoxSizer (sb_datetime, wx.HORIZONTAL)
+        date_time_sizer = wx.StaticBoxSizer (sb_datetime, wx.VERTICAL)
 
+        # Date
+        dateSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.txt_date = wx.StaticText(self, wx.ID_ANY, "Date:")
         self.start_date = wx.DatePickerCtrl(self, wx.ID_ANY, style = wx.DP_DROPDOWN | wx.DP_SHOWCENTURY)
-
         self.Bind(wx.EVT_DATE_CHANGED, self.onDateTimeChanged, self.start_date)                                                                            # $$$$$$ - set default date to start_datetime
 
-        self.date_time_sizer.Add(self.txt_date, 0, wx.ALL, 5)  # --- add to datetime row, center panel, lower sizer
-        self.date_time_sizer.Add(self.start_date, 0, wx.ALL, 5)
+        dateSizer.Add(self.txt_date, 0, wx.ALL, 5)
+        dateSizer.Add(self.start_date, 0, wx.ALL, 5)
 
-        # ---------------------------------------------------------------------  time picker
+        date_time_sizer.Add(dateSizer, 0, wx.ALL, 5)
+
+        # time
         self.txt_time = wx.StaticText(self, wx.ID_ANY, "Time (24-hour format):")
         self.spinbtn = wx.SpinButton(self, wx.ID_ANY, wx.DefaultPosition, (-1, 20), wx.SP_VERTICAL)
-        self.start_time = masked.TimeCtrl(self, wx.ID_ANY, name="24 hour control", fmt24hr=True, spinButton=self.spinbtn)
+        self.start_time = masked.TimeCtrl(self, wx.ID_ANY, name='time: \n24 hour control', fmt24hr=True, spinButton=self.spinbtn)
         self.Bind(masked.EVT_TIMEUPDATE, self.onDateTimeChanged, self.start_time)                                                                            # $$$$$$ - set default date to start_datetime
 
-        self.addWidgets(self.date_time_sizer, [self.txt_time, self.start_time, self.spinbtn])
+        self.addWidgets(date_time_sizer, [self.txt_time, self.start_time, self.spinbtn])
 
-        self.sbSizer_videofile.AddSpacer(50)
-        self.sbSizer_videofile.Add(self.date_time_sizer, 0, wx.EXPAND | wx.ALL, 5)
+        # fps
+        fpsSizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.fpsTxt = wx.StaticText(self, wx.ID_ANY, 'Speed in frames per second:')
+        self.fps = self.configDict['Options, fps_preview']
+        self.fps = wx.TextCtrl(self, 0, style=wx.EXPAND | wx.ALIGN_RIGHT, size=(50, -1), value=str(self.fps))          # get current source
+        fpsSizer.Add(self.fpsTxt, 0, wx. wx.EXPAND | wx.ALL, 2)
+        fpsSizer.Add(self.fps, 0, wx.EXPAND | wx.ALL, 2)
 
+        date_time_sizer.Add(fpsSizer, 0, wx.EXPAND | wx.ALL, 5)
 
-        lowerSizer.Add(self.sbSizer_videofile, 0, wx.ALIGN_BOTTOM | wx.EXPAND | wx.ALL, 5)  # ---- add to lower sizer
+        lowRightTopSizer.Add(date_time_sizer, 0, wx.EXPAND | wx.TOP | wx.ALL, 5)
 
-
+        lowRightTopSizer.AddSpacer(5)
         # ----------------------------------------------------------------------------- Static box   TRACKING OPTIONS
         sb_track_txt = wx.StaticBox(self, wx.ID_ANY, "Set Tracking Parameters")
         sbSizer_trackoptions = wx.StaticBoxSizer (sb_track_txt, wx.VERTICAL)
 
-        # --------------------------------------------------------------------------------  choose mask file
-        self.pickMaskBrowser = FileBrowseButton(self, wx.ID_ANY, labelText='Mask File')
 
-        sbSizer_trackoptions.Add ( self.pickMaskBrowser , 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP|wx.EXPAND, 5 )           # add to right panel lower sizer
+        #  tracking options
+        sbSizer_trackactive = wx.BoxSizer (wx.HORIZONTAL)
 
-        # ------------------------------------------------------------------------------ tracking options
-        sbSizer_trackoptions = wx.BoxSizer (wx.HORIZONTAL)
-
-        self.track = wx.CheckBox(self, wx.ID_ANY, "Activate Tracking")
+        self.track = wx.CheckBox(self, wx.ID_ANY, 'Activate Tracking')
         self.track.SetValue(False)
         self.track.Bind ( wx.EVT_CHECKBOX, self.ontrack)
 
-        self.isSDMonitor = wx.CheckBox(self, wx.ID_ANY, "Sleep Deprivation Monitor")
+        sbSizer_trackactive.Add (self.track, 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+        self.isSDMonitor = wx.CheckBox(self, wx.ID_ANY, 'Sleep Deprivation Monitor')
         self.isSDMonitor.SetValue(False)
         self.isSDMonitor.Bind ( wx.EVT_CHECKBOX, self.onSDMonitor)
         self.isSDMonitor.Enable(False)
 
-        sbSizer_trackoptions.Add (self.track, 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
-        sbSizer_trackoptions.Add (self.isSDMonitor, 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+        sbSizer_trackactive.Add (self.isSDMonitor, 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-#        sbSizer_trackoptions.Add ( sbSizer_trackopt1 , 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+        sbSizer_trackoptions.Add ( sbSizer_trackactive , 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
         sbSizer_trackoptions.AddSpacer(10)
 
         # ------------------------------------------------------------------------------ fly activity options
-        sb_calcbox = wx.StaticBox( self, wx.ID_ANY, "Calculate fly activity as...")
+        sb_calcbox = wx.StaticBox( self, wx.ID_ANY, 'Calculate fly activity as...')
         calcbox_sizer = wx.StaticBoxSizer(sb_calcbox, wx.VERTICAL)
 
-        self.trackDistanceRadio = wx.RadioButton(self, wx.ID_ANY, "Activity as distance traveled", style=wx.RB_GROUP)
-        self.trackVirtualBM = wx.RadioButton(self, wx.ID_ANY, "Activity as midline crossings count")
-        self.trackPosition = wx.RadioButton(self, wx.ID_ANY, "Only position of flies")
+        self.trackDistance = wx.RadioButton(self, wx.ID_ANY, 'Activity as distance traveled', style=wx.RB_GROUP)
+        self.trackVirtualBM = wx.RadioButton(self, wx.ID_ANY, 'Activity as midline crossings count')
+        self.trackPosition = wx.RadioButton(self, wx.ID_ANY, 'Only position of flies')
                                                                                              # add to right panel lower sizer
-        calcbox_sizer.Add (self.trackDistanceRadio, 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
+        calcbox_sizer.Add (self.trackDistance, 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
         calcbox_sizer.Add (self.trackVirtualBM, 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
         calcbox_sizer.Add (self.trackPosition, 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
 
         sbSizer_trackoptions.Add (calcbox_sizer, 0, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-        self.btnSave = wx.Button( self, wx.ID_ANY, label="Save Configuration")          # save configuration button
-        self.Bind(wx.EVT_BUTTON, self.cfg.onFileSaveAs, self.btnSave)
+        lowRightTopSizer.Add(sbSizer_trackoptions, wx.ID_ANY, wx.EXPAND|wx.ALL, 5)       # ---- add to lowRightTopSizer
 
-        sbSizer_trackoptions.Add (self.btnSave, 0, wx.ALIGN_RIGHT | wx.ALIGN_BOTTOM |wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+        lowRightSizer.Add(lowRightTopSizer, 1, wx.ALIGN_BOTTOM | wx.EXPAND | wx.ALL, 5)
+# ---------------------------------------------------------------------------------  Low Right Bottom Sizer
 
-        lowerSizer.Add(sbSizer_trackoptions, wx.ID_ANY, wx.EXPAND|wx.ALL, 5)                       # ---- add to lower sizer
+        sb_mask_txt = wx.StaticBox(self, wx.ID_ANY, "Select Mask File")
+        lowRightBottomSizer = wx.StaticBoxSizer (sb_mask_txt, wx.HORIZONTAL)
 
+        # choose mask file
+        wildcard = 'PySolo Video mask file (*.msk)|*.msk|' \
+                   'All files (*.*)|*.*'                # adding space in here will mess it up!
+        self.pickMaskBrowser = FileBrowseButton(self,id =  wx.ID_ANY,
+                                        labelText = 'Select Mask File:', buttonText = 'Browse',
+                                        toolTip = 'Type filename or click browse to choose mask file',
+                                        dialogTitle = 'Choose a mask file',
+                                        startDirectory = os.path.split(self.configDict[self.mon_name + ', maskfile'])[0],
+                                        initialValue = os.path.split(self.source)[1][0:-4] + '.msk',
+                                        fileMask = wildcard, fileMode = wx.ALL,
+                                        changeCallback = None,
+                                        name = 'maskBrowseButton')
+
+
+        lowRightBottomSizer.Add ( self.pickMaskBrowser , wx.EXPAND | wx.TOP | wx.ALL, 5 )
+        # add to right panel lower sizer
+
+        lowRightSizer.Add(lowRightBottomSizer, 1, wx.ALIGN_BOTTOM | wx.EXPAND | wx.ALL, 5)
+
+        lowerSizer.Add(lowRightSizer, 2, wx.ALIGN_BOTTOM | wx.EXPAND | wx.ALL, 5)
 
         self.SetSizer(lowerSizer)
-        self.Bind(EVT_THUMBNAIL_CLICKED, self.onThumbnailClicked)
+
 
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
@@ -627,8 +699,8 @@ class configPanel(wx.Panel):
         if  cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'end   ')
     """
 
-    #----------------------------------------------------------------------
-    def addWidgets(self, mainSizer ,widgets):                       # TODO: used?
+    #----------------------------------------------------------------------  used for datetime widgets
+    def addWidgets(self, mainSizer ,widgets):
         """
         """
         sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -662,23 +734,22 @@ class configPanel(wx.Panel):
         return which type of tracking we are chosing
         ['DISTANCE','VBS','XY_COORDS']
         """
-        if self.trackDistanceRadio.GetValue(): trackType = 0  #  "DISTANCE"
-        elif self.trackVirtualBM.GetValue(): trackType = 1    #  "VBS"
-        elif self.trackPosition.GetValue(): trackType = 2     #  "XY_COORDS"
+        if self.trackDistanceRadio.GetValue(): trackType = 0  #  'DISTANCE'
+        elif self.trackVirtualBM.GetValue(): trackType = 1    #  'VBS'
+        elif self.trackPosition.GetValue(): trackType = 2     #  'XY_COORDS'
 
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
         return trackType                                                        # $$$$$$ this isn't getting written to config file correctly
 
 # %%                                                            play button
-    def onPlay (self, event=None):
+    def onPlay (self, mon_num, event=None):
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
         # Event handler for the play button
         """
+        self.videoPanelList.Play()
+        self.btnStop.Enable(True)
 
-        if self.thumbnail:
-            self.thumbnail.Play()
-            self.btnStop.Enable(True)
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                                            Stop Button
@@ -706,6 +777,7 @@ class configPanel(wx.Panel):
 
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
+
 # %%                                                    Monitor dropdown box
     def onChangingMonitor(self, evt):
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
@@ -713,78 +785,71 @@ class configPanel(wx.Panel):
         Picking thumbnail by using the dropbox
         Event handler for changing monitor via dropdown box
         """
-        sel = evt.GetString()
-        self.monitor_number = self.MonitorList.index(sel) #+ 1
-        self.current_thumbnail = self.parent.scrollThumbnails.videoPanelList[self.monitor_number]         #this is not very elegant
-        self.updateThumbnail(self.monitor_number)
-        
+        self.mon_num = evt.EventObject.Selection +1  # EventObject is 0-indexed
+        self.updateLowerPanel(self.mon_num)
+
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 # %%                                            Refresh thumbnail and controls
-    def updateThumbnail(self, mon_num):                # TODO:  this should be in Configuration if it isn't already
+    def updateLowerPanel(self, mon_num):
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
-        Updates the lower panel controls with new thumbnail info
+        Updates the lower panel controls with selected monitor info
         """
         # If monitor exists, get info. Else, set to null/default values.
-        mon_name = 'Monitor%d' % mon_num
-        if self.config_obj.has_section(mon_name):
-            """
-            self.sourceType.setValue(self, self.configDict[mon_name + ', sourcetype'])
-            self.currentSource.setValue(self, self.configDict[mon_name + ', source'])
-            self.start_datetime.setValue(self, self.configDict[mon_name + ', start_datetime']) # date & time of start of video
-            self.start_date.setValue(self, self.start_datetime.Date())
-            self.start_date.setValue(self, self.start_datetime.Time())
-            self.track.setValue(self, self.configDict[mon_name + ', track'])
-            self.isSDMonitor.setValue(self, self.configDict[mon_name + ', issdmonitor'])
-            self.trackType.setValue(self, self.configDict[mon_name + ', tracktype'])  # distance tracking
-            self.pickMaskBrowser.setValue(self, self.configDict[mon_name + ', maskfile'])
+        self.mon_name = 'Monitor%d' % mon_num
+        if self.config_obj.has_section(self.mon_name):
 
-            self.trackDistanceRadio.setValue(self, False)
-            self.trackVirtualBM.setValue(self, False)
-            self.tracktrackPosition.setValue(self, False)
-            if self.configDict[mon_name + ', tracktype'] == 0:
-                self.trackDistanceRadio = True
-            elif self.configDict[mon_name + ', tracktype'] == 1:
-                self.trackVirtualBM = True
-            elif self.configDict[mon_name + ', tracktype'] == 2:
-                self.trackPosition = True
+        # update monitor selection
+            self.sourceType =               (self, self.configDict[self.mon_name + ', sourcetype'])
+            self.source =                   (self, self.configDict[self.mon_name + ', source'])
+            try:
+                text = os.path.split(str(self.source))[1]
+            except:
+                text = "No Source Selected"
+            self.currentSource.SetValue(text)
 
-        # If monitor is playing a camera
-        if self.sourceType == 0 and self.source != '':
-            self.source.setValue = self.WebcamsList[self.source]
+        # update Video Selection
+            for radio, src in self.controls:
+                src.Enable(False)
+#                src.SetPath('')
 
-        # Ensure source and type match throughout program              TODO:  what's going on with matching source & type throughout program?
-        self.thumbnail.source = self.source
-        self.thumbnail.sourceType = self.sourceType
-        self.thumbnail.track = self.track
-        if self.thumbnail.hasMonitor():
-            self.isSDMonitor = self.thumbnail.mon.isSDMonitor
+            radio, src = self.controls[self.sourceType]
+            radio.SetValue(True)
+            src.Enable(True)
+            src.SetValue(self.source)
 
-        #update first static box
-        active = self.thumbnail.hasMonitor()
-        self.applyButton.Enable ( active )
-        self.btnPlay.Enable ( active )
-        self.btnStop.Enable ( active and self.thumbnail.isPlaying )
+        # update date time
+            self.start_datetime =           (self.configDict[self.mon_name + ', start_datetime'] )
+            self.start_date.SetValue        (self, self.start_datetime.Date())
+            self.start_date.SetValue        (self, self.start_datetime.Time())
 
-        text = os.path.split(str(self.source))[1] or "No Source Selected"
-        self.currentSource.SetValue( text )
+        # update tracking parameters
+            self.pickMaskBrowser.SetPath   (self, self.configDict[self.mon_name + ', maskfile'])
 
-        #update second static box
-        for radio, src in self.controls:
-            src.Enable(False); src.SetValue('')
+            self.isSDMonitor.SetValue       (self, self.configDict[self.mon_name + ', issdmonitor'])
 
-        radio, src = self.controls[self.sourceType]
-        radio.SetValue(True); src.Enable(True)
-        src.SetValue(self.source)
+            self.track.SetValue             (self, self.configDict[self.mon_name + ', track'])
+            self.trackType =                (self, self.configDict[self.mon_name + ', tracktype'])
+            self.trackDistance.SetValue     (self, False)       # set all 3 to False, then change one to true
+            self.trackVirtualBM.SetValue    (self, False)
+            self.trackPosition.SetValue     (self, False)
+            if self.trackType == 0:
+                self.trackDistance.SetValue (self, True)
+            elif self.trackType == 1:
+                self.trackVirtualBM.SetValue(self, True)
+            elif self.trackType == 2:
+                self.trackPosition.SetValue (self, True)
 
-        #update third static box
-        self.track.SetValue(self.thumbnail.track)
-        self.isSDMonitor.SetValue(self.isSDMonitor)
-        self.pickMaskBrowser.SetValue(self.mask_file or '')
-        [self.trackDistanceRadio, self.trackVirtualBM, self.trackPosition][self.trackType].SetValue(True)
-        if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
-        """
+
+        # enabled buttons
+            active = self.config_obj.has_section(self.mon_name)
+            self.applyButton.Enable ( active )
+            self.btnPlay.Enable ( active )
+            self.btnStop.Enable ( not active )
+
+
+
 # %%
     def sourceCallback (self, event):
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
@@ -811,64 +876,38 @@ class configPanel(wx.Panel):
     def onApplySource(self, event):
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
         """
-        Get source and mask info from the user's selections
+        Get source filename from the user's selections
         Event handler for the Apply button on the lower left of panel one
         """
-        source, sourceType = self.__getSource()
-        track = self.track.GetValue()
-        self.mask_file = self.pickMaskBrowser.GetValue()
-        self.trackType = self.__getTrackingType()
 
-        # If there exists a thumbnail
-        # Else statement belongs to inner if statement, not sure why it keeps dedenting
-        if self.thumbnail:
-            if sourceType > 0:
-                camera = source # If source is a file, get file
-            else:
-                camera = self.WebcamsList.index(source) # Otherwise, check webcam list
+        # update the current source value in the monitor selection box
+        if self.rb1.GetValue():
+            self.currentSource.SetValue(self.source1.GetValue())
+        elif self.rb2.GetValue():
+            self.currentSource.SetValue(self.source2.textControl.Value)
+#        elif self.rb3:
+#            self.currentSource.SetValue(self.source3)
 
-            # Set the thumbnail's source to the source we have chosen
-            # Specify if it is webcam, file, etc
-            self.thumbnail.source = camera
-            self.thumbnail.sourceType = sourceType
+        # Enable buttons
+        self.btnPlay.Enable(True)
+        self.track.Enable(True)
+        self.pickMaskBrowser.Enable(True)
 
-            #Change the source text
-            self.currentSource.SetValue( os.path.split(source)[1] )
+        self.cfg.save_Config(new=False)
 
-            #Set thumbnail's monitor
-            self.thumbnail.setMonitor(camera)
+        self.setMonitor(self.source, self.size)
 
-            #Enable buttons
-            self.btnPlay.Enable(True)
-            self.track.Enable(True)
-            self.pickMaskBrowser.Enable(True)
 
-            self.saveMonitorConfiguration()
-        if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
+        if  cmn.call_tracking: cmn.debugprt(self, currentframe(),pgm,'end   ')
 
     def onDateTimeChanged(self,event):
         date_wx = self.start_date.GetValue()
         date_py = datetime.date(*map(int, date_wx.FormatISODate().split('-')))
         time_wx = self.start_time.GetValue(self)
         time_py = datetime.time(*map(int, time_wx.FormatISOTime().split(':')))
-        print("$$$$$$ pvg_panel_one; 593; start date = ", date_wx)
-        print("$$$$$$ pvg_panel_one; start time = ", time_py)
         self.start_datetime = datetime.datetime.combine(date_py, time_py)
-        print("$$$$$$ pvg_panel_one; start time = ", self.start_datetime)
 
         # %%                                                Save Monitor Config
-    def saveMonitorConfiguration(self):
-
-        if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'begin     ')                                          # debug
-        self.cfg.SetMonitor(self.monitor_number,          # monitor_number is 0-indexed
-                           self.thumbnail.sourceType,
-                           self.thumbnail.source,           #self.thumbnail.source+1 in dev code
-                           self.start_datetime,
-                           self.thumbnail.track,
-                           self.mask_file,
-                           self.trackType,                                      # this is not being saved correctly                             self.thumbnail.mon.isSDMonitor
-                           )
-        self.cfg.Save()
 
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
@@ -933,15 +972,15 @@ class configPanel(wx.Panel):
         self.controls.insert(0, (rb1,source1))
 
         # Remove the old ones from the layout and add the new ones
-        self.grid2.Hide(0)
-        self.grid2.Remove(0)
-        self.grid2.Insert(0, rb1)
-        self.grid2.Hide(1)
-        self.grid2.Remove(1)
-        self.grid2.Insert(1, source1)
+        sourceGridSizer.Hide(0)
+        sourceGridSizer.Remove(0)
+        sourceGridSizer.Insert(0, rb1)
+        sourceGridSizer.Hide(1)
+        sourceGridSizer.Remove(1)
+        sourceGridSizer.Insert(1, source1)
 
         # Show changes to UI
-        self.grid2.Layout()
+        sourceGridSizer.Layout()
         if  cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
 
@@ -986,14 +1025,27 @@ class scrollableGrid(wx.ScrolledWindow):
         self.config_obj = self.cfg.config_obj
         self.configDict = self.cfg.configDict
         self.full_filename = self.cfg.full_filename
+        size = self.configDict['Options, thumbnailsize']
+        fps = self.configDict['Options, fps_preview']
+        n_mons = self.configDict['Options, monitors']
 
-        wx.ScrolledWindow.__init__(self, parent, wx.ID_ANY, size=(-1, 600))
+        wx.ScrolledWindow.__init__(self, parent, wx.ID_ANY, size=(-1,-1))
         self.SetScrollbars(1, 1, 1, 1)
         self.SetScrollRate(10, 10)
 
         self.grid_mainSizer = wx.GridSizer(6, 3, 2, 2)          # TODO: adjust based on n_mons
 
-        self.updateGrid()
+        self.videoPanelList = []
+        for mon_num in range(1, n_mons+1):
+            self.videoPanelList.append(cmn.blankPanel(self, mon_num, fps, size))
+            # the videoPanelList list will be 0-indexed
+#            self.videoPanelList[mon_num-1].showThumbnail()                    # TODO:  helpful?
+            self.grid_mainSizer.Add(self.videoPanelList[mon_num-1], 0, wx.EXPAND | wx.CENTER| wx.ALL, 0)
+            self.SetSizer(self.grid_mainSizer)
+
+        # Set up listener for clicking on thumbnails
+        self.Bind(EVT_THUMBNAIL_CLICKED, self.onThumbnailClicked)
+
 
     def updateGrid(self):
         # %%                                              Populate the thumbnail grid
@@ -1002,15 +1054,17 @@ class scrollableGrid(wx.ScrolledWindow):
         n_mons = self.configDict['Options, monitors']
         self.videoPanelList = []
         for mon_num in range(1, n_mons+1):
-            mon_panel = cv2.namedWindow(mon_name, cv.CV_WINDOW_NORMAL)
-            mon_name = 'Monitor%d' % mon_num
-            self.videoPanelList.append(cmn.singleVideoImage(self, mon_num, fps, size, self.cfg))
-            self.grid_mainSizer.Add(self.videoPanelList[mon_num-1])  # the videoPanelList list will be 0-indexed
+            self.videoPanelList.append(cmn.singleVideoImage(self, self.cfg, mon_num, fps, size))
+            # the videoPanelList list will be 0-indexed
+            self.grid_mainSizer.Add(self.videoPanelList[mon_num-1], 0, wx.EXPAND | wx.CENTER| wx.ALL, 0)
+
 
         # %%                                              Make elements visible in GUI
         self.SetSizer(self.grid_mainSizer)
+
         # Set up listener for clicking on thumbnails
         self.Bind(EVT_THUMBNAIL_CLICKED, self.onThumbnailClicked)
+
         if cmn.call_tracking: cmn.debugprt(self, currentframe(), pgm, 'end   ')
 
     # %%                                                    Thumbnail Clicked

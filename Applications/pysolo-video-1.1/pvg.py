@@ -74,8 +74,8 @@ class mainNotebook(wx.Notebook):
         self.AddPage(self.panelOne, 'Thumbnails')
         mon_num = self.panelOne.mon_num
 
-        self.panelTwo = p2.maskPanel(self, mon_num, self.cfg)             # create mask maker pg
-        self.AddPage(self.panelTwo, 'Mask Maker')
+#        self.panelTwo = p2.maskPanel(self, mon_num, self.cfg)             # create mask maker pg
+#        self.AddPage(self.panelTwo, 'Mask Maker')
 
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
 
@@ -88,8 +88,8 @@ class mainNotebook(wx.Notebook):
         """
         Switches between notebook pages.
         """
-        p1.StopPlaying()                    # see pvg_panel_one.py
-        p2.StopPlaying()                    # see pvg_panel_two.py
+        self.cfg.onStop()                    # see pvg_panel_one.py
+#        p2.onStop()                    # see pvg_panel_two.py
         
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
 
@@ -99,8 +99,8 @@ class mainNotebook(wx.Notebook):
         """
         Refreshes all pages of notebook.
         """
-        self.p1.onRefresh()                    # see pvg_panel_one.py
-        self.p2.onRefresh(self.cfg)                    # see pvg_panel_two.py
+        self.cfg.onRefresh()                    # see pvg_panel_one.py
+#        self.p2.onRefresh(self.cfg)                    # see pvg_panel_two.py
         self.Layout()
         
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')
@@ -212,7 +212,7 @@ class mainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.cfg.save_Config, id=ID_FILE_SAVE)
         self.Bind(wx.EVT_MENU, self.cfg.onFileSaveAs, id=ID_FILE_SAVE_AS)
         self.Bind(wx.EVT_MENU, self.onFileExit, id=ID_FILE_EXIT)
-        self.Bind(wx.EVT_MENU, self.cfg.onOptionSet, id=ID_OPTIONS_SET)
+#        self.Bind(wx.EVT_MENU, self.cfg.onOptionSet, id=ID_OPTIONS_SET)
         self.Bind(wx.EVT_MENU, self.onAbout, id=ID_HELP_ABOUT)
 
         if cmn.call_tracking: cmn.debugprt(self,currentframe(),pgm,'end   ')

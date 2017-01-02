@@ -31,6 +31,9 @@ from inspect import currentframe        # debug call tracer                     
 from db import debugprt                 # debug call tracer
 import datetime
 from dateutil import parser
+import wx.lib.newevent
+
+ThumbnailClickedEvt, EVT_THUMBNAIL_CLICKED = wx.lib.newevent.NewCommandEvent()
 
 """
 --------------------------------------------------------------------------   Developer Settings
@@ -91,9 +94,6 @@ class Configuration:
         self.defaultConfig()             # create a default dictionary
 
         self.save_Config(new=True)                          # save the configuration to the filename
-
-
-
 # %% ----------------------------------------------------------  Create configuration dictionary from scratch and create file
     def defaultConfig(self):
 
@@ -119,16 +119,17 @@ class Configuration:
     # save to file
         self.save_Config(new=True)
 
-
 #  ---------------------------------------------------------------------- reads the config file to make the config_obj
     def getConfigObj(self):
 
         self.config_obj = ConfigParser.RawConfigParser()                    # read the config file
         self.config_obj.read(self.full_filename)
 
-
 # -----------------------------------------------------------------------  create configuration dictionary
     def getConfigDict(self):
+        """
+        Create dictionary from config_obj for easier lookup of configuration info
+        """
         self.configDict = {}
 
     # Options
@@ -170,9 +171,10 @@ class Configuration:
         if call_tracking: debugprt(self,currentframe(),pgm,'end   ')
 
 # %% ----------------------------------------------------------------------------   Set options from menu
+    """
     def onOptionSet(self):
         print('set options from menu')      # TODO: used?
-
+    """
 # %%  ----------------------------------------------------------------------------  Save config file
     def save_Config(self, new):
         if call_tracking: debugprt(self,currentframe(),pgm,'begin     ')        
@@ -324,64 +326,42 @@ class Configuration:
 
 
 """
-# --------------------------------------------------------------------------------------  Video Display Panel
+# --------------------------------------------------------------------------------------  Blank Display Panel
 """
-class singleVideoImage(wx.Panel):
+class blankPanel(wx.Panel):
     """
-    A panel showing video image mon_name
-    fps and size are provided by the calling program.  This function cannot differentiate between full size and thumbnail.
+    creates one numbered panel where a video can be displayed
     """
-    def __init__(self, parent, mon_num, fps, size, cfg, keymode=True):             # TODO: what does keymode do?
-        if call_tracking:  debugprt(self,currentframe(),pgm,'begin     ')                                            # debug
+    def __init__(self, parent, mon_num=1, fps=1, size=(200,200)):
 
-        self.imgFrame = wx.Panel.__init__(self, parent, wx.ID_ANY, style=wx.WANTS_CHARS)            # any key pressed (incl. tab, enter, etc.) will be input
-
-        self.cfg = cfg
-        self.config_obj = self.cfg.config_obj
-        self.configDict = self.cfg.configDict
-        self.full_filename = self.cfg.full_filename
-
+        wx.Panel.__init__(self, parent, wx.ID_ANY, style=wx.WANTS_CHARS)
         self.parent = parent
-        self.mon_name = 'Monitor%d' % mon_num
+        self.mon_num = mon_num
         self.size = size
-#        self.SetMinSize(self.size)                                     # TODO: setminsize cause trouble.  need a setsizer?
-        self.interval = 1000/fps # fps determines refresh interval in ms
+        self.fps = fps
+        self.interval = 1000/self.fps # fps determines refresh interval in ms
 
-        self.SetBackgroundColour('#A9A9A9')
+        self.SetMinSize(self.size)
 
-    # collect monitor information
-        self.sourceType = self.configDict[self.mon_name + ', sourcetype']
-        self.source = self.configDict[self.mon_name + ', source']
-        self.isSDMonitor = self.configDict[self.mon_name + ', issdmonitor']
+        # display monitor number on panel
+        pos = int(self.size[0]/8 - 20), int(self.size[1]/8 - 20),
+        font1 = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL)
+        text1 = wx.StaticText( self, wx.ID_ANY, '%s' % (self.mon_num+1), pos)
+        text1.SetFont(font1)
 
-        self.playVideo()
+        self.Bind(wx.EVT_LEFT_UP, self.onLeftClick)
 
-    def playVideo(self):
-        capture = cv2.VideoCapture(self.source)
-        for k in range(0, 10):
-            if not capture.isOpened():
-                capture = cv2.VideoCapture(self.source)
-                cv2.waitKey(1000)
+    def onLeftClick(self, evt):
+        """
+        Send signal around that the thumbnail was clicked
+        """
+        event = ThumbnailClickedEvt(self.GetId())
 
-        if capture.isOpened():
-            print('Capture successful')
-            cv2.namedWindow(self.mon_name, cv.CV_WINDOW_NORMAL)
-            retval, imgFrame = capture.read()
-            while retval:
-                cv2.resizeWindow(self.mon_name, self.size[0], self.size[1])
-                imgSized = cv2.resize(imgFrame, self.size)
-                cv2.imshow(self.mon_name, imgSized)
-                cv2.waitKey(self.interval)
-                retval, imgFrame = capture.read()
-            capture.release()
+        event.id = self.GetId()
+        event.number = self.mon_num
+        event.thumbnail = self
 
-        else:
-            print('could not open file')
+        self.GetEventHandler().ProcessEvent(event)
 
 
-
-
-
-
-        
 
