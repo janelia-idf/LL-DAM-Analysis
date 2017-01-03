@@ -17,40 +17,27 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="pvg.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pvg.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="52">
-              <caret line="39" column="25" lean-forward="false" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
+            <state relative-caret-position="130">
+              <caret line="118" column="17" lean-forward="false" selection-start-line="118" selection-start-column="17" selection-end-line="118" selection-end-column="17" />
               <folding>
                 <element signature="e#1236#1249#0" expanded="true" />
-                <element signature="e#4169#4819#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pvg_panel_one.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="pvg_panel_one.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pvg_panel_one.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="137">
-              <caret line="330" column="0" lean-forward="true" selection-start-line="330" selection-start-column="0" selection-end-line="330" selection-end-column="0" />
+            <state relative-caret-position="334">
+              <caret line="341" column="0" lean-forward="true" selection-start-line="341" selection-start-column="0" selection-end-line="341" selection-end-column="0" />
               <folding>
                 <element signature="e#1293#1306#0" expanded="true" />
-                <element signature="e#11090#12804#0" expanded="false" />
-                <element signature="e#12924#16521#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="_core.py" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Anaconda2/Lib/site-packages/wx-3.0-msw/wx/_core.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="145">
-              <caret line="13112" column="0" lean-forward="true" selection-start-line="13112" selection-start-column="0" selection-end-line="13112" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -58,8 +45,8 @@
       <file leaf-file-name="filebrowsebutton_LL.py" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Anaconda2/Lib/site-packages/wx-3.0-msw/wx/lib/filebrowsebutton_LL.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-98">
-              <caret line="355" column="0" lean-forward="true" selection-start-line="355" selection-start-column="0" selection-end-line="355" selection-end-column="0" />
+            <state relative-caret-position="5984">
+              <caret line="355" column="0" lean-forward="false" selection-start-line="355" selection-start-column="0" selection-end-line="355" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -68,8 +55,8 @@
       <file leaf-file-name="pvg_common.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pvg_common.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="164">
-              <caret line="42" column="22" lean-forward="false" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
+            <state relative-caret-position="96">
+              <caret line="54" column="8" lean-forward="false" selection-start-line="54" selection-start-column="8" selection-end-line="54" selection-end-column="8" />
               <folding>
                 <element signature="e#1053#1066#0" expanded="true" />
                 <element signature="e#12644#15274#1" expanded="false" />
@@ -78,32 +65,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pysolovideo.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="pysolovideo.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysolovideo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="103">
-              <caret line="1273" column="0" lean-forward="false" selection-start-line="1273" selection-start-column="0" selection-end-line="1273" selection-end-column="0" />
+            <state relative-caret-position="96">
+              <caret line="1899" column="1" lean-forward="false" selection-start-line="1899" selection-start-column="1" selection-end-line="1899" selection-end-column="1" />
               <folding>
                 <element signature="e#1688#1706#0" expanded="true" />
-                <element signature="e#35322#35689#0" expanded="false" />
-                <element signature="e#36327#36807#0" expanded="false" />
-                <element signature="e#37051#37526#0" expanded="false" />
-                <element signature="e#37614#38409#0" expanded="false" />
-                <element signature="e#38688#38865#0" expanded="false" />
-                <element signature="e#38952#39603#0" expanded="false" />
-                <element signature="e#39661#39806#0" expanded="false" />
-                <element signature="e#39846#40183#0" expanded="false" />
-                <element signature="e#40235#40590#0" expanded="false" />
-                <element signature="e#40627#40793#0" expanded="false" />
-                <element signature="e#40829#40996#0" expanded="false" />
-                <element signature="e#41047#41245#0" expanded="false" />
-                <element signature="e#41296#41510#0" expanded="false" />
-                <element signature="e#41566#41792#0" expanded="false" />
-                <element signature="e#41835#42071#0" expanded="false" />
-                <element signature="e#42123#42287#0" expanded="false" />
-                <element signature="e#42332#43099#0" expanded="false" />
-                <element signature="e#43157#47295#0" expanded="false" />
-                <element signature="e#49473#53657#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -112,7 +80,7 @@
       <file leaf-file-name="pvg_panel_two.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pvg_panel_two.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="86">
+            <state relative-caret-position="986">
               <caret line="66" column="0" lean-forward="true" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
               <folding>
                 <element signature="e#913#926#0" expanded="true" />
@@ -125,14 +93,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>lower</find>
-      <find>lowerp</find>
-      <find>controls</find>
-      <find>getsourceob</find>
-      <find>Dict</find>
-      <find>type</find>
-      <find>zip</find>
-      <find>monitor</find>
       <find>onpaint</find>
       <find>onApply</find>
       <find>setMonitor</find>
@@ -146,7 +106,6 @@
       <find>preview</find>
       <find>class monitor</find>
       <find>getSourceObj</find>
-      <find>setmonitor</find>
       <find>apply</find>
       <find>hasSource</find>
       <find>class</find>
@@ -155,6 +114,15 @@
       <find>getframetime</find>
       <find>called arena</find>
       <find>called monitor</find>
+      <find>onapply</find>
+      <find>setmonitor</find>
+      <find>def thumbnail</find>
+      <find>def th</find>
+      <find>self.thumbnail =</find>
+      <find>self.thumbnail</find>
+      <find>setsource</find>
+      <find>playtimer</find>
+      <find>setso</find>
     </findStrings>
     <replaceStrings>
       <replace>gridSize</replace>
@@ -179,8 +147,8 @@
         <option value="$USER_HOME$/Anaconda2/Lib/site-packages/wx-3.0-msw/wx/lib/filebrowsebutton_LL.py" />
         <option value="$PROJECT_DIR$/pvg.py" />
         <option value="$PROJECT_DIR$/pvg_panel_two.py" />
-        <option value="$PROJECT_DIR$/pvg_panel_one.py" />
         <option value="$PROJECT_DIR$/pysolovideo.py" />
+        <option value="$PROJECT_DIR$/pvg_panel_one.py" />
       </list>
     </option>
   </component>
@@ -401,6 +369,9 @@
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="cad859e8-6444-4dc4-885f-a8a705eb47aa" name="Default" comment="" />
@@ -424,23 +395,24 @@
     <frame x="66" y="-8" width="1308" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17874016" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="SVN Repositories" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290735" sideWeight="0.4968504" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3856" sideWeight="0.40787402" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2827476" sideWeight="0.4968504" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3410596" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33865815" sideWeight="0.16850394" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17874016" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2827476" sideWeight="0.49370077" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1503937" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37060702" sideWeight="0.5031496" order="3" side_tool="true" content_ui="tabs" x="85" y="247" width="1270" height="273" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2827476" sideWeight="0.5062992" order="3" side_tool="true" content_ui="tabs" x="85" y="247" width="1270" height="273" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -496,7 +468,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/pvg_panel_one.py</url>
-          <line>976</line>
+          <line>987</line>
           <option name="timeStamp" value="40" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -506,24 +478,186 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/pysolovideo.py</url>
-          <line>1160</line>
+          <line>1158</line>
           <option name="timeStamp" value="51" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/pysolovideo.py</url>
-          <line>456</line>
+          <line>457</line>
           <option name="timeStamp" value="52" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/pvg_panel_one.py</url>
+          <line>762</line>
+          <option name="timeStamp" value="63" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/pvg_panel_one.py</url>
+          <line>748</line>
+          <option name="timeStamp" value="64" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/pvg_panel_one.py</url>
+          <line>735</line>
+          <option name="timeStamp" value="65" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/pvg_panel_one.py</url>
+          <line>329</line>
+          <option name="timeStamp" value="67" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="60" />
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+      <option name="time" value="68" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="self.mon" />
+        <watch expression="self.source" language="Python" />
       </configuration>
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/pvg.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="39" column="25" lean-forward="false" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
+          <folding>
+            <element signature="e#1236#1249#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pvg_panel_one.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14773">
+          <caret line="869" column="0" lean-forward="false" selection-start-line="869" selection-start-column="0" selection-end-line="869" selection-end-column="0" />
+          <folding>
+            <element signature="e#1293#1306#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda2/Lib/site-packages/wx-3.0-msw/wx/_core.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda2/Lib/site-packages/wx-3.0-msw/wx/lib/filebrowsebutton_LL.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5984">
+          <caret line="355" column="0" lean-forward="false" selection-start-line="355" selection-start-column="0" selection-end-line="355" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pvg_common.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="714">
+          <caret line="42" column="22" lean-forward="false" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
+          <folding>
+            <element signature="e#1053#1066#0" expanded="true" />
+            <element signature="e#12644#15274#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysolovideo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="23018">
+          <caret line="1354" column="8" lean-forward="false" selection-start-line="1354" selection-start-column="8" selection-end-line="1354" selection-end-column="8" />
+          <folding>
+            <element signature="e#1688#1706#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pvg_panel_two.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="986">
+          <caret line="66" column="0" lean-forward="true" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
+          <folding>
+            <element signature="e#913#926#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pvg.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="39" column="25" lean-forward="false" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
+          <folding>
+            <element signature="e#1236#1249#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pvg_panel_one.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5610">
+          <caret line="330" column="0" lean-forward="true" selection-start-line="330" selection-start-column="0" selection-end-line="330" selection-end-column="0" />
+          <folding>
+            <element signature="e#1293#1306#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda2/Lib/site-packages/wx-3.0-msw/wx/_core.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222904">
+          <caret line="13112" column="0" lean-forward="true" selection-start-line="13112" selection-start-column="0" selection-end-line="13112" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda2/Lib/site-packages/wx-3.0-msw/wx/lib/filebrowsebutton_LL.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5984">
+          <caret line="355" column="0" lean-forward="true" selection-start-line="355" selection-start-column="0" selection-end-line="355" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pvg_common.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="714">
+          <caret line="42" column="22" lean-forward="false" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
+          <folding>
+            <element signature="e#1053#1066#0" expanded="true" />
+            <element signature="e#12644#15274#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysolovideo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#1688#1706#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pvg_panel_two.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="986">
+          <caret line="66" column="0" lean-forward="true" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
+          <folding>
+            <element signature="e#913#926#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$USER_HOME$/Anaconda2/Lib/site-packages/wx-3.0-msw/wx/_windows.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="111">
@@ -536,7 +670,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="117">
           <caret line="1595" column="0" lean-forward="false" selection-start-line="1595" selection-start-column="0" selection-end-line="1595" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -558,8 +691,8 @@
     </entry>
     <entry file="file://$USER_HOME$/Anaconda2/Lib/site-packages/wx-3.0-msw/wx/lib/filebrowsebutton_LL.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-98">
-          <caret line="355" column="0" lean-forward="true" selection-start-line="355" selection-start-column="0" selection-end-line="355" selection-end-column="0" />
+        <state relative-caret-position="5984">
+          <caret line="355" column="0" lean-forward="false" selection-start-line="355" selection-start-column="0" selection-end-line="355" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -568,7 +701,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="108">
           <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -576,14 +708,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pvg_panel_two.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="986">
+          <caret line="66" column="0" lean-forward="true" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
+          <folding>
+            <element signature="e#913#926#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pvg_common.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="42" column="22" lean-forward="false" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
+        <state relative-caret-position="96">
+          <caret line="54" column="8" lean-forward="false" selection-start-line="54" selection-start-column="8" selection-end-line="54" selection-end-column="8" />
           <folding>
             <element signature="e#1053#1066#0" expanded="true" />
             <element signature="e#12644#15274#1" expanded="false" />
@@ -593,70 +734,38 @@
     </entry>
     <entry file="file://$USER_HOME$/Anaconda2/Lib/site-packages/wx-3.0-msw/wx/_core.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="13112" column="0" lean-forward="true" selection-start-line="13112" selection-start-column="0" selection-end-line="13112" selection-end-column="0" />
+        <state relative-caret-position="105">
+          <caret line="7951" column="0" lean-forward="false" selection-start-line="7951" selection-start-column="0" selection-end-line="7951" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysolovideo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="1899" column="1" lean-forward="false" selection-start-line="1899" selection-start-column="1" selection-end-line="1899" selection-end-column="1" />
+          <folding>
+            <element signature="e#1688#1706#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pvg.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="52">
-          <caret line="39" column="25" lean-forward="false" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
+        <state relative-caret-position="130">
+          <caret line="118" column="17" lean-forward="false" selection-start-line="118" selection-start-column="17" selection-end-line="118" selection-end-column="17" />
           <folding>
             <element signature="e#1236#1249#0" expanded="true" />
-            <element signature="e#4169#4819#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pvg_panel_two.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="86">
-          <caret line="66" column="0" lean-forward="true" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
-          <folding>
-            <element signature="e#913#926#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pvg_panel_one.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="330" column="0" lean-forward="true" selection-start-line="330" selection-start-column="0" selection-end-line="330" selection-end-column="0" />
+        <state relative-caret-position="334">
+          <caret line="341" column="0" lean-forward="true" selection-start-line="341" selection-start-column="0" selection-end-line="341" selection-end-column="0" />
           <folding>
             <element signature="e#1293#1306#0" expanded="true" />
-            <element signature="e#11090#12804#0" expanded="false" />
-            <element signature="e#12924#16521#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pysolovideo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="1273" column="0" lean-forward="false" selection-start-line="1273" selection-start-column="0" selection-end-line="1273" selection-end-column="0" />
-          <folding>
-            <element signature="e#1688#1706#0" expanded="true" />
-            <element signature="e#35322#35689#0" expanded="false" />
-            <element signature="e#36327#36807#0" expanded="false" />
-            <element signature="e#37051#37526#0" expanded="false" />
-            <element signature="e#37614#38409#0" expanded="false" />
-            <element signature="e#38688#38865#0" expanded="false" />
-            <element signature="e#38952#39603#0" expanded="false" />
-            <element signature="e#39661#39806#0" expanded="false" />
-            <element signature="e#39846#40183#0" expanded="false" />
-            <element signature="e#40235#40590#0" expanded="false" />
-            <element signature="e#40627#40793#0" expanded="false" />
-            <element signature="e#40829#40996#0" expanded="false" />
-            <element signature="e#41047#41245#0" expanded="false" />
-            <element signature="e#41296#41510#0" expanded="false" />
-            <element signature="e#41566#41792#0" expanded="false" />
-            <element signature="e#41835#42071#0" expanded="false" />
-            <element signature="e#42123#42287#0" expanded="false" />
-            <element signature="e#42332#43099#0" expanded="false" />
-            <element signature="e#43157#47295#0" expanded="false" />
-            <element signature="e#49473#53657#0" expanded="false" />
           </folding>
         </state>
       </provider>

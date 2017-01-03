@@ -326,8 +326,8 @@ class previewPanel(wx.Panel):
         """
         """
 
-        if self.mon is not None and self.resolution is not None and self.mon is not None:
-            self.mon.setSource(self.camera, self.resolution)
+#        if self.mon is not None and self.resolution is not None and self.mon is not None:
+#            self.mon.setSource(self.camera, self.resolution)
 
         if self.mon:
             self.drawROI = showROIs
@@ -540,8 +540,10 @@ class panelConfigure(wx.Panel):
         # ----------- can reset by button                                                                               # thumbnail number (mon_num)
         self.thumbnailNumber = wx.ComboBox(self, -1, size=(-1,-1) , choices=self.MonitorList,
                                            style=wx.CB_DROPDOWN | wx.CB_READONLY | wx.CB_SORT)
-        # ----------- can reset by button                                                                               # current source (source)
+        self.thumbnailNumber.SetValue(self.MonitorList[0])
+        # ----------- can reset by button                                                                               # displays filename only.  don't GetValue
         self.currentSource = wx.TextCtrl (self, -1, os.path.split(self.source)[1], style=wx.TE_READONLY)
+        self.currentSource.Value = '<path>\\' + os.path.split(self.source)[1]
         # -----------
         self.Bind ( wx.EVT_COMBOBOX, self.onChangingMonitor, self.thumbnailNumber)
 
@@ -575,10 +577,15 @@ class panelConfigure(wx.Panel):
         self.WebcamsList = [ 'Webcam %s' % (int(w) +1) for w in range( self.n_cams ) ]
 
         rb1 = wx.RadioButton(self, -1, 'Camera', style=wx.RB_GROUP)
+        if self.sourceType == 0:  rb1.Value = True
+        else: rb1.Value = False
         source1 = wx.ComboBox(self, -1, size=(285,-1) , choices = self.WebcamsList, style=wx.CB_DROPDOWN | wx.CB_READONLY | wx.CB_SORT)
+        source1.Value = self.WebcamsList[0]
         self.Bind(wx.EVT_COMBOBOX, self.sourceCallback, source1)
 
         rb2 = wx.RadioButton(self, -1, 'File' )
+        if self.sourceType == 1:  rb2.Value = True
+        else: rb2.Value = False
         source2 = FileBrowseButton(self,
                         id = wx.ID_ANY,
                         pos = wx.DefaultPosition,
@@ -590,15 +597,18 @@ class panelConfigure(wx.Panel):
                         # following are the values for a file dialog box
                         dialogTitle = "Choose a file",
                         startDirectory = self.pDir,
-                        initialValue = '',
+                        initialValue = self.source,
                         fileMask = "*.*",
                         fileMode = wx.FD_OPEN,
                         # callback for when value changes (optional)
                         changeCallback = self.sourceCallback,
                         labelWidth = 0,
                         name = 'fileBrowseButton')
+        source2.Value = self.source
 
         rb3 = wx.RadioButton(self, -1, 'Folder' )
+        if self.sourceType == 2:  rb3.Value = True
+        else: rb3.Value = False
         source3 = DirBrowseButton (self,
                         id = wx.ID_ANY,
                         pos = wx.DefaultPosition, size = (300,-1),
@@ -612,6 +622,7 @@ class panelConfigure(wx.Panel):
                         dialogClass = wx.DirDialog,
                         newDirectory = False,
                         name = 'dirBrowseButton')
+        source3.SetValue(self.pDir)
 
         self.controls = []
         self.controls.append((rb1, source1))
@@ -624,7 +635,7 @@ class panelConfigure(wx.Panel):
             self.Bind(wx.EVT_RADIOBUTTON, self.onChangeSource, radio )
             source.Enable(False)
 
-        self.controls[0][1].Enable(True)
+        self.controls[self.sourceType][1].Enable(True)
 
         # grid2.Add(wx.StaticText(self, -1, ""))
 
@@ -710,7 +721,7 @@ class panelConfigure(wx.Panel):
         """
         # Event handler for the play button
         """
-
+        self.thumbnail = self.parent.scrollThumbnails.previewPanels[self.mon_num-1]         # mon_num is 1-indexed, but previewPanels is a 0-indexed list. #this is not very elegant
         if self.thumbnail:
             self.thumbnail.Play()
             self.btnStop.Enable(True)
@@ -753,13 +764,13 @@ class panelConfigure(wx.Panel):
         self.updateThumbnail(self.thumbnail, 'Monitor%d' % self.mon_num)
 
 
+
 # %%                                            Refresh thumbnail and controls
     def updateThumbnail(self, thumbnail, mon_name):
 
         """
         Refreshing thumbnail data
         """
-        # If monitor is playing a camera
 
         sourceType = self.configDict[mon_name + ', sourcetype']
         source = self.configDict[mon_name + ', source']
@@ -781,8 +792,7 @@ class panelConfigure(wx.Panel):
         self.btnPlay.Enable ( active )
         self.btnStop.Enable ( active and self.thumbnail.isPlaying )
 
-        text = os.path.split(str(self.source))[1] or 'No Source Selected'
-        self.currentSource.SetValue( text )
+        self.currentSource.Value = '<path>\\' + os.path.split(self.source)[1]                # only filename is shown in currentSource textctrl
 
         #update second static box
         for radio, src in self.controls:
@@ -841,8 +851,9 @@ class panelConfigure(wx.Panel):
         # Update the source settings
         count = 1                                   # used to determine sourceType
         for radio, src in self.controls:
-            if radio:                              # if the radio button is enabled
-                self.currentSource = src.GetValue()
+            if radio.GetValue():                              # if the radio button is enabled
+                self.source = src.GetValue()
+                self.currentSource.Value = '<path>\\' + os.path.split(self.source)[1]             # currentSource shows only filename
                 self.sourcetype = count
             count = count + 1
 
@@ -853,7 +864,7 @@ class panelConfigure(wx.Panel):
 
         self.cfg.save_Config(new=False)  # TODO: just save settings for this monitor instead of everything?
 
-        self.thumbnail.setMonitor(self.source, size=self.cam_size)
+#        self.thumbnail.setMonitor(self.source, size=self.cam_size)
 
     # %%                                                        Activate Tracking
     def onActivateTracking(self, event):
@@ -960,7 +971,7 @@ class panelOne(wx.Panel):
 
 
 # %%                                                         Stop Playing
-    def StopPlaying(self):
+    def StopPlaying(self, event):
 
         self.lowerPanel.onStop(event)
 

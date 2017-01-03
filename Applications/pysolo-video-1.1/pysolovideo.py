@@ -557,9 +557,14 @@ class Arena:
     The class monitor takes care of the camera
     The class arena takes care of the flies
     """
-    def __init__(self, parent):
+    def __init__(self, parent, cfg, mon_name):
+
+        self.cfg = cfg
+        self.config_obj = self.cfg.config_obj
+        self.configDict = self.cfg.configDict
 
         self.monitor = parent
+        self.mon_name = mon_name
 
         self.ROIS = [] #Regions of interest
         self.beams = [] # beams: absolute coordinates
@@ -627,7 +632,6 @@ class Arena:
 
     def __distance( self, (x1, y1), (x2, y2) ):
 
-        print('   Arena __distance')
         """
         Calculate the distance between two cartesian points
         """
@@ -726,18 +730,19 @@ class Arena:
         elif n < 0:
             self.ROIS = []
 
-
+    """
     def getROInumber(self):
 
-       """
+        """"""
         Return the number of current active ROIS
-        """
+        """"""
 
         return len(self.ROIS)
+    """
 
     def saveROIS(self, filename):
 
-       """
+        """
         Save the current crop data to a file
         """
         cf = open(filename, 'w')
@@ -1055,7 +1060,7 @@ class Arena:
         """
 
         activity = []
-        rois = self.getROInumber()
+        rois = len(self.ROIS)                    # WAS:  self.getROInumber()
 
         a = self.flyDataMin.transpose(1,0,2) # ( interval, n_flies, (x,y) )
         a = a.reshape(resolution, -1, rois, 2).mean(0)
@@ -1097,8 +1102,7 @@ class Monitor(object):
         self.grabMovie = False
         self.writer = None
 
-        self.arena = Arena(self)
-        print(self.arena)
+        self.arena = Arena(self, self.cfg, self.mon_name)
 
         self.imageCount = 0
         self.lasttime = 0
@@ -1122,17 +1126,17 @@ class Monitor(object):
         """
 
         if self.sourceType == 0:  # webcam
-            self.source_obj = realCam(resolution=self.cam_size)
+            source_obj = realCam(resolution=self.cam_size)
 
         elif self.sourceType == 1:  # file
-            self.source_obj = virtualCamMovie(
+            source_obj = virtualCamMovie(
                 path=os.path.split(self.source)[0],
                 step=self.fps, start=0, end=1, loop=False,
                 resolution=self.cam_size
             )
 
         elif self.sourceType == 2:
-            self.source_obj = virtualCamFrames(
+            source_obj = virtualCamFrames(
                 path=os.path.split(self.source)[0],
                 step=self.fps, start=0, end=1, loop=False,
                 resolution=self.cam_size
@@ -1142,7 +1146,9 @@ class Monitor(object):
             print('$$$$$$ SourceType is invalid!')
             source_obj = None
 
-        return
+        return source_obj
+
+
 
     def __drawBeam(self, img, bm, color=None):
 
@@ -1269,17 +1275,17 @@ class Monitor(object):
 
         return (dx1*dx2 + dy1*dy2)/np.sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10)
 
+    """
     def close(self):
 
-        """
+        """"""
         Closes stream
-        """
+        """"""
         self.cam.close()
-
+    """
 
     def CaptureFromCAM(self, devnum=0, resolution=(640,480), options=None):
 
-        print('        called Monitor capturefromcam')
         """
         """
         self.isVirtualCam = False
@@ -1294,7 +1300,6 @@ class Monitor(object):
 
     def CaptureFromMovie(self, camera, resolution=None, options=None):
 
-        print('        called Monitor capturefrommovie')
         """
         """
         self.isVirtualCam = True
@@ -1313,7 +1318,6 @@ class Monitor(object):
 
     def CaptureFromFrames(self, camera, resolution=None, options=None):
 
-        print('        called Monitor capturefromframes')
         """
         """
         self.isVirtualCam = True
@@ -1329,20 +1333,9 @@ class Monitor(object):
         self.resolution = self.cam.getResolution()
         self.numberOfFrames = self.cam.getTotalFrames()
 
-    """
-    def hasSource(self):
-
-        print('        called Monitor hassource')
-        """"""
-        """"""
-        a = self.mon is not None
-
-        return a
-    """
 
     def setSource(self, camera, resolution, options=None):
 
-        print('        called Monitor setsource')
         """
         Set source intelligently
         """
@@ -1361,7 +1354,6 @@ class Monitor(object):
 
     def setTracking(self, track, trackType=0, mask_file='', outputFile=''):
 
-        print('        called Monitor settracking')
         """
         Set the tracking parameters
 
@@ -1384,19 +1376,8 @@ class Monitor(object):
         if mask_file:
             self.loadROIS(mask_file)
 
-    """
-    def getFrameTime(self):                                         # in class Monitor
-
-        print('        called Monitor getframetime')
-        """"""
-        """"""
-        a = self.cam.getFrameTime()
-
-        return a
-    """
     def isLastFrame(self):
 
-        print('        called Monitor islastframe')
         """
         Proxy to isLastFrame()
         Handled by camera
@@ -1408,7 +1389,6 @@ class Monitor(object):
 
     def saveMovie(self, filename, fps=24, codec='FMP4', startOnKey=False):
 
-        print('        called Monitor savemovie')
         """
         Determines whether all the frames grabbed through getImage will also
         be saved as movie.
@@ -1425,19 +1405,17 @@ class Monitor(object):
         self.grabMovie = not startOnKey
 
 
-
+    """
     def saveSnapshot(self, *args, **kwargs):
 
-        print('        called Monitor savesnapshot')
-        """
+        """"""
         proxy to saveSnapshot
-        """
+        """"""
         self.cam.saveSnapshot(*args, **kwargs)
-
+    """
 
     def SetLoop(self,loop):
 
-        print('        called Monitor setloop')
         """
         Set Loop on or off.
         Will work only in virtual cam mode and not realCam
@@ -1454,7 +1432,6 @@ class Monitor(object):
 
     def addROI(self, coords, n_flies=1):
 
-        print('        called Monitor addroi')
         """
         Add the coords for a new ROI and the number of flies we want to track in that area
         selection       (pt1, pt2, pt3, pt4)    A four point selection
@@ -1466,7 +1443,6 @@ class Monitor(object):
 
     def getROI(self, n):
 
-        print('        called Monitor getroi')
         """
         Returns the coordinates of the nth crop area
         """
@@ -1476,7 +1452,6 @@ class Monitor(object):
 
     def delROI(self, n):
 
-        print('        called Monitor setroi')
         """
         removes the nth crop area from the list
         if n -1, remove all
@@ -1486,7 +1461,6 @@ class Monitor(object):
 
     def saveROIS(self, filename=None):
 
-        print('        called Monitor saverois')
         """
         Save the current crop data to a file
         """
@@ -1496,7 +1470,6 @@ class Monitor(object):
 
     def loadROIS(self, filename=None):
 
-        print('        called Monitor loadrois')
         """
         Load the crop data from a file
         """
@@ -1507,7 +1480,6 @@ class Monitor(object):
 
     def resizeROIS(self, origSize, newSize):
 
-        print('        called Monitor resizerois')
         """
         Resize the mask to new size so that it would properly fit
         resized images
@@ -1518,7 +1490,6 @@ class Monitor(object):
 
     def isPointInROI(self, pt):
 
-        print('        called Monitor ispointinroi')
         """
         Check if a given point falls whithin one of the ROI
         Returns the ROI number or else returns -1
@@ -1529,7 +1500,6 @@ class Monitor(object):
 
     def calibrate(self, pt1, pt2, cm=1):
 
-        print('        called Monitor calibrate')
         """
         Relays to arena calibrate
         """
@@ -1539,7 +1509,6 @@ class Monitor(object):
 
     def autoMask(self, pt1, pt2):
 
-        print('        called Monitor automask')
         """
         EXPERIMENTAL, FIX THIS
         This is experimental
@@ -1573,7 +1542,6 @@ class Monitor(object):
 
     def findOuterFrame(self, img, thresh=50):
 
-        print('        called Monitor findouterframe')
         """
         EXPERIMENTAL
         Find the greater square
@@ -1672,7 +1640,6 @@ class Monitor(object):
 
     def GetImage(self, drawROIs = False, selection=None, crosses=None, timestamp=False):
 
-        print('        called Monitor getimage')
         """
         GetImage(self, drawROIs = False, selection=None, timestamp=0)
 
@@ -1830,12 +1797,9 @@ class Monitor(object):
         if show_raw_diff:
             temp2 = cv.CloneImage(grey_image)
             cv.CvtColor(grey_image, temp2, cv.CV_GRAY2RGB)#show the actual difference blob that will be tracked
-
             return temp2
-
-
-        return frame
-
+        else:
+            return frame
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Acquire Object
 class acquireObject:
@@ -1870,7 +1834,7 @@ class acquireObject:
                 camera = self.WebcamsList.index(source) # Otherwise, check webcam list
 
         self.mon = monitor
-        self.mon.setSource(source, resolution)
+#        self.mon.setSource(source, resolution)
         self.mon.setTracking(True, track_type, mask_file, outputFile)
 
         if self.verbose: print(
@@ -1933,7 +1897,7 @@ class acquireThread(threading.Thread):
                                   'Monitor%02d.txt' % (monitor + 1))  # account for computer indexing diff from humans
 
         self.mon = monitor
-        self.mon.setSource(source, resolution)
+#        self.mon.setSource(source, resolution)
         self.mon.setTracking(True, track_type, mask_file, outputFile)
 
         if self.verbose: print(
