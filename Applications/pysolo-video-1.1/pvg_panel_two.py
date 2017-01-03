@@ -21,7 +21,9 @@
 #       MA 02110-1301, USA.
 
 import wx, os
-from pvg_common import previewPanel, options
+import pysolovideo as pv
+import pvg_common as cmn
+import pvg_panel_one as pv1
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Global Variables
 # get root dir name for all file operations
@@ -38,7 +40,7 @@ data_dir = root_dir + 'Data\\Working_files\\'
 DEFAULT_CONFIG = 'pysolo_video.cfg'
 pgm = 'pvg_acquire.py'
 #start_dt = datetime.datetime(2016,8,23,13,52,17)
-#t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00 
+#t = datetime.time(19, 1, 00)                    # get datetime for adjusting from 31 Dec 1969 at 19:01:00
 #d = datetime.date(1969, 12, 31)
 #zero_dt = datetime.datetime.combine(d, t)
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -50,17 +52,20 @@ class panelLiveView(wx.Panel):
     Panel Number 2
     Live view of selected camera
     """
-    def __init__(self, parent):
-        """
-        """
+    def __init__(self, parent, cfg, mon_num):
+
+        self.cfg = cfg
+        self.config_obj = self.cfg.config_obj
+        self.configDict = self.cfg.configDict
 
         wx.Panel.__init__(self, parent, wx.ID_ANY)
 
-        self.monitor_number = options.GetOption("Monitors")
-        self.fs_size = options.GetOption("FullSize")
-        self.monitor_name = ''
+        self.monitor_number = self.mon_num = mon_num
+        self.mon_name = 'Monitor%d' % self.mon_num
+        self.fs_size = self.configDict['Options, fullsize']
 
-        self.fsPanel = previewPanel(self, size=self.fs_size)
+
+        self.fsPanel = pv1.previewPanel(self, self.cfg, self.mon_num, self.fs_size)
 
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
         sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
@@ -158,7 +163,7 @@ class panelLiveView(wx.Panel):
 
         self.SetSizer(sizer_1)
         print wx.Window.FindFocus()
-        
+
         self.Bind( wx.EVT_CHAR, self.fsPanel.onKeyPressed )
 
     def StopPlaying(self):

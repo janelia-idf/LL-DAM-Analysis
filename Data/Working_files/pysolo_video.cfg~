@@ -1,6 +1,6 @@
 [Options]
 webcams = 1
-data_folder = \Data\Working_files
+data_folder = C:\Users\Lori\Documents\GitHub\LL-DAM-Analysis\Data\Working_files
 thumbnailsize = 320, 240
 fullsize = 640, 480
 fps_recording = 5
@@ -14,7 +14,4 @@ track = True
 maskfile = C:\Users\Lori\Documents\GitHub\LL-DAM-Analysis\Data\Working_files\Monitor_1.msk
 tracktype = 0
 issdmonitor = False
-
-[Monitor1]
-maskfile = C:\Users\Lori\Documents\GitHub\LL-DAM-Analysis\Data\Working_files\Monitor_1.msk
 
